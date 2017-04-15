@@ -155,7 +155,7 @@ def update_post(session, state):
 def update_next_post():
     try:
         with ScopedSession() as session:
-            state = session.query(SyncState).filter_by(pending=True).order_by(SyncState.priority).first()
+            state = session.query(SyncState).filter_by(pending=True).order_by(SyncState.priority, SyncState.post_id.desc()).first()
             if state:
                 update_post(session, state)
 
