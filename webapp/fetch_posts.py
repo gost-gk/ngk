@@ -21,12 +21,13 @@ SUCCESS_DELAY = 5
 ERROR_DELAY = 60
 
 def inner_html(node):
-    res = ""
-    if node.text:
-        res += node.text
+    tmp = lxml.etree.Element("root")
+    tmp.text = node.text
     for child in node:
-        res += lxml.html.tostring(child, encoding='unicode')
-    return res.strip()
+        tmp.append(child)
+
+    res = lxml.html.tostring(tmp, encoding='unicode')
+    return re.sub(r'</root>$', '', re.sub(r'^<root>', '', res)).strip()
 
 def parse_date(date):
     date = re.sub(r'(\d\d):(\d\d)$', r'\1\2', date)
