@@ -33,6 +33,14 @@ app.controller('CommentsController', function($scope, $http, $sce) {
 
         comment.text = $sce.trustAsHtml(comment.text);
         comment.avatar_url = makeAvatarUrl(comment.user_avatar);
+
+        for (var j = 0; j < $scope.comments.length; ++j) {
+            if (comment.id > $scope.comments[j].id) {
+                $scope.comments.splice(j, 0, comment);
+                return;
+            }
+        }
+
         $scope.comments.push(comment);
     }
 
