@@ -37,3 +37,5 @@ create table if not exists comments(
     vote_minus integer,
     rating numeric
 );
+
+create index if not exists comments_posted on comments(posted);
