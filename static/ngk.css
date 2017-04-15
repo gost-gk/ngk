@@ -1,15 +1,38 @@
+.header {
+    border: 1px solid #C0C0C0;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 5px;
+}
+
 .comment {
     position: relative;
     margin-bottom: 20px;
-    min-height: 64px;
+    min-height: 74px;
+    border: 1px solid #C0C0C0;
+    border-radius: 5px;
 }
 
 .comment .avatar {
     display: inline-block;
     position: absolute;
-    left: 0px;
+    left: 5px;
+    top: 5px;
+    width: 64px;
+    height: 64px;
+    border: 1px solid #C0C0C0;
 }
 
 .comment .content {
-    margin-left: 75px;
+    margin-left: 80px;
+}
+
+.comment .info {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.comment .text {
+    margin-bottom: 5px;
 }

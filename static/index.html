@@ -8,16 +8,21 @@
     <link rel="stylesheet" type="text/css" href="ngk.css">
 </head>
 <body>
+    <div class="header">
+        <p>Комменты подгружаются автоматически.</p>
+        <p>Исходники: <a href="https://github.com/bormand/ngk">https://github.com/bormand/ngk</a></p>
+        <p>Снепшот базы: TODO</p>
+    </div>
     <div ng-controller="CommentsController">
         <div ng-repeat="comment in comments" class="comment">
             <img ng-src="{{comment.avatar_url}}" class="avatar">
             <div class="content">
-                <div>
+                <div class="info">
                     <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a> насрал в 
                     <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>
                     ({{comment.posted}})
                 </div>
-                <div ng-bind-html="comment.text"></div>
+                <div class="text" ng-bind-html="comment.text"></div>
             </div>
         </div>
         <div>
