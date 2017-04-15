@@ -47,7 +47,7 @@ def update_sync_states(comments):
                 state = SyncState(post_id=post_id, last_comment_id=comment_id, pending=True, priority=SyncState.PRIORITY_HAS_COMMENTS)
                 session.add(state)
             else:
-                if comment_id > state.last_comment_id:
+                if state.last_comment_id is None or comment_id > state.last_comment_id:
                     logging.info("Got new comment %d for post %d", comment_id, post_id)
                     has_updates = True
                     state.last_comment_id = comment_id
