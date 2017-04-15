@@ -1,0 +1,15 @@
+.comment {
+    position: relative;
+    margin-bottom: 20px;
+    min-height: 64px;
+}
+
+.comment .avatar {
+    display: inline-block;
+    position: absolute;
+    left: 0px;
+}
+
+.comment .content {
+    margin-left: 75px;
+}

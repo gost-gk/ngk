@@ -1,9 +1,27 @@
 <!doctype html>
-<html>
+<html ng-app="app">
 <head>
     <meta charset="utf-8">
     <title>Neon Genesis Govnokod</title>
+    <script type="text/javascript" src="angular.min.js"></script>
+    <script type="text/javascript" src="ngk.js"></script>
+    <link rel="stylesheet" type="text/css" href="ngk.css">
 </head>
 <body>
-    <h1>Under construction</h1>
+    <div ng-controller="CommentsController">
+        <div ng-repeat="comment in comments" class="comment">
+            <img ng-src="{{comment.avatar_url}}" class="avatar">
+            <div class="content">
+                <div>
+                    <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a> насрал в 
+                    <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>
+                    ({{comment.posted}})
+                </div>
+                <div ng-bind-html="comment.text"></div>
+            </div>
+        </div>
+        <div>
+            <button ng-click="loadMoreComments()">Ещё комменты</button>
+        </div>
+    </div>
 </body>
