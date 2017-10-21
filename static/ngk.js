@@ -1,10 +1,59 @@
 var app = angular.module('app', []);
 
+function Notifier() {
+    this.comments = 0;
+    this.hasFocus = true;
+    this.titleBackup = null;
+
+    this.restoreTitle = function() {
+        if (this.titleBackup != null) {
+            document.title = this.titleBackup;
+            this.titleBackup = null;
+        }
+
+        if (this.comments > 0) {
+            setTimeout(this.updateTitle.bind(this), 1000);
+        }
+    }
+
+    this.updateTitle = function() {
+        if ((this.comments > 0) && (this.titleBackup == null)) {
+            this.titleBackup = document.title;
+            document.title = "*** " + this.comments + " NEW ***";
+            setTimeout(this.restoreTitle.bind(this), 1000);
+        }
+    }
+
+    this.onCommentAdded = function() {
+        if (this.hasFocus)
+            return;
+
+        this.comments++;
+        this.updateTitle();
+    }
+
+    function onFocus() {
+        this.hasFocus = true;
+        this.comments = 0;
+        this.restoreTitle();
+    }
+
+    function onFocusLost() {
+        this.hasFocus = false;
+    }
+
+
+    window.addEventListener("focus", onFocus.bind(this));
+    window.addEventListener("blur", onFocusLost.bind(this));
+}
+
+
 app.controller('CommentsController', function($scope, $http, $sce) {
     $scope.comments = [];
     var minDate = null;
     var seen = {};
     var limit = 20;
+    var notifier = new Notifier();
 
     function isSpam(comment) {
         // quick and dirty filter agains guest spam
@@ -33,6 +82,7 @@ app.controller('CommentsController', function($scope, $http, $sce) {
 
         comment.text = $sce.trustAsHtml(comment.text);
         comment.avatar_url = makeAvatarUrl(comment.user_avatar);
+        notifier.onCommentAdded();
 
         for (var j = 0; j < $scope.comments.length; ++j) {
             if (comment.id > $scope.comments[j].id) {
