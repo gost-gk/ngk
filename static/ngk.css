@@ -8,7 +8,8 @@
 
 .comment {
     position: relative;
-    margin-bottom: 20px;
+    margin-top: 15px;
+    margin-bottom: 5px;
     min-height: 74px;
     border: 1px solid #C0C0C0;
     border-radius: 5px;
@@ -35,4 +36,12 @@
 
 .comment .text {
     margin-bottom: 5px;
+}
+
+.nested-comment {
+    margin-left: 20px;
+}
+
+.nested-comment .content {
+    min-height: 64px;
 }

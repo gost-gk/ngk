@@ -47,7 +47,7 @@ function Notifier() {
     window.addEventListener("blur", onFocusLost.bind(this));
 }
 
-app.config(function($routeProvider) {
+app.config(function($routeProvider, $rootScopeProvider) {
     $routeProvider.when('/', {
         'templateUrl': 'comments.html',
         'controller': 'CommentsController'
@@ -57,6 +57,8 @@ app.config(function($routeProvider) {
         'templateUrl': 'post.html',
         'controller': 'PostController'
     });
+
+    $rootScopeProvider.digestTtl(1000);
 });
 
 function makeAvatarUrl(hash) {
@@ -157,11 +159,22 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams) {
     $http(request).then(function(response) {
         console.log("Got response")
 
+        var comments = [];
+        var known_comments = {};
+
         for (var j = 0; j < response.data.comments.length; ++j) {
-            response.data.comments[j].avatar_url = makeAvatarUrl(response.data.comments[j].user_avatar);
-            response.data.comments[j].text = $sce.trustAsHtml(response.data.comments[j].text);
+            var comment = response.data.comments[j];
+            comment.avatar_url = makeAvatarUrl(comment.user_avatar);
+            comment.text = $sce.trustAsHtml(comment.text);
+            comment.children = [];
+            known_comments[comment.id] = comment;
+            if (comment.parent_id)
+                known_comments[comment.parent_id].children.push(comment);
+            else
+                comments.push(comment);
         }
 
+        response.data.comments = comments;
         response.data.avatar_url = makeAvatarUrl(response.data.user_avatar);
         response.data.text = $sce.trustAsHtml(response.data.text);
 

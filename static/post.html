@@ -1,6 +1,18 @@
 <div class="header">
     <a href="#!/">На главную</a> <a href="http://govnokod.ru/{{post.id}}">#{{post.id}} на ГК</a>
 </div>
+<script type="text/ng-template" id="comment-template">
+    <img ng-src="{{comment.avatar_url}}" class="avatar">
+    <div class="content">
+        <a name="#{{comment.id}}"></a>
+        <div class="info">
+            <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a> {{comment.posted}}
+        </div>
+        <div class="text" ng-bind-html="comment.text"></div>
+    </div>
+    <div ng-repeat="comment in comment.children" class="comment nested-comment" ng-include="'comment-template'">
+    </div>
+</script>
 <div>
     <div class="comment">
         <img ng-src="{{post.avatar_url}}" class="avatar">
@@ -13,16 +25,7 @@
                 <div ng-bind-html="post.text"></div>
             </div>
         </div>
-    </div>
-
-    <div ng-repeat="comment in post.comments" class="comment">
-        <img ng-src="{{comment.avatar_url}}" class="avatar">
-        <div class="content">
-            <a name="#{{comment.id}}"></a>
-            <div class="info">
-                <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a> {{comment.posted}}
-            </div>
-            <div class="text" ng-bind-html="comment.text"></div>
+        <div ng-repeat="comment in post.comments" class="comment nested-comment" ng-include="'comment-template'">
         </div>
     </div>
 </div>
