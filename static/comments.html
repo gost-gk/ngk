@@ -9,7 +9,8 @@
         <div class="content">
                 <div class="info">
                 <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a> насрал в 
-                <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>
+                <a href="#!/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>
+                (<a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">оригинал на ГК</a>)
                 ({{comment.posted}})
             </div>
             <div class="text" ng-bind-html="comment.text"></div>

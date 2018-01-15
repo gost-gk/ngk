@@ -47,14 +47,25 @@ function Notifier() {
     window.addEventListener("blur", onFocusLost.bind(this));
 }
 
-app.config(['$routeProvider', function($routeProvider) {
+app.config(function($routeProvider) {
     $routeProvider.when('/', {
         'templateUrl': 'comments.html',
         'controller': 'CommentsController'
     });
-}])
 
-app.controller('CommentsController', function($scope, $http, $sce) {
+    $routeProvider.when('/:postId', {
+        'templateUrl': 'post.html',
+        'controller': 'PostController'
+    });
+});
+
+function makeAvatarUrl(hash) {
+    if (!hash)
+        return '';
+    return 'http://www.gravatar.com/avatar/' + hash + '?size=64';
+}
+
+app.controller('CommentsController', function($scope, $http, $sce, $interval) {
     $scope.comments = [];
     var minDate = null;
     var seen = {};
@@ -69,11 +80,6 @@ app.controller('CommentsController', function($scope, $http, $sce) {
         return false;
     }
 
-    function makeAvatarUrl(hash) {
-        if (!hash)
-            return '';
-        return 'http://www.gravatar.com/avatar/' + hash + '?size=64';
-    }
 
     function insertComment(comment) {
         if (seen[comment.id])
@@ -119,6 +125,10 @@ app.controller('CommentsController', function($scope, $http, $sce) {
         });
     }
 
+    function loadNewComments() {
+        loadComments(null);
+    }
+
     function loadMoreComments() {
         loadComments(minDate);
     }
@@ -130,5 +140,31 @@ app.controller('CommentsController', function($scope, $http, $sce) {
 
     loadComments(null);
 
-    setInterval(loadComments, 5000);
+    var updateTimer = $interval(loadNewComments, 5000);
+    $scope.$on('$destroy', function() {
+        $interval.cancel(updateTimer);
+    });
+});
+
+app.controller('PostController', function($scope, $http, $sce, $routeParams) {
+    var request = {
+        method: 'GET',
+        url: '/ngk/api/post/' + $routeParams.postId,
+        params: {}
+    };
+
+    console.log("Loading post " + $routeParams.postId + "...")
+    $http(request).then(function(response) {
+        console.log("Got response")
+
+        for (var j = 0; j < response.data.comments.length; ++j) {
+            response.data.comments[j].avatar_url = makeAvatarUrl(response.data.comments[j].user_avatar);
+            response.data.comments[j].text = $sce.trustAsHtml(response.data.comments[j].text);
+        }
+
+        response.data.avatar_url = makeAvatarUrl(response.data.user_avatar);
+        response.data.text = $sce.trustAsHtml(response.data.text);
+
+        $scope.post = response.data;
+    });
 });
