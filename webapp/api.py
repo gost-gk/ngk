@@ -58,21 +58,28 @@ def post(post_id):
 
     with ScopedSession() as session:
         post = session.query(Post).get(post_id)
+        user = session.query(User).get(post.user_id)
 
         resp = {
             "id": post.post_id,
             "code": post.code,
             "text": post.text,
-            "posted": post.posted.strftime(DATE_FORMAT)
+            "posted": post.posted.strftime(DATE_FORMAT),
+            "user_id": user.user_id,
+            "user_name": user.name,
+            "user_avatar": user.avatar_hash
         }
 
         comments = []
-        for comment in session.query(Comment).filter(Comment.post_id == post_id).order_by(Comment.posted.asc()).all():
+        for comment, user in session.query(Comment, User).filter(Comment.post_id == post_id).filter(Comment.user_id == User.user_id).order_by(Comment.posted.asc()).all():
             comments.append({
                 "id": comment.comment_id,
                 "parent_id": comment.parent_id,
                 "text": comment.text,
-                "posted": comment.posted.strftime(DATE_FORMAT)
+                "posted": comment.posted.strftime(DATE_FORMAT),
+                "user_id": user.user_id,
+                "user_name": user.name,
+                "user_avatar": user.avatar_hash
             })
         resp["comments"] = comments
 
