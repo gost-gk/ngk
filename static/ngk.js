@@ -1,4 +1,4 @@
-var app = angular.module('app', []);
+var app = angular.module('app', ['ngRoute']);
 
 function Notifier() {
     this.comments = 0;
@@ -47,6 +47,12 @@ function Notifier() {
     window.addEventListener("blur", onFocusLost.bind(this));
 }
 
+app.config(['$routeProvider', function($routeProvider) {
+    $routeProvider.when('/', {
+        'templateUrl': 'comments.html',
+        'controller': 'CommentsController'
+    });
+}])
 
 app.controller('CommentsController', function($scope, $http, $sce) {
     $scope.comments = [];
