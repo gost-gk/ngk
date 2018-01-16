@@ -176,6 +176,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     });
 });
 
+
 app.controller('PostController', function($scope, $http, $sce, $routeParams, $timeout, $anchorScroll) {
     var request = {
         method: 'GET',
@@ -183,12 +184,28 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
         params: {}
     };
 
+    function getLastViewedComments() {
+        var lastViewed = null;
+        try {
+            var lastViewed = JSON.parse(localStorage.getItem("lastViewed"));
+        } catch (e) {
+        }
+        return lastViewed || {};
+    }
+
+    function setLastViewedComments(lastViewed) {
+        localStorage.setItem("lastViewed", JSON.stringify(lastViewed));
+    }
+
     console.log("Loading post " + $routeParams.postId + "...")
     $http(request).then(function(response) {
         console.log("Got response")
 
         var comments = [];
         var known_comments = {};
+
+        var lastViewed = getLastViewedComments();
+        var lastViewedInPost = lastViewed[response.data.id] || 0;
 
         for (var j = 0; j < response.data.comments.length; ++j) {
             var comment = response.data.comments[j];
@@ -200,7 +217,14 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
                 known_comments[comment.parent_id].children.push(comment);
             else
                 comments.push(comment);
+            if (comment.id > lastViewedInPost) {
+                comment.is_new = true;
+                lastViewedInPost = comment.id;
+            }
         }
+
+        lastViewed[response.data.id] = lastViewedInPost;
+        setLastViewedComments(lastViewed);
 
         response.data.comments = comments;
         response.data.avatar_url = makeAvatarUrl(response.data.user_avatar);

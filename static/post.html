@@ -2,6 +2,7 @@
     <a href="#!/">На главную</a> <a href="http://govnokod.ru/{{post.id}}">#{{post.id}} на ГК</a>
 </div>
 <script type="text/ng-template" id="comment-template">
+<div ng-class="{'comment': true, 'nested-comment': true, 'new': comment.is_new}">
     <img ng-src="{{comment.avatar_url}}" class="avatar">
     <div class="content">
         <a name="comment{{comment.id}}"></a>
@@ -12,6 +13,7 @@
     </div>
     <div ng-repeat="comment in comment.children" class="comment nested-comment" ng-include="'comment-template'">
     </div>
+</div>
 </script>
 <div>
     <div class="comment">
@@ -25,7 +27,7 @@
                 <div ng-bind-html="post.text"></div>
             </div>
         </div>
-        <div ng-repeat="comment in post.comments" class="comment nested-comment" ng-include="'comment-template'">
+        <div ng-repeat="comment in post.comments" ng-include="'comment-template'">
         </div>
     </div>
 </div>

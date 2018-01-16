@@ -50,3 +50,7 @@
     color: black;
     text-decoration: none;
 }
+
+.comment.new {
+    background-color: #ffffe0;
+}
