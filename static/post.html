@@ -4,7 +4,7 @@
 <script type="text/ng-template" id="comment-template">
     <img ng-src="{{comment.avatar_url}}" class="avatar">
     <div class="content">
-        <a name="#{{comment.id}}"></a>
+        <a name="comment{{comment.id}}"></a>
         <div class="info">
             <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a> {{comment.posted}}
         </div>

@@ -176,7 +176,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     });
 });
 
-app.controller('PostController', function($scope, $http, $sce, $routeParams) {
+app.controller('PostController', function($scope, $http, $sce, $routeParams, $timeout, $anchorScroll) {
     var request = {
         method: 'GET',
         url: '/ngk/api/post/' + $routeParams.postId,
@@ -207,5 +207,7 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams) {
         response.data.text = $sce.trustAsHtml(response.data.text);
 
         $scope.post = response.data;
+
+        $timeout(function() { $anchorScroll(); }, 0);
     });
 });
