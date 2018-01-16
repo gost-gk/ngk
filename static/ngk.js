@@ -132,7 +132,9 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
             var ignore = [];
             for (var k in ignoredUsers)
                 ignore.push(k);
-            request.params.ignore = ignore.join(",");
+            ignore = ignore.join(",");
+            if (ignore)
+                request.params.ignore = ignore;
         }
 
         $http(request).then(function(response) {
