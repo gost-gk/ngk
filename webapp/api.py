@@ -33,6 +33,11 @@ def comments():
         if before is not None:
             query = query.filter(Comment.posted < parse_date(before))
 
+        ignore = flask.request.args.get('ignore')
+        if ignore is not None:
+            ignore = [int(u) for u in ignore.split(',')]
+            query = query.filter(Comment.user_id.notin_(ignore))
+
         comments = []
 
         for comment, user in query.order_by(Comment.posted.desc()).limit(20).all():

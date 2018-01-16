@@ -8,10 +8,12 @@
         <img ng-src="{{comment.avatar_url}}" class="avatar">
         <div class="content">
                 <div class="info">
-                <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a> насрал в 
-                <a href="#!/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>
-                (<a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">оригинал на ГК</a>)
+                <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a>
+                насрал в
+                <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>
+                (<a href="#!/{{comment.post_id}}#comment{{comment.id}}">Зеркало на NGK</a>)
                 ({{comment.posted}})
+                <a href="" ng-click="ignoreUser(comment.user_id, comment.user_name)" class="ignore" title="Забанить">&#x2613;</a>
             </div>
             <div class="text" ng-bind-html="comment.text"></div>
         </div>

@@ -67,7 +67,16 @@ function makeAvatarUrl(hash) {
     return 'http://www.gravatar.com/avatar/' + hash + '?size=64';
 }
 
-app.controller('CommentsController', function($scope, $http, $sce, $interval) {
+function getIgnoredUsers() {
+    var ignoredUsers = null;
+    try {
+        var ignoredUsers = JSON.parse(localStorage.getItem("ignoredUsers"));
+    } catch (e) {
+    }
+    return ignoredUsers || {};
+}
+
+app.controller('CommentsController', function($scope, $http, $sce, $interval, $route) {
     $scope.comments = [];
     var minDate = null;
     var seen = {};
@@ -118,6 +127,14 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval) {
         if (beforeDate)
             request.params.before = beforeDate;
 
+        var ignoredUsers = getIgnoredUsers();
+        if (ignoredUsers) {
+            var ignore = [];
+            for (var k in ignoredUsers)
+                ignore.push(k);
+            request.params.ignore = ignore.join(",");
+        }
+
         $http(request).then(function(response) {
             for (var i = 0; i < response.data.length; ++i)
                 insertComment(response.data[i]);
@@ -138,6 +155,15 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval) {
     $scope.loadMoreComments = function() {
         limit += 20;
         loadMoreComments();
+    }
+
+    $scope.ignoreUser = function(user_id, user_name) {
+        var ignoredUsers = getIgnoredUsers();
+        ignoredUsers[user_id] = user_name;
+        localStorage.setItem("ignoredUsers", JSON.stringify(ignoredUsers));
+        console.log(ignoredUsers);
+
+        $route.reload();
     }
 
     loadComments(null);

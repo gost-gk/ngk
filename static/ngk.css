@@ -45,3 +45,8 @@
 .nested-comment .content {
     min-height: 64px;
 }
+
+.comment .ignore {
+    color: black;
+    text-decoration: none;
+}
