@@ -54,3 +54,8 @@
 .comment.new {
     background-color: #ffffe0;
 }
+
+pre {
+    max-width: 100%;
+    overflow: auto;
+}
