@@ -8,10 +8,11 @@
         <a name="comment{{comment.id}}"></a>
         <div class="info">
             <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a> {{comment.posted}}
+            <a href="http://govnokod.ru/{{post.id}}#comment{{comment.id}}">#</a>
         </div>
         <div class="text" ng-bind-html="comment.text"></div>
     </div>
-    <div ng-repeat="comment in comment.children" class="comment nested-comment" ng-include="'comment-template'">
+    <div ng-repeat="comment in comment.children" ng-include="'comment-template'">
     </div>
 </div>
 </script>
