@@ -64,7 +64,7 @@ app.config(function($routeProvider, $rootScopeProvider) {
 function makeAvatarUrl(hash) {
     if (!hash)
         return '';
-    return 'http://www.gravatar.com/avatar/' + hash + '?size=64';
+    return 'http://www.gravatar.com/avatar/' + hash + '?size=64&r=pg';
 }
 
 function getIgnoredUsers() {
