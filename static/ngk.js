@@ -168,6 +168,11 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
         $route.reload();
     }
 
+    $scope.unignoreAllUsers = function() {
+        localStorage.removeItem("ignoredUsers");
+        $route.reload();
+    }
+
     loadComments(null);
 
     var updateTimer = $interval(loadNewComments, 5000);
