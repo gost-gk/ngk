@@ -52,7 +52,9 @@ def parse_post(content):
     users = []
     comments = []
 
-    root = lxml.etree.HTML(content)
+    # Note: this code needs patched lxml with support for huge_tree in HTMLParser
+    parser = lxml.etree.HTMLParser(recover=False, huge_tree=True)
+    root = lxml.etree.HTML(content, parser=parser)
 
     # post
     post_node = root.xpath('//li[@class="hentry"]')[0]
