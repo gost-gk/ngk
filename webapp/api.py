@@ -89,6 +89,6 @@ def post(post_id):
         resp["comments"] = comments
 
         resp = app.make_response(json.dumps(resp, ensure_ascii=False))
-        resp.mimetipe = 'application/json; charset=utf-8'
+        resp.mimetype = 'application/json; charset=utf-8'
 
         return resp
