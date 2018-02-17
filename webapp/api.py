@@ -27,7 +27,7 @@ def state():
 @app.route('/comments')
 def comments():
     with ScopedSession() as session:
-        query = session.query(Comment, User).filter(Comment.user_id == User.user_id)
+        query = session.query(Comment, User, Post).filter(Comment.user_id == User.user_id).filter(Comment.post_id == Post.post_id)
 
         before = flask.request.args.get('before')
         if before is not None:
@@ -40,7 +40,7 @@ def comments():
 
         comments = []
 
-        for comment, user in query.order_by(Comment.posted.desc()).limit(20).all():
+        for comment, user, post in query.order_by(Comment.posted.desc()).limit(20).all():
             comments.append({
                 "id": comment.comment_id,
                 "parent_id": comment.parent_id,
@@ -49,7 +49,8 @@ def comments():
                 "posted": comment.posted.strftime(DATE_FORMAT),
                 "user_id": user.user_id,
                 "user_name": user.name,
-                "user_avatar": user.avatar_hash
+                "user_avatar": user.avatar_hash,
+                "comment_list_id": post.comment_list_id
             })
 
     resp = app.make_response(json.dumps(comments, ensure_ascii=False))
@@ -72,7 +73,8 @@ def post(post_id):
             "posted": post.posted.strftime(DATE_FORMAT),
             "user_id": user.user_id,
             "user_name": user.name,
-            "user_avatar": user.avatar_hash
+            "user_avatar": user.avatar_hash,
+            "comment_list_id": post.comment_list_id
         }
 
         comments = []
