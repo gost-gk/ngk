@@ -53,7 +53,7 @@ def parse_post(content):
     comments = []
 
     # Note: this code needs patched lxml with support for huge_tree in HTMLParser
-    parser = lxml.etree.HTMLParser(recover=False, huge_tree=True)
+    parser = lxml.etree.HTMLParser(recover=True, huge_tree=True)
     root = lxml.etree.HTML(content, parser=parser)
 
     # post
