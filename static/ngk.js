@@ -182,7 +182,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
 });
 
 
-app.controller('PostController', function($scope, $http, $sce, $routeParams, $timeout, $anchorScroll) {
+app.controller('PostController', function($scope, $http, $sce, $routeParams, $timeout, $anchorScroll, $route) {
     var request = {
         method: 'GET',
         url: '/ngk/api/post/' + $routeParams.postId,
@@ -211,6 +211,7 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
 
         var lastViewed = getLastViewedComments();
         var lastViewedInPost = lastViewed[response.data.id] || 0;
+        var ignoredUsers = getIgnoredUsers();
 
         for (var j = 0; j < response.data.comments.length; ++j) {
             var comment = response.data.comments[j];
@@ -231,6 +232,20 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
         lastViewed[response.data.id] = lastViewedInPost;
         setLastViewedComments(lastViewed);
 
+        function filterIgnoredComments(comments) {
+            var res = [];
+            for (var j = 0; j < comments.length; ++j) {
+                var comment = comments[j];
+                comment.children = filterIgnoredComments(comment.children);
+                if ((comment.user_id in ignoredUsers) && (comment.children.length == 0))
+                    continue;
+                res.push(comment);
+            }
+            return res;
+        }
+
+        comments = filterIgnoredComments(comments);
+
         response.data.comments = comments;
         response.data.avatar_url = makeAvatarUrl(response.data.user_avatar);
         response.data.text = $sce.trustAsHtml(response.data.text);
@@ -239,4 +254,13 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
 
         $timeout(function() { $anchorScroll(); }, 0);
     });
+
+    $scope.ignoreUser = function(user_id, user_name) {
+        var ignoredUsers = getIgnoredUsers();
+        ignoredUsers[user_id] = user_name;
+        localStorage.setItem("ignoredUsers", JSON.stringify(ignoredUsers));
+        console.log(ignoredUsers);
+
+        $route.reload();
+    }
 });
