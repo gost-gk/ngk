@@ -1,0 +1,31 @@
+<div class="header">
+    <a href="#!/">На главную</a><br>
+
+    <form>
+    Порыться в говне:
+    <input ng-model="query" placeholder="{{example}}">
+    <input ng-click="search()" type="submit" value="Искать">
+    </form>
+</div>
+<script type="text/ng-template" id="comment-template-search">
+<div class="comment">
+    <img ng-src="{{comment.avatar_url}}" class="avatar">
+    <div class="content">
+        <a name="comment{{comment.id}}"></a>
+        <div class="info">
+            <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a> {{comment.posted}}
+            <a href="" ng-click="ignoreUser(comment.user_id, comment.user_name)" class="ignore" title="Забанить">&#x2613;</a>
+            <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#</a>
+            <ngk-comment-popup comment-id="{{comment.parent_id}}"  post-id="{{comment.post_id}}"/>
+        </div>
+        <div class="text" ng-bind-html="comment.text"></div>
+    </div>
+</div>
+</script>
+<div>
+    <div ng-if="!result.length">Ничего не найдено.</div>
+    <div ng-if="result.length">
+        <div ng-repeat="comment in result" ng-include="'comment-template-search'"></div>
+    </div>
+</div>
+
