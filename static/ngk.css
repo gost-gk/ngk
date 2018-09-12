@@ -8,11 +8,12 @@
 
 .comment {
     position: relative;
-    margin-top: 15px;
+    margin-top: 10px;
     margin-bottom: 5px;
     min-height: 74px;
     border: 1px solid #C0C0C0;
     border-radius: 5px;
+    min-width: 60%;
 }
 
 .comment .avatar {
@@ -20,13 +21,13 @@
     position: absolute;
     left: 5px;
     top: 5px;
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
     border: 1px solid #C0C0C0;
 }
 
 .comment .content {
-    margin-left: 80px;
+    margin-left: 64px;
 }
 
 .comment .info {
@@ -43,7 +44,7 @@
 }
 
 .nested-comment .content {
-    min-height: 64px;
+    min-height: 48px;
 }
 
 .comment .ignore {
@@ -52,10 +53,24 @@
 }
 
 .comment.new {
-    background-color: #ffffe0;
+    background-color: #e0ffe0;
 }
 
 pre {
     max-width: 100%;
     overflow: auto;
+}
+
+
+.comment-popup {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    width: 90%;
+}
+
+body {
+    overflow-x: auto;
 }
