@@ -1,5 +1,140 @@
 var app = angular.module('app', ['ngRoute']);
 
+app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
+    var popupStack = [];
+    var currentPopup = null;
+    var touchMode = false;
+
+    function switchToTouchMode() {
+        touchMode = true;
+        angular.element(document.body).bind('touchstart', function () {
+            currentPopup = null;
+            closePopups();
+        });
+    }
+
+    function loadPopup(scope, anchor) {
+        if (scope.commentId) {
+            var request = {
+                method: 'GET',
+                url: '/ngk/api/comments',
+                params: {id: scope.commentId}
+            };
+
+            var template =
+                '<div class="comment-popup comment">' +
+                '  <img src="{{comment.avatar_url}}" class="avatar">' +
+                '  <div class="content">' +
+                '    <div class="info">' +
+                '      <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a>' +
+                '      насрал в ' +
+                '      <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>' +
+                '      (<a href="#!/{{comment.post_id}}#comment{{comment.id}}">Зеркало на NGK</a>)' +
+                '      ({{comment.posted}})' +
+                '      <ngk-comment-popup comment-id="{{comment.parent_id}}" post-id="{{comment.post_id}}" />' +
+                '    </div>' +
+                '    <div class="text" ng-bind-html="comment.text"</div>' +
+                '  </div>' +
+                '</div>';
+
+            $http(request).then(function(response) {
+                var comment = response.data[0];
+                comment.text = $sce.trustAsHtml(comment.text);
+                comment.avatar_url = makeAvatarUrl(comment.user_avatar);
+                scope.comment = comment;
+                showPopup(scope, anchor, template);
+            })
+        } else {
+            var request = {
+                method: 'GET',
+                url: '/ngk/api/post/' + scope.postId,
+                params: {no_comments: true}
+            };
+
+            var template =
+                '<div class="comment-popup comment">' +
+                '  <img src="{{post.avatar_url}}" class="avatar">' +
+                '  <div class="content">' +
+                '    <div class="info">' +
+                '      <a href="http://govnokod.ru/user/{{post.user_id}}">{{post.user_name}}</a>' +
+                '      насрал в ' +
+                '      <a href="http://govnokod.ru/{{post.post_id}}">#{{post.post_id}}</a>' +
+                '      (<a href="#!/{{post.post_id}}#comment{{comment.id}}">Зеркало на NGK</a>)' +
+                '      ({{post.posted}})' +
+                '    </div>' +
+                '    <pre>{{post.code}}</pre>'
+                '    <div class="text" ng-bind-html="post.text"</div>' +
+                '  </div>' +
+                '</div>';
+
+            $http(request).then(function(response) {
+                var post = response.data;
+                post.text = $sce.trustAsHtml(post.text);
+                post.avatar_url = makeAvatarUrl(post.user_avatar);
+                scope.post = post;
+                showPopup(scope, anchor, template);
+            })
+        }
+    }
+
+    function showPopup(scope, anchor, template) {
+        var popup = angular.element($compile(template)(scope));
+
+        angular.element(document.body).append(popup);
+
+        popupStack.push(popup[0]);
+
+        popup.bind('mouseenter', function () {
+            currentPopup = popup[0];
+        });
+        popup.bind('mouseleave', function () {
+            currentPopup = null;
+            if (!touchMode)
+                setTimeout(closePopups, 200);
+        });
+        popup.bind('touchstart', function () {
+            currentPopup = popup[0];
+            closePopups();
+            event.stopPropagation();
+        });
+        var y = anchor[0].getBoundingClientRect().top + window.scrollY;
+        popup[0].style.left = '5%';
+        popup[0].style.top = y + 'px';
+    }
+
+    function closePopups() {
+        while (popupStack.length > 0) {
+            if (popupStack[popupStack.length - 1] == currentPopup)
+                return;
+            angular.element(popupStack.pop()).remove();
+        }
+    }
+
+    return {
+        template: "<span>#</span>",
+        scope: {
+            commentId: '@',
+            postId: '@'
+        },
+        link: function (scope, element, attrs) {
+            element.bind('mouseenter', function () {
+                loadPopup(scope, element);
+            });
+            element.bind('mouseleave', function () {
+                if (!touchMode) {
+                    setTimeout(closePopups, 200);
+                }
+            });
+            element.bind('touchstart', function (event) {
+                if (!touchMode)
+                    switchToTouchMode();
+                loadPopup(scope, element);
+                event.stopPropagation();
+            })
+        }
+    }
+});
+
 function Notifier() {
     this.comments = 0;
     this.hasFocus = true;
@@ -53,6 +188,11 @@ app.config(function($routeProvider, $rootScopeProvider) {
         'controller': 'CommentsController'
     });
 
+    $routeProvider.when('/search', {
+        'templateUrl': 'search.html',
+        'controller': 'SearchController'
+    });
+
     $routeProvider.when('/:postId', {
         'templateUrl': 'post.html',
         'controller': 'PostController'
@@ -62,9 +202,10 @@ app.config(function($routeProvider, $rootScopeProvider) {
 });
 
 function makeAvatarUrl(hash) {
+    var defaultAvatar = location.protocol + "//" + location.host + "/ngk/default.png";
     if (!hash)
-        return '';
-    return 'http://www.gravatar.com/avatar/' + hash + '?size=64&r=pg';
+        return defaultAvatar;
+    return 'http://www.gravatar.com/avatar/' + hash + '?size=48&r=pg&default=' + encodeURIComponent(defaultAvatar);
 }
 
 function getIgnoredUsers() {
@@ -74,6 +215,19 @@ function getIgnoredUsers() {
     } catch (e) {
     }
     return ignoredUsers || {};
+}
+
+function getLastViewedComments() {
+    var lastViewed = null;
+    try {
+        var lastViewed = JSON.parse(localStorage.getItem("lastViewed"));
+    } catch (e) {
+    }
+    return lastViewed || {};
+}
+
+function setLastViewedComments(lastViewed) {
+    localStorage.setItem("lastViewed", JSON.stringify(lastViewed));
 }
 
 app.controller('CommentsController', function($scope, $http, $sce, $interval, $route) {
@@ -91,6 +245,14 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
         return false;
     }
 
+    function updateViewedComments() {
+        var lastViewed = getLastViewedComments();
+        for (var j = 0; j < $scope.comments.length; ++j) {
+            var comment = $scope.comments[j];
+            var lastViewedInPost = lastViewed[comment.post_id] || 0;
+            comment.is_new = comment.id > lastViewedInPost;
+        }
+    }
 
     function insertComment(comment) {
         if (seen[comment.id])
@@ -105,6 +267,8 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
 
         comment.text = $sce.trustAsHtml(comment.text);
         comment.avatar_url = makeAvatarUrl(comment.user_avatar);
+        comment.is_new = false;
+
         notifier.onCommentAdded();
 
         for (var j = 0; j < $scope.comments.length; ++j) {
@@ -140,6 +304,8 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
         $http(request).then(function(response) {
             for (var i = 0; i < response.data.length; ++i)
                 insertComment(response.data[i]);
+
+            updateViewedComments();
 
             if ($scope.comments.length < limit)
                 loadMoreComments();
@@ -189,17 +355,15 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
         params: {}
     };
 
-    function getLastViewedComments() {
-        var lastViewed = null;
-        try {
-            var lastViewed = JSON.parse(localStorage.getItem("lastViewed"));
-        } catch (e) {
-        }
-        return lastViewed || {};
+    try {
+        var isTreeModeEnabled = JSON.parse(localStorage.getItem("treeMode")) || false;
+    } catch (e) {
+        isTreeModeEnabled = false;
     }
 
-    function setLastViewedComments(lastViewed) {
-        localStorage.setItem("lastViewed", JSON.stringify(lastViewed));
+    $scope.enableTreeMode = function (enable) {
+        localStorage.setItem("treeMode", JSON.stringify(enable));
+        $route.reload();
     }
 
     console.log("Loading post " + $routeParams.postId + "...")
@@ -219,7 +383,7 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
             comment.text = $sce.trustAsHtml(comment.text);
             comment.children = [];
             known_comments[comment.id] = comment;
-            if (comment.parent_id)
+            if (isTreeModeEnabled && comment.parent_id)
                 known_comments[comment.parent_id].children.push(comment);
             else
                 comments.push(comment);
@@ -228,6 +392,21 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
                 lastViewedInPost = comment.id;
             }
         }
+
+        var maxLevel = 20;
+        function flatten(level, comments) {
+            var out = [];
+            for (var j = 0; j < comments.length; j++) {
+                comments[j].indent = Math.min(level, maxLevel);
+                out.push(comments[j]);
+                out = out.concat(flatten(level + 1, comments[j].children));
+            }
+            console.log(comments.length, " -> ", out.length);
+            return out;
+        }
+
+        if (isTreeModeEnabled)
+            comments = flatten(1, comments);
 
         lastViewed[response.data.id] = lastViewedInPost;
         setLastViewedComments(lastViewed);
@@ -264,3 +443,40 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
         $route.reload();
     }
 });
+
+app.controller('SearchController', function($scope, $http, $sce, $interval, $route) {
+    $scope.result = [];
+
+    var examples = [
+        "карманный лев",
+        "вореции и кобенации",
+        "царский анролл",
+        "бесконечный сток",
+        "тарасоформатирование",
+        "какой багор",
+        "крестоблядство"
+    ];
+
+    $scope.example = examples[Math.floor(examples.length * Math.random())];
+
+    $scope.search = function() {
+        var request = {
+            method: 'GET',
+            url: '/ngk/api/search',
+            params: {query: $scope.query}
+        };
+
+        $http(request).then(function(response) {
+            console.log("Got search response");
+
+            for (var i = 0; i < response.data.length; ++i) {
+                var comment = response.data[i];
+                comment.text = $sce.trustAsHtml(comment.text);
+                comment.avatar_url = makeAvatarUrl(comment.user_avatar);
+            }
+
+            $scope.result = response.data;
+        });
+    }
+});
+
