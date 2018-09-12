@@ -7,6 +7,9 @@ import re
 import decimal
 from datetime import datetime, timezone, timedelta
 from schema import ScopedSession, SyncState, User, Post, Comment
+import os
+import os.path
+
 
 
 logging.basicConfig(
@@ -19,6 +22,7 @@ logging.basicConfig(
 GK_URL = "http://govnokod.ru"
 SUCCESS_DELAY = 5
 ERROR_DELAY = 60
+DUMP_DIR = "../dumps"
 
 def inner_html(node):
     tmp = lxml.etree.Element("root")
@@ -127,6 +131,15 @@ def update_state(state, result):
     state.synced = datetime.utcnow()
     state.result = result
 
+def dump_post(content):
+    time = datetime.utcnow()
+    subdir_path = os.path.join(DUMP_DIR, time.strftime("%Y-%m-%d"))
+    file_name = time.strftime("%H-%M-%S") + ".html"
+    if not os.path.isdir(subdir_path):
+        os.makedirs(subdir_path)
+    with open(os.path.join(subdir_path, file_name), 'wb') as f:
+        f.write(content)
+
 def update_post(session, state):
     logging.info("Updating post %d...", state.post_id)
 
@@ -134,6 +147,8 @@ def update_post(session, state):
     if r.status_code != 200:
         update_state(state, 'HTTP error {0}'.format(r.status_code))
         return
+
+    dump_post(r.content)
 
     try:
         post, users, comments = parse_post(r.content)
