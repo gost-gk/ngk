@@ -111,6 +111,7 @@ def post(post_id):
                 comments.append({
                     "id": comment.comment_id,
                     "parent_id": comment.parent_id,
+                    "post_id": comment.post_id,
                     "text": normalize_text(comment.text),
                     "posted": comment.posted.strftime(DATE_FORMAT),
                     "user_id": user.user_id,

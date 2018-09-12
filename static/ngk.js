@@ -62,8 +62,8 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
                 '      (<a href="#!/{{post.post_id}}#comment{{comment.id}}">Зеркало на NGK</a>)' +
                 '      ({{post.posted}})' +
                 '    </div>' +
-                '    <pre>{{post.code}}</pre>'
-                '    <div class="text" ng-bind-html="post.text"</div>' +
+                '    <pre>{{post.code}}</pre>' +
+                '    <div class="text" ng-bind-html="post.text"></div>' +
                 '  </div>' +
                 '</div>';
 
@@ -401,7 +401,7 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
                 out.push(comments[j]);
                 out = out.concat(flatten(level + 1, comments[j].children));
             }
-            console.log(comments.length, " -> ", out.length);
+            //console.log(comments.length, " -> ", out.length);
             return out;
         }
 
