@@ -1,24 +1,10 @@
 <div class="header">
     <a href="#!/">На главную</a> <a href="http://govnokod.ru/{{post.id}}">#{{post.id}} на ГК</a>
+    <a href="" ng-click="enableTreeMode(false);">[Список]</a>
+    <a href="" ng-click="enableTreeMode(true);">[Дерево]</a>
 </div>
-<script type="text/ng-template" id="comment-template">
-<div ng-class="{'comment': true, 'nested-comment': true, 'new': comment.is_new}">
-    <img ng-src="{{comment.avatar_url}}" class="avatar">
-    <div class="content">
-        <a name="comment{{comment.id}}"></a>
-        <div class="info">
-            <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a> {{comment.posted}}
-            <a href="" ng-click="ignoreUser(comment.user_id, comment.user_name)" class="ignore" title="Забанить">&#x2613;</a>
-            <a href="http://govnokod.ru/{{post.id}}#comment{{comment.id}}">#</a>
-        </div>
-        <div class="text" ng-bind-html="comment.text"></div>
-    </div>
-    <div ng-repeat="comment in comment.children" ng-include="'comment-template'">
-    </div>
-</div>
-</script>
 <div>
-    <div class="comment nested-comment">
+    <div class="comment">
         <img ng-src="{{post.avatar_url}}" class="avatar">
         <div class="content">
             <div class="info">
@@ -29,7 +15,20 @@
                 <div ng-bind-html="post.text"></div>
             </div>
         </div>
-        <div ng-repeat="comment in post.comments" ng-include="'comment-template'">
+    </div>
+    <div ng-repeat="comment in post.comments" ng-class="{'comment': true, 'new': comment.is_new}"
+         ng-style="{'margin-left': (comment.indent * 15) + 'px'}">
+        <img ng-src="{{comment.avatar_url}}" class="avatar">
+        <div class="content">
+            <a name="comment{{comment.id}}"></a>
+            <div class="info">
+                <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a>
+                <a href="" ng-click="ignoreUser(comment.user_id, comment.user_name)" class="ignore" title="Забанить">&#x2613;</a>
+                {{comment.posted}}
+                <a href="http://govnokod.ru/{{post.id}}#comment{{comment.id}}">#</a>
+                <ngk-comment-popup comment-id="{{comment.parent_id}}" post-id="{{comment.post_id}}" />
+            </div>
+            <div class="text" ng-bind-html="comment.text"></div>
         </div>
     </div>
 </div>
