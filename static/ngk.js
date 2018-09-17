@@ -59,7 +59,7 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
                 '      <a href="http://govnokod.ru/user/{{post.user_id}}">{{post.user_name}}</a>' +
                 '      насрал в ' +
                 '      <a href="http://govnokod.ru/{{post.post_id}}">#{{post.post_id}}</a>' +
-                '      (<a href="#!/{{post.post_id}}#comment{{comment.id}}">Зеркало на NGK</a>)' +
+                '      (<a href="#!/{{post.id}}">Зеркало на NGK</a>)' +
                 '      ({{post.posted}})' +
                 '    </div>' +
                 '    <pre>{{post.code}}</pre>' +
