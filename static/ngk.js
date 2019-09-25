@@ -1,5 +1,38 @@
 var app = angular.module('app', ['ngRoute']);
 
+
+const DEFAULT_FILTER = `// quick and dirty filter agains guest spam
+// it can reject normal links, but who cares...
+if ((comment.user_id == 1) && comment.text.match('http://')) {
+    return true;
+}
+if (comment.user_id == 25580 && comment.text.indexOf("Моментальный магазин закладок LegalRF") >= 0) {
+    return true;
+}
+if (comment.user_id == 25580 && comment.text.indexOf("Хелло, Вы спрашивали, как заказать") >= 0) {
+    return true;
+}
+if (comment.user_id == 25580 && comment.text.indexOf("Привет, ваш регион представляется как Краснодар") >= 0) {
+    return true;
+}
+if (comment.user_id == 25580 && comment.text.indexOf("Онлайн-магазин Китайская медицина") >= 0) {
+    return true;
+}
+if (comment.user_id == 25580 && comment.text.indexOf("великолепная природа от тропиков и аризонской пустыни до Ниагарских водопадов") >= 0) {
+    return true;
+}
+if (comment.user_id == 25580 && comment.text.match('^_+$')) {
+    return true;
+}
+return false;`;
+
+
+function formatDate(timestamp_seconds) {
+    var date = new Date(timestamp_seconds * 1000);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+}
+    
+    
 app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
     var popupStack = [];
     var currentPopup = null;
@@ -30,7 +63,7 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
                 '      насрал в ' +
                 '      <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>' +
                 '      (<a href="#!/{{comment.post_id}}#comment{{comment.id}}">Зеркало на NGK</a>)' +
-                '      ({{comment.posted}})' +
+                '      ({{comment.posted_local}})' +
                 '      <ngk-comment-popup comment-id="{{comment.parent_id}}" post-id="{{comment.post_id}}" />' +
                 '    </div>' +
                 '    <div class="text" ng-bind-html="comment.text"</div>' +
@@ -41,6 +74,7 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
                 var comment = response.data[0];
                 comment.text = $sce.trustAsHtml(comment.text);
                 comment.avatar_url = makeAvatarUrl(comment.user_avatar);
+                comment.posted_local = formatDate(comment.posted_timestamp);
                 scope.comment = comment;
                 showPopup(scope, anchor, template);
             })
@@ -60,7 +94,7 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
                 '      насрал в ' +
                 '      <a href="http://govnokod.ru/{{post.id}}">#{{post.id}}</a>' +
                 '      (<a href="#!/{{post.id}}">Зеркало на NGK</a>)' +
-                '      ({{post.posted}})' +
+                '      ({{post.posted_local}})' +
                 '    </div>' +
                 '    <pre>{{post.code}}</pre>' +
                 '    <div class="text" ng-bind-html="post.text"></div>' +
@@ -71,6 +105,7 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
                 var post = response.data;
                 post.text = $sce.trustAsHtml(post.text);
                 post.avatar_url = makeAvatarUrl(post.user_avatar);
+                post.posted_local = formatDate(post.posted_timestamp);
                 scope.post = post;
                 showPopup(scope, anchor, template);
             })
@@ -192,7 +227,12 @@ app.config(function($routeProvider, $rootScopeProvider) {
         'templateUrl': 'search.html',
         'controller': 'SearchController'
     });
-
+    
+    $routeProvider.when('/settings', {
+        'templateUrl': 'settings.html',
+        'controller': 'SettingsController'
+    });
+    
     $routeProvider.when('/:postId', {
         'templateUrl': 'post.html',
         'controller': 'PostController'
@@ -205,7 +245,7 @@ function makeAvatarUrl(hash) {
     var defaultAvatar = location.protocol + "//" + location.host + "/ngk/default.png";
     if (!hash)
         return defaultAvatar;
-    return 'http://www.gravatar.com/avatar/' + hash + '?size=48&r=pg&default=' + encodeURIComponent(defaultAvatar);
+    return location.protocol + '//www.gravatar.com/avatar/' + hash + '?size=48&r=pg&default=' + encodeURIComponent(defaultAvatar);
 }
 
 function getIgnoredUsers() {
@@ -237,14 +277,9 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     var limit = 20;
     var notifier = new Notifier();
 
-    function isSpam(comment) {
-        // quick and dirty filter agains guest spam
-        // it can reject normal links, but who cares...
-        if ((comment.user_id == 1) && comment.text.match('http://'))
-                return true;
-        return false;
-    }
-
+    var spamFilterString = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
+    var isSpam = new Function("comment", spamFilterString);
+    
     function updateViewedComments() {
         var lastViewed = getLastViewedComments();
         for (var j = 0; j < $scope.comments.length; ++j) {
@@ -253,12 +288,14 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
             comment.is_new = comment.id > lastViewedInPost;
         }
     }
-
+    
     function insertComment(comment) {
         if (seen[comment.id])
             return;
         seen[comment.id] = true;
 
+        comment.posted_local = formatDate(comment.posted_timestamp);
+        
         if (minDate == null || comment.posted < minDate)
             minDate = comment.posted;
 
@@ -379,6 +416,7 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
 
         for (var j = 0; j < response.data.comments.length; ++j) {
             var comment = response.data.comments[j];
+            comment.posted_local = formatDate(comment.posted_timestamp);
             comment.avatar_url = makeAvatarUrl(comment.user_avatar);
             comment.text = $sce.trustAsHtml(comment.text);
             comment.children = [];
@@ -425,10 +463,12 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
 
         comments = filterIgnoredComments(comments);
 
+        response.data.posted_local = formatDate(response.data.posted_timestamp);
+        console.log(response.data);
         response.data.comments = comments;
         response.data.avatar_url = makeAvatarUrl(response.data.user_avatar);
         response.data.text = $sce.trustAsHtml(response.data.text);
-
+    
         $scope.post = response.data;
 
         $timeout(function() { $anchorScroll(); }, 0);
@@ -457,13 +497,20 @@ app.controller('SearchController', function($scope, $http, $sce, $interval, $rou
         "крестоблядство"
     ];
 
+    var examplesUsername = [
+        "bormand",
+        "guest8",
+        "wvxvw"
+    ];
+    
     $scope.example = examples[Math.floor(examples.length * Math.random())];
-
+    $scope.exampleUsername = examplesUsername[Math.floor(examplesUsername.length * Math.random())];
+    
     $scope.search = function() {
         var request = {
             method: 'GET',
             url: '/ngk/api/search',
-            params: {query: $scope.query}
+            params: {query: $scope.query, username: $scope.username}
         };
 
         $http(request).then(function(response) {
@@ -471,6 +518,7 @@ app.controller('SearchController', function($scope, $http, $sce, $interval, $rou
 
             for (var i = 0; i < response.data.length; ++i) {
                 var comment = response.data[i];
+                comment.posted_local = formatDate(comment.posted_timestamp);
                 comment.text = $sce.trustAsHtml(comment.text);
                 comment.avatar_url = makeAvatarUrl(comment.user_avatar);
             }
@@ -480,3 +528,20 @@ app.controller('SearchController', function($scope, $http, $sce, $interval, $rou
     }
 });
 
+
+app.controller('SettingsController', function($scope, $http, $sce, $interval, $route) {
+    var spamFilter = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
+
+    $scope.newFilter = spamFilter;
+    
+    $scope.saveFilter = function() {
+        localStorage.setItem("spamFilter", $scope.newFilter);
+    };
+    
+    $scope.resetFilter = function() {
+        if (confirm("Точно?")) {
+            $scope.newFilter = DEFAULT_FILTER;
+            $scope.saveFilter();
+        }
+    };
+});

@@ -1,9 +1,11 @@
 <div class="header">
     <img src="logo.png" style="height: 120px; float: left; margin-right: 20px;">
-    <p>Зеркало <a href="http://govnokod.ru">ГК</a>.</p>
-    <p>Исходники: <a href="https://github.com/bormand/ngk">https://github.com/bormand/ngk</a></p>
+    <p>Новое зеркало <a href="http://govnokod.ru">ГК</a>.</p>
+    <p>Исходники: <a href="https://github.com/gost-gk/ngk">https://github.com/gost-gk/ngk</a></p>
+    <p>Более свежие исходники с новыми фичами потеряны навсегда, осталась только эта, старая, версия.</p>
     <p><a href="" ng-click="unignoreAllUsers($event)">[Разбанить всех]</a>
        <a href="#!/search">[Порыться в говне]</a>
+       <a href="#!/settings">[Настройки фильтра]</a></p>
 </div>
 <div>
     <div ng-repeat="comment in comments" ng-class="{'comment':true, 'new': comment.is_new}">
@@ -15,7 +17,7 @@
                 насрал в
                 <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>
                 (<a href="#!/{{comment.post_id}}#comment{{comment.id}}">Зеркало на NGK</a>)
-                ({{comment.posted}})
+                ({{comment.posted_local}})
                 <ngk-comment-popup comment-id="{{comment.parent_id}}" post-id="{{comment.post_id}}" />
             </div>
             <div class="text" ng-bind-html="comment.text"></div>

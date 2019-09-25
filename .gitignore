@@ -1,0 +1,15 @@
+# govnostarter scripts
+start.sh
+stop.sh
+
+# dev-version
+static-dev/
+webapp/api_dev.py
+
+# secret keys
+webapp/.env
+
+webapp/__pycache__
+webapp/*.log
+logs/
+dumps/

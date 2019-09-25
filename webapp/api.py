@@ -72,6 +72,7 @@ def comments():
                 "post_id": comment.post_id,
                 "text": normalize_text(comment.text),
                 "posted": comment.posted.strftime(DATE_FORMAT),
+                "posted_timestamp": comment.posted.timestamp(),
                 "user_id": user.user_id,
                 "user_name": user.name,
                 "user_avatar": user.avatar_hash,
@@ -97,6 +98,7 @@ def post(post_id):
             "code": post.code,
             "text": normalize_text(post.text),
             "posted": post.posted.strftime(DATE_FORMAT),
+            "posted_timestamp": post.posted.timestamp(),
             "user_id": user.user_id,
             "user_name": user.name,
             "user_avatar": user.avatar_hash,
@@ -114,6 +116,7 @@ def post(post_id):
                     "post_id": comment.post_id,
                     "text": normalize_text(comment.text),
                     "posted": comment.posted.strftime(DATE_FORMAT),
+                    "posted_timestamp": comment.posted.timestamp(),
                     "user_id": user.user_id,
                     "user_name": user.name,
                     "user_avatar": user.avatar_hash
@@ -128,22 +131,27 @@ def post(post_id):
 
 @app.route('/search')
 def search():
+    comments = []
     with ScopedSession() as session:
-        q = flask.request.args.get('query')
-
+        q = flask.request.args.get('query', '')
+        user_name = flask.request.args.get('username', '')
+        
         query = session.query(Comment, User, Post, func.ts_headline('russian', Comment.text, func.plainto_tsquery('russian', q), 'HighlightAll=true').label('highlighted')).filter(Comment.user_id == User.user_id).filter(Comment.post_id == Post.post_id)
 
-        query = query.filter(func.to_tsvector('russian', Comment.text).op('@@')(func.plainto_tsquery('russian', q)))
-
-        comments = []
-
-        for comment, user, post, highlighted in query.order_by(func.ts_rank_cd(func.to_tsvector('russian', Comment.text), func.plainto_tsquery('russian', q)).desc(), Comment.posted.desc()).limit(100).all():
+        if len(q) > 0:
+            query = query.filter(Comment.text_tsv.op('@@')(func.plainto_tsquery('russian', q)))
+        if len(user_name) > 0:
+            query = query.filter(User.name == user_name)
+            
+        # func.ts_rank_cd(func.to_tsvector('russian', Comment.text), func.plainto_tsquery('russian', q)).desc(), 
+        for comment, user, post, highlighted in query.order_by(Comment.posted.desc()).limit(100).all():
             comments.append({
                 "id": comment.comment_id,
                 "parent_id": comment.parent_id,
                 "post_id": comment.post_id,
                 "text": normalize_text(highlighted),
                 "posted": comment.posted.strftime(DATE_FORMAT),
+                "posted_timestamp": comment.posted.timestamp(),
                 "user_id": user.user_id,
                 "user_name": user.name,
                 "user_avatar": user.avatar_hash,
@@ -155,6 +163,7 @@ def search():
     resp.headers['Access-Control-Allow-Origin'] = '*'
 
     return resp
+
 
 @app.route('/users')
 def users():

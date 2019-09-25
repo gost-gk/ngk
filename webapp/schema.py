@@ -3,11 +3,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, Numeric
+from sqlalchemy.dialects.postgresql import TSVECTOR
+from decouple import config
 
-engine = create_engine('postgresql:///ngk')
+
+engine = create_engine(config('DB_CONNECT_STRING'))
 Base = declarative_base()
 Session = sessionmaker()
 Session.configure(bind=engine)
+
 
 @contextmanager
 def ScopedSession():
@@ -33,6 +37,7 @@ class SyncState(Base):
     result = Column(String)
 
     PRIORITY_HAS_COMMENTS = 10
+    PRIORITY_DUMP = 9
 
 class User(Base):
     __tablename__ = 'users'
@@ -50,6 +55,7 @@ class Post(Base):
     language = Column(String)
     code = Column(String)
     text = Column(String)
+    text_tsv = Column(TSVECTOR)
     posted = Column(DateTime)
     vote_plus = Column(Integer)
     vote_minus = Column(Integer)
@@ -63,6 +69,7 @@ class Comment(Base):
     parent_id = Column(Integer)
     user_id = Column(Integer)
     text = Column(String)
+    text_tsv = Column(TSVECTOR)
     posted = Column(DateTime)
     vote_plus = Column(Integer)
     vote_minus = Column(Integer)

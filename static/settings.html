@@ -1,0 +1,11 @@
+<div class="header">
+    <a href="#!/">На главную</a><br>
+
+    <form>
+    Фильтр:
+    <br>
+    <textarea rows="30" cols="80" style="font-family:monospace;" ng-model="newFilter"></textarea><br>
+    <input ng-click="saveFilter()" type="submit" value="Сохранить">
+    <input ng-click="resetFilter()" type="submit" value="Вернуть стандартный">
+    </form>
+</div>

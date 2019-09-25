@@ -4,6 +4,7 @@
     <form>
     Порыться в говне:
     <input ng-model="query" placeholder="{{example}}">
+    <input ng-model="username" placeholder="{{exampleUsername}}">
     <input ng-click="search()" type="submit" value="Искать">
     </form>
 </div>
@@ -13,7 +14,7 @@
     <div class="content">
         <a name="comment{{comment.id}}"></a>
         <div class="info">
-            <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a> {{comment.posted}}
+            <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a> {{comment.posted_local}}
             <a href="" ng-click="ignoreUser(comment.user_id, comment.user_name)" class="ignore" title="Забанить">&#x2613;</a>
             <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#</a>
             <ngk-comment-popup comment-id="{{comment.parent_id}}"  post-id="{{comment.post_id}}"/>
