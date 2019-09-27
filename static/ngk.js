@@ -43,6 +43,49 @@ function formatSource(source, element) {
 }
 
 
+// Source: https://github.com/jashkenas/underscore/blob/master/underscore.js
+function throttle(func, wait, options) {
+    var timeout, context, args, result;
+    var previous = 0;
+    if (!options) options = {};
+
+    var later = function() {
+      previous = options.leading === false ? 0 : Date.now();
+      timeout = null;
+      result = func.apply(context, args);
+      if (!timeout) context = args = null;
+    };
+
+    var throttled = function() {
+      var now = Date.now();
+      if (!previous && options.leading === false) previous = now;
+      var remaining = wait - (now - previous);
+      context = this;
+      args = arguments;
+      if (remaining <= 0 || remaining > wait) {
+        if (timeout) {
+          clearTimeout(timeout);
+          timeout = null;
+        }
+        previous = now;
+        result = func.apply(context, args);
+        if (!timeout) context = args = null;
+      } else if (!timeout && options.trailing !== false) {
+        timeout = setTimeout(later, remaining);
+      }
+      return result;
+    };
+
+    throttled.cancel = function() {
+      clearTimeout(timeout);
+      previous = 0;
+      timeout = context = args = null;
+    };
+
+    return throttled;
+};
+
+
 app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
     var popupStack = [];
     var currentPopup = null;
@@ -375,6 +418,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     $scope.loadMoreComments = function() {
         limit += 20;
         loadMoreComments();
+        console.log('Loading more.');
     }
 
     $scope.ignoreUser = function(user_id, user_name) {
@@ -394,8 +438,20 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     loadComments(null);
 
     var updateTimer = $interval(loadNewComments, 5000);
+    var infScroll = throttle(function() {
+        if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
+            $scope.loadMoreComments();
+        }
+    }, 1500);
+    window.onscroll = function(ev) {
+        if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
+            infScroll();
+        }
+    };
+    
     $scope.$on('$destroy', function() {
         $interval.cancel(updateTimer);
+        infScroll.cancel();
     });
 });
 
