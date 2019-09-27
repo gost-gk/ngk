@@ -31,8 +31,18 @@ function formatDate(timestamp_seconds) {
     var date = new Date(timestamp_seconds * 1000);
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
 }
-    
-    
+
+
+function formatSource(source, element) {
+    switch(source) {
+        case 0: return "<span title=\"" + element + " с ГК\">GK</span>";
+        case 1: return "<span title=\"" + element + " с Webarchive\">WA</span>";
+        case 2: return "<span title=\"" + element + " с Хуза\">XYZ</span>";
+        default: return "";
+    }
+}
+
+
 app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
     var popupStack = [];
     var currentPopup = null;
@@ -64,6 +74,7 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
                 '      <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>' +
                 '      (<a href="#!/{{comment.post_id}}#comment{{comment.id}}">Зеркало на NGK</a>)' +
                 '      ({{comment.posted_local}})' +
+                '      <span ng-bind-html="comment.source"></span>' +
                 '      <ngk-comment-popup comment-id="{{comment.parent_id}}" post-id="{{comment.post_id}}" />' +
                 '    </div>' +
                 '    <div class="text" ng-bind-html="comment.text"</div>' +
@@ -75,6 +86,7 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
                 comment.text = $sce.trustAsHtml(comment.text);
                 comment.avatar_url = makeAvatarUrl(comment.user_avatar);
                 comment.posted_local = formatDate(comment.posted_timestamp);
+                comment.source = $sce.trustAsHtml(formatSource(comment.source, "Коммент"));
                 scope.comment = comment;
                 showPopup(scope, anchor, template);
             })
@@ -95,6 +107,7 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
                 '      <a href="http://govnokod.ru/{{post.id}}">#{{post.id}}</a>' +
                 '      (<a href="#!/{{post.id}}">Зеркало на NGK</a>)' +
                 '      ({{post.posted_local}})' +
+                '      <span ng-bind-html="post.source"></span>' +
                 '    </div>' +
                 '    <pre>{{post.code}}</pre>' +
                 '    <div class="text" ng-bind-html="post.text"></div>' +
@@ -106,6 +119,7 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
                 post.text = $sce.trustAsHtml(post.text);
                 post.avatar_url = makeAvatarUrl(post.user_avatar);
                 post.posted_local = formatDate(post.posted_timestamp);
+                post.source = $sce.trustAsHtml(formatSource(post.source, "Пост"));
                 scope.post = post;
                 showPopup(scope, anchor, template);
             })
@@ -295,6 +309,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
         seen[comment.id] = true;
 
         comment.posted_local = formatDate(comment.posted_timestamp);
+        comment.source = $sce.trustAsHtml(formatSource(comment.source, "Коммент"));
         
         if (minDate == null || comment.posted < minDate)
             minDate = comment.posted;
@@ -417,6 +432,7 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
         for (var j = 0; j < response.data.comments.length; ++j) {
             var comment = response.data.comments[j];
             comment.posted_local = formatDate(comment.posted_timestamp);
+            comment.source = $sce.trustAsHtml(formatSource(comment.source, "Коммент"));
             comment.avatar_url = makeAvatarUrl(comment.user_avatar);
             comment.text = $sce.trustAsHtml(comment.text);
             comment.children = [];
@@ -464,6 +480,7 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
         comments = filterIgnoredComments(comments);
 
         response.data.posted_local = formatDate(response.data.posted_timestamp);
+        response.data.source = $sce.trustAsHtml(formatSource(response.data.source, "Пост"));
         console.log(response.data);
         response.data.comments = comments;
         response.data.avatar_url = makeAvatarUrl(response.data.user_avatar);
@@ -519,6 +536,7 @@ app.controller('SearchController', function($scope, $http, $sce, $interval, $rou
             for (var i = 0; i < response.data.length; ++i) {
                 var comment = response.data[i];
                 comment.posted_local = formatDate(comment.posted_timestamp);
+                comment.source = $sce.trustAsHtml(formatSource(comment.source, "Коммент"));
                 comment.text = $sce.trustAsHtml(comment.text);
                 comment.avatar_url = makeAvatarUrl(comment.user_avatar);
             }

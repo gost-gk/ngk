@@ -66,6 +66,7 @@ def parse_post(content):
     author_node = post_node.xpath('.//p[@class="author"]')[0]
 
     post_url = post_node.xpath('.//a[@class="entry-title"]')[0].get('href')
+    post.source = Post.SOURCE_GK
     post.post_id = int(re.search(r'/(\d+)$', post_url).group(1))
 
     comment_list_raw = comments_node.xpath('ul')[0].get("id")
@@ -84,6 +85,7 @@ def parse_post(content):
     user = User()
 
     user_url = author_node.xpath('a[1]')[0].get('href')
+    user.source = User.SOURCE_GK
     user.user_id = int(re.search(r'/user/(\d+)$', user_url).group(1))
     user.name = author_node.xpath('a[2]')[0].text
     user.avatar_hash = parse_avatar(author_node.xpath('a[1]/img')[0].get('src'))
@@ -95,6 +97,7 @@ def parse_post(content):
     for comment_node in comments_node.xpath('.//div[@class="entry-comment-wrapper"]'):
         comment = Comment()
 
+        comment.source = Comment.SOURCE_GK
         comment.comment_id = int(re.match(r'comment-(\d+)$', comment_node.get('id')).group(1))
         comment.post_id = post.post_id
 

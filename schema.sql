@@ -10,7 +10,8 @@ create table if not exists sync_states(
 create table if not exists users(
     user_id integer primary key,
     name varchar,
-    avatar_hash varchar
+    avatar_hash varchar,
+    source INTEGER
 );
 
 create table if not exists posts(
@@ -24,7 +25,8 @@ create table if not exists posts(
     posted timestamp,
     vote_plus integer,
     vote_minus integer,
-    rating numeric
+    rating numeric,
+    source INTEGER
 );
 
 create table if not exists comments(
@@ -37,11 +39,13 @@ create table if not exists comments(
     posted timestamp,
     vote_plus integer,
     vote_minus integer,
-    rating numeric
+    rating numeric,
+    source INTEGER
 );
 
-CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE ON comments FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(text_tsv, 'pg_catalog.russian', text);
-CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE ON posts FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(text_tsv, 'pg_catalog.russian', text);
+
+CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE OF text ON comments FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(text_tsv, 'pg_catalog.russian', text);
+CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE OF text ON posts FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(text_tsv, 'pg_catalog.russian', text);
 
 create index if not exists comments_posted on comments(posted);
 CREATE INDEX IF NOT EXISTS weighted_tsv_idx_comments ON comments USING GIST (text_tsv);

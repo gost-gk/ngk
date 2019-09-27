@@ -17,6 +17,7 @@
             <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a> {{comment.posted_local}}
             <a href="" ng-click="ignoreUser(comment.user_id, comment.user_name)" class="ignore" title="Забанить">&#x2613;</a>
             <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#</a>
+            <span ng-bind-html="comment.source"></span>
             <ngk-comment-popup comment-id="{{comment.parent_id}}"  post-id="{{comment.post_id}}"/>
         </div>
         <div class="text" ng-bind-html="comment.text"></div>

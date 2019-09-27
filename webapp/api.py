@@ -76,7 +76,8 @@ def comments():
                 "user_id": user.user_id,
                 "user_name": user.name,
                 "user_avatar": user.avatar_hash,
-                "comment_list_id": post.comment_list_id
+                "comment_list_id": post.comment_list_id,
+                "source": comment.source
             })
 
     resp = app.make_response(json.dumps(comments, ensure_ascii=False))
@@ -102,7 +103,8 @@ def post(post_id):
             "user_id": user.user_id,
             "user_name": user.name,
             "user_avatar": user.avatar_hash,
-            "comment_list_id": post.comment_list_id
+            "comment_list_id": post.comment_list_id,
+            "source": post.source
         }
 
         comments = []
@@ -119,7 +121,8 @@ def post(post_id):
                     "posted_timestamp": comment.posted.timestamp(),
                     "user_id": user.user_id,
                     "user_name": user.name,
-                    "user_avatar": user.avatar_hash
+                    "user_avatar": user.avatar_hash,
+                    "source": comment.source
                 })
         resp["comments"] = comments
 
@@ -155,7 +158,8 @@ def search():
                 "user_id": user.user_id,
                 "user_name": user.name,
                 "user_avatar": user.avatar_hash,
-                "comment_list_id": post.comment_list_id
+                "comment_list_id": post.comment_list_id,
+                "source": comment.source
             })
 
     resp = app.make_response(json.dumps(comments, ensure_ascii=False))

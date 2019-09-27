@@ -39,13 +39,20 @@ class SyncState(Base):
     PRIORITY_HAS_COMMENTS = 10
     PRIORITY_DUMP = 9
 
+
 class User(Base):
     __tablename__ = 'users'
 
     user_id = Column(Integer, primary_key=True)
     name = Column(String)
     avatar_hash = Column(String)
+    source = Column(Integer)
 
+    SOURCE_GK = 0
+    SOURCE_WEBARCHIVE = 1
+    SOURCE_XYZ = 2
+    
+    
 class Post(Base):
     __tablename__ = 'posts'
 
@@ -60,7 +67,13 @@ class Post(Base):
     vote_plus = Column(Integer)
     vote_minus = Column(Integer)
     rating = Column(Numeric)
+    source = Column(Integer)
 
+    SOURCE_GK = 0
+    SOURCE_WEBARCHIVE = 1
+    SOURCE_XYZ = 2
+    
+    
 class Comment(Base):
     __tablename__ = 'comments'
 
@@ -74,3 +87,9 @@ class Comment(Base):
     vote_plus = Column(Integer)
     vote_minus = Column(Integer)
     rating = Column(Numeric)
+    source = Column(Integer)
+
+    SOURCE_GK = 0
+    SOURCE_WEBARCHIVE = 1
+    SOURCE_XYZ = 2
+    
