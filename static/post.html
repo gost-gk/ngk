@@ -22,7 +22,8 @@
         <div class="content">
             <a name="comment{{comment.id}}"></a>
             <div class="info">
-                <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a>
+                <a href="/#!/search?user={{comment.user_name}}" target="_blank">{{comment.user_name}}</a>
+                (<a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_id}}</a>)
                 <a href="" ng-click="ignoreUser(comment.user_id, comment.user_name)" class="ignore" title="Забанить">&#x2613;</a>
                 {{comment.posted_local}}
                 <a href="http://govnokod.ru/{{post.id}}#comment{{comment.id}}">#</a>

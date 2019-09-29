@@ -1,6 +1,6 @@
 <div class="header">
     <img src="logo.png" style="height: 120px; float: left; margin-right: 20px;">
-    <p>Новое зеркало <a href="http://govnokod.ru">ГК</a> (<a href="http://govnokod.xyz">альтернативный хуз</a>).</p>
+    <p>Бесконечный сток имени Борманда: <a href="http://govnokod.ru">ГК</a>, <a href="http://govnokod.xyz">хуз</a>.</p>
     <p>Исходники: <a href="https://github.com/gost-gk/ngk">https://github.com/gost-gk/ngk</a></p>
     <p><a href="" ng-click="unignoreAllUsers($event)">[Разбанить всех]</a>
        <a href="#!/search">[Порыться в говне]</a>
@@ -11,11 +11,12 @@
         <img ng-src="{{comment.avatar_url}}" class="avatar">
         <div class="content">
                 <div class="info">
-                <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a>
+                <a href="/#!/search?user={{comment.user_name}}" target="_blank">{{comment.user_name}}</a>
+                (<a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_id}}</a>)
                 <a href="" ng-click="ignoreUser(comment.user_id, comment.user_name)" class="ignore" title="Забанить">&#x2613;</a>
                 насрал в
                 <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>
-                (<a href="#!/{{comment.post_id}}#comment{{comment.id}}">Зеркало на NGK</a>)
+                (<a href="#!/{{comment.post_id}}#comment{{comment.id}}">NGK</a>)
                 ({{comment.posted_local}})
                 <span ng-bind-html="comment.source"></span>
                 <ngk-comment-popup comment-id="{{comment.parent_id}}" post-id="{{comment.post_id}}" />

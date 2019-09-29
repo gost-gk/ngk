@@ -14,7 +14,9 @@
     <div class="content">
         <a name="comment{{comment.id}}"></a>
         <div class="info">
-            <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a> {{comment.posted_local}}
+            <a href="/#!/search?user={{comment.user_name}}">{{comment.user_name}}</a>
+            <span>(<a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_id}}</a>)</span>
+            {{comment.posted_local}}
             <a href="" ng-click="ignoreUser(comment.user_id, comment.user_name)" class="ignore" title="Забанить">&#x2613;</a>
             <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#</a>
             <span ng-bind-html="comment.source"></span>
@@ -24,10 +26,11 @@
     </div>
 </div>
 </script>
-<div>
-    <div ng-if="!result.length">Ничего не найдено.</div>
-    <div ng-if="result.length">
+<div ng-switch="state">
+    <div ng-switch-when="NO_QUERY">Введите запрос.</div>
+    <div ng-switch-when="IN_PROGRESS">Ищем...</div>
+    <div ng-switch-when="NOT_FOUND">Ничего не найдено.</div>
+    <div ng-switch-when="FOUND">
         <div ng-repeat="comment in result" ng-include="'comment-template-search'"></div>
     </div>
 </div>
-

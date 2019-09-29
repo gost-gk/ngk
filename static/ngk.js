@@ -112,10 +112,11 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
                 '  <img src="{{comment.avatar_url}}" class="avatar">' +
                 '  <div class="content">' +
                 '    <div class="info">' +
-                '      <a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_name}}</a>' +
+                '      <a href="/#!/search?user={{comment.user_name}}" target="_blank">{{comment.user_name}}</a>' +
+                '      (<a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_id}}</a>)' +
                 '      насрал в ' +
                 '      <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>' +
-                '      (<a href="#!/{{comment.post_id}}#comment{{comment.id}}">Зеркало на NGK</a>)' +
+                '      (<a href="#!/{{comment.post_id}}#comment{{comment.id}}">NGK</a>)' +
                 '      ({{comment.posted_local}})' +
                 '      <span ng-bind-html="comment.source"></span>' +
                 '      <ngk-comment-popup comment-id="{{comment.parent_id}}" post-id="{{comment.post_id}}" />' +
@@ -145,10 +146,11 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
                 '  <img src="{{post.avatar_url}}" class="avatar">' +
                 '  <div class="content">' +
                 '    <div class="info">' +
-                '      <a href="http://govnokod.ru/user/{{post.user_id}}">{{post.user_name}}</a>' +
+                '      <a href="/#!/search?user={{post.user_name}}" target="_blank">{{post.user_name}}</a>' +
+                '      (<a href="http://govnokod.ru/user/{{post.user_id}}">{{post.user_id}}</a>)' +
                 '      насрал в ' +
                 '      <a href="http://govnokod.ru/{{post.id}}">#{{post.id}}</a>' +
-                '      (<a href="#!/{{post.id}}">Зеркало на NGK</a>)' +
+                '      (<a href="#!/{{post.id}}">NGK</a>)' +
                 '      ({{post.posted_local}})' +
                 '      <span ng-bind-html="post.source"></span>' +
                 '    </div>' +
@@ -557,7 +559,7 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
     }
 });
 
-app.controller('SearchController', function($scope, $http, $sce, $interval, $route) {
+app.controller('SearchController', function($scope, $routeParams, $http, $sce, $interval, $route) {
     $scope.result = [];
 
     var examples = [
@@ -578,8 +580,10 @@ app.controller('SearchController', function($scope, $http, $sce, $interval, $rou
     
     $scope.example = examples[Math.floor(examples.length * Math.random())];
     $scope.exampleUsername = examplesUsername[Math.floor(examplesUsername.length * Math.random())];
+    $scope.state = 'NO_QUERY';
     
     $scope.search = function() {
+        $scope.state = 'IN_PROGRESS';
         var request = {
             method: 'GET',
             url: '/ngk/api/search',
@@ -598,7 +602,17 @@ app.controller('SearchController', function($scope, $http, $sce, $interval, $rou
             }
 
             $scope.result = response.data;
+            if ($scope.result.length > 0) {
+                $scope.state = 'FOUND';
+            } else {
+                $scope.state = 'NOT_FOUND';
+            }
         });
+    }
+    
+    if ($routeParams.user !== undefined) {
+        $scope.username = $routeParams.user;
+        $scope.search();
     }
 });
 
