@@ -140,27 +140,32 @@ def search():
         user_name = flask.request.args.get('username', '')
         
         query = session.query(Comment, User, Post, func.ts_headline('russian', Comment.text, func.plainto_tsquery('russian', q), 'HighlightAll=true').label('highlighted')).filter(Comment.user_id == User.user_id).filter(Comment.post_id == Post.post_id)
-
+        
+        is_query_valid = True
         if len(q) > 0:
             query = query.filter(Comment.text_tsv.op('@@')(func.plainto_tsquery('russian', q)))
         if len(user_name) > 0:
-            query = query.filter(User.name == user_name)
+            user_id = session.query(User.user_id).filter(User.name == user_name).scalar()
+            if user_id is not None:
+                query = query.filter(User.user_id == user_id)
+            else:
+                is_query_valid = False
             
-        # func.ts_rank_cd(func.to_tsvector('russian', Comment.text), func.plainto_tsquery('russian', q)).desc(), 
-        for comment, user, post, highlighted in query.order_by(Comment.posted.desc()).limit(100).all():
-            comments.append({
-                "id": comment.comment_id,
-                "parent_id": comment.parent_id,
-                "post_id": comment.post_id,
-                "text": normalize_text(highlighted),
-                "posted": comment.posted.strftime(DATE_FORMAT),
-                "posted_timestamp": comment.posted.timestamp(),
-                "user_id": user.user_id,
-                "user_name": user.name,
-                "user_avatar": user.avatar_hash,
-                "comment_list_id": post.comment_list_id,
-                "source": comment.source
-            })
+        if is_query_valid:
+            for comment, user, post, highlighted in query.order_by(Comment.posted.desc()).limit(100).all():
+                comments.append({
+                    "id": comment.comment_id,
+                    "parent_id": comment.parent_id,
+                    "post_id": comment.post_id,
+                    "text": normalize_text(highlighted),
+                    "posted": comment.posted.strftime(DATE_FORMAT),
+                    "posted_timestamp": comment.posted.timestamp(),
+                    "user_id": user.user_id,
+                    "user_name": user.name,
+                    "user_avatar": user.avatar_hash,
+                    "comment_list_id": post.comment_list_id,
+                    "source": comment.source
+                })
 
     resp = app.make_response(json.dumps(comments, ensure_ascii=False))
     resp.mimetype = 'application/json; charset=utf-8'
