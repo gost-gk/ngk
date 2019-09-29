@@ -26,6 +26,7 @@ if (comment.user_id == 25580 && comment.text.match('^_+$')) {
 }
 return false;`;
 
+const SEARCH_LIMIT = 50;
 
 function formatDate(timestamp_seconds) {
     var date = new Date(timestamp_seconds * 1000);
@@ -445,15 +446,19 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
             $scope.loadMoreComments();
         }
     }, 1500);
-    window.onscroll = function(ev) {
+    
+    var infScrollListener = function(ev) {
         if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
             infScroll();
         }
     };
     
+    window.addEventListener('scroll', infScrollListener);
+    
     $scope.$on('$destroy', function() {
         $interval.cancel(updateTimer);
         infScroll.cancel();
+        window.removeEventListener('scroll', infScrollListener);
     });
 });
 
@@ -581,18 +586,16 @@ app.controller('SearchController', function($scope, $routeParams, $http, $sce, $
     $scope.example = examples[Math.floor(examples.length * Math.random())];
     $scope.exampleUsername = examplesUsername[Math.floor(examplesUsername.length * Math.random())];
     $scope.state = 'NO_QUERY';
+    $scope.searchComplete = false;
     
-    $scope.search = function() {
-        $scope.state = 'IN_PROGRESS';
+    var doSearchRequest = function(query, username, beforeTimestamp, callback) {
         var request = {
             method: 'GET',
             url: '/ngk/api/search',
-            params: {query: $scope.query, username: $scope.username}
+            params: {query: query, username: username, before: beforeTimestamp}
         };
 
         $http(request).then(function(response) {
-            console.log("Got search response");
-
             for (var i = 0; i < response.data.length; ++i) {
                 var comment = response.data[i];
                 comment.posted_local = formatDate(comment.posted_timestamp);
@@ -600,20 +603,69 @@ app.controller('SearchController', function($scope, $routeParams, $http, $sce, $
                 comment.text = $sce.trustAsHtml(comment.text);
                 comment.avatar_url = makeAvatarUrl(comment.user_avatar);
             }
-
+            callback(response);
+        });
+    };
+    
+    $scope.search = function() {
+        $scope.searchComplete = false;
+        $scope.state = 'IN_PROGRESS';
+        
+        doSearchRequest($scope.query, $scope.username, null, function(response) {
             $scope.result = response.data;
             if ($scope.result.length > 0) {
                 $scope.state = 'FOUND';
             } else {
                 $scope.state = 'NOT_FOUND';
             }
+            
+            if (response.data.length < SEARCH_LIMIT) {
+                $scope.searchComplete = true;
+            }
         });
     }
+    
+    $scope.nextSearch = function(beforeTimestamp) {
+        if ($scope.searchComplete) {
+            return;
+        }
+       
+        doSearchRequest($scope.query, $scope.username, beforeTimestamp, function(response) {
+            response.data.forEach(item => $scope.result.push(item));
+            if (response.data.length < SEARCH_LIMIT) {
+                $scope.searchComplete = true;
+            }
+        });
+    }
+    
+    $scope.loadMoreResults = function() {
+        $scope.nextSearch($scope.result[$scope.result.length - 1].posted_timestamp);
+    }
+    
     
     if ($routeParams.user !== undefined) {
         $scope.username = $routeParams.user;
         $scope.search();
     }
+    
+    var infScroll = throttle(function() {
+        if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
+            $scope.loadMoreResults();
+        }
+    }, 1500);
+    
+    var infScrollListener = function(ev) {
+        if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
+            infScroll();
+        }
+    };
+    
+    window.addEventListener('scroll', infScrollListener);
+    
+    $scope.$on('$destroy', function() {
+        infScroll.cancel();
+        window.removeEventListener('scroll', infScrollListener);
+    });
 });
 
 

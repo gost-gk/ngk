@@ -32,5 +32,11 @@
     <div ng-switch-when="NOT_FOUND">Ничего не найдено.</div>
     <div ng-switch-when="FOUND">
         <div ng-repeat="comment in result" ng-include="'comment-template-search'"></div>
+        <div ng-if="!searchComplete">
+            <button ng-click="loadMoreResults()">Ещё результаты</button>
+        </div>
+        <div ng-if="searchComplete">
+            Поиск завершён.
+        </div>
     </div>
 </div>

@@ -7,7 +7,7 @@ from sqlalchemy.sql.expression import func
 import re
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
-
+SEARCH_LIMIT = 50
 
 app = flask.Flask(__name__)
 
@@ -137,35 +137,39 @@ def search():
     comments = []
     with ScopedSession() as session:
         q = flask.request.args.get('query', '')
+        try:
+            before = float(flask.request.args.get('before', ''))
+        except ValueError:
+            before = None
+
         user_name = flask.request.args.get('username', '')
         
         query = session.query(Comment, User, Post, func.ts_headline('russian', Comment.text, func.plainto_tsquery('russian', q), 'HighlightAll=true').label('highlighted')).filter(Comment.user_id == User.user_id).filter(Comment.post_id == Post.post_id)
         
-        is_query_valid = True
         if len(q) > 0:
             query = query.filter(Comment.text_tsv.op('@@')(func.plainto_tsquery('russian', q)))
+            
         if len(user_name) > 0:
             user_id = session.query(User.user_id).filter(User.name == user_name).scalar()
-            if user_id is not None:
-                query = query.filter(User.user_id == user_id)
-            else:
-                is_query_valid = False
-            
-        if is_query_valid:
-            for comment, user, post, highlighted in query.order_by(Comment.posted.desc()).limit(100).all():
-                comments.append({
-                    "id": comment.comment_id,
-                    "parent_id": comment.parent_id,
-                    "post_id": comment.post_id,
-                    "text": normalize_text(highlighted),
-                    "posted": comment.posted.strftime(DATE_FORMAT),
-                    "posted_timestamp": comment.posted.timestamp(),
-                    "user_id": user.user_id,
-                    "user_name": user.name,
-                    "user_avatar": user.avatar_hash,
-                    "comment_list_id": post.comment_list_id,
-                    "source": comment.source
-                })
+            query = query.filter(User.user_id == user_id)
+        
+        if before is not None:
+            query = query.filter(Comment.posted < datetime.fromtimestamp(before))
+        
+        for comment, user, post, highlighted in query.order_by(Comment.posted.desc()).limit(SEARCH_LIMIT).all():
+            comments.append({
+                "id": comment.comment_id,
+                "parent_id": comment.parent_id,
+                "post_id": comment.post_id,
+                "text": normalize_text(highlighted),
+                "posted": comment.posted.strftime(DATE_FORMAT),
+                "posted_timestamp": comment.posted.timestamp(),
+                "user_id": user.user_id,
+                "user_name": user.name,
+                "user_avatar": user.avatar_hash,
+                "comment_list_id": post.comment_list_id,
+                "source": comment.source
+            })
 
     resp = app.make_response(json.dumps(comments, ensure_ascii=False))
     resp.mimetype = 'application/json; charset=utf-8'
