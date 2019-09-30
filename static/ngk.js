@@ -631,7 +631,7 @@ app.controller('SearchController', function($scope, $routeParams, $http, $sce, $
         }
        
         doSearchRequest($scope.query, $scope.username, beforeTimestamp, function(response) {
-            response.data.forEach(item => $scope.result.push(item));
+            $scope.result = $scope.result.concat(response.data);
             if (response.data.length < SEARCH_LIMIT) {
                 $scope.searchComplete = true;
             }
