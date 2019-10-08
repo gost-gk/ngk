@@ -317,6 +317,17 @@ function getIgnoredUsers() {
     return ignoredUsers || {};
 }
 
+function ignoreUser(route, user_id, user_name) {
+    var ignoredUsers = getIgnoredUsers();
+    ignoredUsers[user_id] = user_name;
+    localStorage.setItem("ignoredUsers", JSON.stringify(ignoredUsers));
+    console.log(ignoredUsers);
+
+    if (route && route.reload) {
+        route.reload();
+    }
+}
+    
 function getLastViewedComments() {
     var lastViewed = null;
     try {
@@ -424,14 +435,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
         console.log('Loading more.');
     }
 
-    $scope.ignoreUser = function(user_id, user_name) {
-        var ignoredUsers = getIgnoredUsers();
-        ignoredUsers[user_id] = user_name;
-        localStorage.setItem("ignoredUsers", JSON.stringify(ignoredUsers));
-        console.log(ignoredUsers);
-
-        $route.reload();
-    }
+    $scope.ignoreUser = ignoreUser.bind(undefined, $route);
 
     $scope.unignoreAllUsers = function() {
         localStorage.removeItem("ignoredUsers");
@@ -554,14 +558,7 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
         $timeout(function() { $anchorScroll(); }, 0);
     });
 
-    $scope.ignoreUser = function(user_id, user_name) {
-        var ignoredUsers = getIgnoredUsers();
-        ignoredUsers[user_id] = user_name;
-        localStorage.setItem("ignoredUsers", JSON.stringify(ignoredUsers));
-        console.log(ignoredUsers);
-
-        $route.reload();
-    }
+    $scope.ignoreUser = ignoreUser.bind(undefined, $route);
 });
 
 app.controller('SearchController', function($scope, $routeParams, $http, $sce, $interval, $route) {
@@ -666,6 +663,8 @@ app.controller('SearchController', function($scope, $routeParams, $http, $sce, $
         infScroll.cancel();
         window.removeEventListener('scroll', infScrollListener);
     });
+    
+    $scope.ignoreUser = ignoreUser.bind(undefined, undefined);
 });
 
 
