@@ -109,22 +109,24 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
             };
 
             var template =
-                '<div class="comment-popup comment">' +
-                '  <img src="{{comment.avatar_url}}" class="avatar">' +
-                '  <div class="content">' +
-                '    <div class="info">' +
-                '      <a href="/#!/search?user={{comment.user_name}}" target="_blank">{{comment.user_name}}</a>' +
-                '      (<a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_id}}</a>)' +
-                '      насрал в ' +
-                '      <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>' +
-                '      (<a href="#!/{{comment.post_id}}#comment{{comment.id}}">NGK</a>)' +
-                '      ({{comment.posted_local}})' +
-                '      <span ng-bind-html="comment.source"></span>' +
-                '      <ngk-comment-popup comment-id="{{comment.parent_id}}" post-id="{{comment.post_id}}" />' +
-                '    </div>' +
-                '    <div class="text" ng-bind-html="comment.text"</div>' +
-                '  </div>' +
-                '</div>';
+                `<div class="comment-popup comment">
+                  <img src="{{comment.avatar_url}}" class="avatar">
+                  <div class="content">
+                    <div class="info">
+                        <a href="/#!/search?user={{comment.user_name}}" target="_blank">{{comment.user_name}}</a>
+                        (<a href="http://govnokod.ru/user/{{comment.user_id}}">U</a>)
+                        <a href="" ng-click="ignoreUser(comment.user_id, comment.user_name)" class="ignore" title="Забанить">&#x2613;</a>
+                        насрал в
+                        <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>
+                        (<a href="#!/{{comment.post_id}}#comment{{comment.id}}">NGK</a>,
+                            <a href="https://govnokod.xyz/_{{comment.post_id}}">XYZ</a>)
+                        ({{comment.posted_local}})
+                        <span ng-bind-html="comment.source"></span>
+                        <ngk-comment-popup comment-id="{{comment.parent_id}}" post-id="{{comment.post_id}}" />
+                    </div>
+                    <div class="text" ng-bind-html="comment.text"</div>
+                  </div>
+                </div>`;
 
             $http(request).then(function(response) {
                 var comment = response.data[0];
@@ -143,22 +145,23 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
             };
 
             var template =
-                '<div class="comment-popup comment">' +
-                '  <img src="{{post.avatar_url}}" class="avatar">' +
-                '  <div class="content">' +
-                '    <div class="info">' +
-                '      <a href="/#!/search?user={{post.user_name}}" target="_blank">{{post.user_name}}</a>' +
-                '      (<a href="http://govnokod.ru/user/{{post.user_id}}">{{post.user_id}}</a>)' +
-                '      насрал в ' +
-                '      <a href="http://govnokod.ru/{{post.id}}">#{{post.id}}</a>' +
-                '      (<a href="#!/{{post.id}}">NGK</a>)' +
-                '      ({{post.posted_local}})' +
-                '      <span ng-bind-html="post.source"></span>' +
-                '    </div>' +
-                '    <pre>{{post.code}}</pre>' +
-                '    <div class="text" ng-bind-html="post.text"></div>' +
-                '  </div>' +
-                '</div>';
+                `<div class="comment-popup comment">
+                  <img src="{{post.avatar_url}}" class="avatar">
+                  <div class="content">
+                    <div class="info">
+                      <a href="/#!/search?user={{post.user_name}}" target="_blank">{{post.user_name}}</a>
+                      (<a href="http://govnokod.ru/user/{{post.user_id}}">U</a>)
+                      насрал в 
+                      <a href="http://govnokod.ru/{{post.id}}">#{{post.id}}</a>
+                      (<a href="#!/{{post.id}}">NGK</a>,
+                        <a href="https://govnokod.xyz/_{{post.id}}">XYZ</a>)
+                      ({{post.posted_local}})
+                      <span ng-bind-html="post.source"></span>
+                    </div>
+                    <pre>{{post.code}}</pre>
+                    <div class="text" ng-bind-html="post.text"></div>
+                  </div>
+                </div>`;
 
             $http(request).then(function(response) {
                 var post = response.data;
