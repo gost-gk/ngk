@@ -36,7 +36,7 @@ function formatDate(timestamp_seconds) {
 
 function formatSource(source, element) {
     switch(source) {
-        case 0: return "<span title=\"" + element + " с ГК\">GK</span>";
+        case 0: return "";
         case 1: return "<span title=\"" + element + " с Webarchive\">WA</span>";
         case 2: return "<span title=\"" + element + " с Хуза\">XYZ</span>";
         default: return "";
@@ -110,22 +110,7 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
 
             var template =
                 `<div class="comment-popup comment">
-                  <img src="{{comment.avatar_url}}" class="avatar">
-                  <div class="content">
-                    <div class="info">
-                        <a href="/#!/search?user={{comment.user_name}}" target="_blank">{{comment.user_name}}</a>
-                        (<a href="http://govnokod.ru/user/{{comment.user_id}}">U</a>)
-                        <a href="" ng-click="ignoreUser(comment.user_id, comment.user_name)" class="ignore" title="Забанить">&#x2613;</a>
-                        насрал в
-                        <a href="http://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>
-                        (<a href="#!/{{comment.post_id}}#comment{{comment.id}}">NGK</a>,
-                            <a href="https://govnokod.xyz/_{{comment.post_id}}">XYZ</a>)
-                        ({{comment.posted_local}})
-                        <span ng-bind-html="comment.source"></span>
-                        <ngk-comment-popup comment-id="{{comment.parent_id}}" post-id="{{comment.post_id}}" />
-                    </div>
-                    <div class="text" ng-bind-html="comment.text"</div>
-                  </div>
+                    <ng-include src="'comment-template-base'"></ng-include>
                 </div>`;
 
             $http(request).then(function(response) {
@@ -146,21 +131,7 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
 
             var template =
                 `<div class="comment-popup comment">
-                  <img src="{{post.avatar_url}}" class="avatar">
-                  <div class="content">
-                    <div class="info">
-                      <a href="/#!/search?user={{post.user_name}}" target="_blank">{{post.user_name}}</a>
-                      (<a href="http://govnokod.ru/user/{{post.user_id}}">U</a>)
-                      насрал в 
-                      <a href="http://govnokod.ru/{{post.id}}">#{{post.id}}</a>
-                      (<a href="#!/{{post.id}}">NGK</a>,
-                        <a href="https://govnokod.xyz/_{{post.id}}">XYZ</a>)
-                      ({{post.posted_local}})
-                      <span ng-bind-html="post.source"></span>
-                    </div>
-                    <pre>{{post.code}}</pre>
-                    <div class="text" ng-bind-html="post.text"></div>
-                  </div>
+                <ng-include src="'post-template-base'"></ng-include>
                 </div>`;
 
             $http(request).then(function(response) {

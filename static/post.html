@@ -17,21 +17,8 @@
         </div>
     </div>
     <div ng-repeat="comment in post.comments" ng-class="{'comment': true, 'new': comment.is_new}"
-         ng-style="{'margin-left': (comment.indent * 15) + 'px'}">
-        <img ng-src="{{comment.avatar_url}}" class="avatar">
-        <div class="content">
-            <a name="comment{{comment.id}}"></a>
-            <div class="info">
-                <a href="/#!/search?user={{comment.user_name}}" target="_blank">{{comment.user_name}}</a>
-                (<a href="http://govnokod.ru/user/{{comment.user_id}}">{{comment.user_id}}</a>)
-                <a href="" ng-click="ignoreUser(comment.user_id, comment.user_name)" class="ignore" title="Забанить">&#x2613;</a>
-                {{comment.posted_local}}
-                <a href="http://govnokod.ru/{{post.id}}#comment{{comment.id}}">#</a>
-                <span ng-bind-html="post.source"></span>
-                <ngk-comment-popup comment-id="{{comment.parent_id}}" post-id="{{comment.post_id}}" />
-            </div>
-            <div class="text" ng-bind-html="comment.text"></div>
-        </div>
+         ng-style="{'margin-left': (comment.indent * 15) + 'px'}"
+         ng-include="'comment-template-base'">
     </div>
 </div>
 
