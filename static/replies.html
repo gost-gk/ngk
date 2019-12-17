@@ -1,7 +1,7 @@
 <div class="header">
+    <a href="#!/">На главную</a><br>
     <p ng-if="isUserValid">Ответы на комменты пользователя <b>{{user}}</b></p>
     <p ng-if="!isUserValid">Такого пользователя нет.</p>
-    <a href="#!/">На главную</a><br>
 </div>
 <div>
     <div ng-repeat="comment in comments track by $index"
