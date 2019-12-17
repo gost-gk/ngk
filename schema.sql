@@ -31,6 +31,7 @@ create table if not exists posts(
 
 create table if not exists comments(
     comment_id integer primary key,
+    comment_id_xyz INTEGER,
     post_id integer,
     parent_id integer,
     user_id integer,

@@ -78,6 +78,7 @@ class Comment(Base):
     __tablename__ = 'comments'
 
     comment_id = Column(Integer, primary_key=True)
+    comment_id_xyz = Column(Integer)
     post_id = Column(Integer)
     parent_id = Column(Integer)
     user_id = Column(Integer)
