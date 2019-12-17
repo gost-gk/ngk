@@ -1,12 +1,16 @@
-import json
-import flask
-import logging
 from collections import defaultdict, namedtuple
-from datetime import datetime, timezone, timedelta
-from schema import ScopedSession, SyncState, User, Post, Comment
-from sqlalchemy.sql.expression import func
-from sqlalchemy.orm import aliased
+from datetime import datetime, timedelta, timezone
+from typing import Dict, Optional
+import json
+import logging
 import re
+
+import flask
+from sqlalchemy.orm import aliased
+from sqlalchemy.sql.expression import func
+
+from schema import Comment, Post, ScopedSession, SyncState, User
+
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 SEARCH_LIMIT = 50
@@ -14,11 +18,13 @@ COMMENTS_LIMIT = 20
 
 app = flask.Flask(__name__)
 
-def parse_date(date):
+
+def parse_date(date: str) -> datetime:
     return datetime.strptime(date, DATE_FORMAT)
 
+
 @app.route('/state')
-def state():
+def state() -> flask.Response:
     with ScopedSession() as session:
         pending = session.query(SyncState.post_id).filter_by(pending=True).count()
         total = session.query(SyncState.post_id).count()
@@ -28,7 +34,8 @@ def state():
         "total": total
     })
 
-def normalize_text(s):
+
+def normalize_text(s: str) -> str:
     # TODO: hacks below should be integrated into the parser
     s = s.replace("&#13;", "")
 
@@ -49,7 +56,7 @@ def normalize_text(s):
     return res + s
 
 
-def make_comment_dict(comment, user, post):
+def make_comment_dict(comment: Comment, user: User, post: Post) -> Dict:
     return {
         "id": comment.comment_id,
         "parent_id": comment.parent_id,
@@ -65,7 +72,7 @@ def make_comment_dict(comment, user, post):
     }
 
 
-def make_post_dict(post, user):
+def make_post_dict(post: Post, user: User) -> Dict:
     return {
         "id": post.post_id,
         "code": post.code,
@@ -81,7 +88,7 @@ def make_post_dict(post, user):
 
 
 @app.route('/comments')
-def comments():
+def comments() -> flask.Response:
     with ScopedSession() as session:
         query = session.query(Comment, User, Post).filter(Comment.user_id == User.user_id).filter(Comment.post_id == Post.post_id)
 
@@ -112,13 +119,7 @@ def comments():
 
 Replies = namedtuple('Replies', ['parents', 'children'])
 Replies.__new__.__defaults__ = ([], [])
-def get_replies_to(user_id=None, user_name=None):
-    if user_id is not None:
-        try:
-            user_id = int(user_id)
-        except ValueError:
-            user_id = None
-
+def get_replies_to(user_id: Optional[int]=None, user_name: Optional[str]=None) -> Replies:
     with ScopedSession() as session:
         if user_id is not None:
             parent_user = session.query(User).filter(User.user_id == user_id).first()
@@ -161,8 +162,8 @@ def get_replies_to(user_id=None, user_name=None):
     return replies
 
 
-@app.route('/replies/id/<user_id>')
-def replies_to_id(user_id):
+@app.route('/replies/id/<int:user_id>')
+def replies_to_id(user_id: int) -> flask.Response:
     resp = app.make_response(json.dumps(get_replies_to(user_id=user_id)._asdict(), ensure_ascii=False))
     resp.mimetype = 'application/json; charset=utf-8'
     resp.headers['Access-Control-Allow-Origin'] = '*'
@@ -170,17 +171,15 @@ def replies_to_id(user_id):
 
 
 @app.route('/replies/name/<user_name>')
-def replies_to_name(user_name):
+def replies_to_name(user_name: str) -> flask.Response:
     resp = app.make_response(json.dumps(get_replies_to(user_name=user_name)._asdict(), ensure_ascii=False))
     resp.mimetype = 'application/json; charset=utf-8'
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
    
 
-@app.route('/post/<post_id>')
-def post(post_id):
-    post_id = int(post_id)
-
+@app.route('/post/<int:post_id>')
+def post(post_id: int) -> flask.Response:
     with ScopedSession() as session:
         post = session.query(Post).get(post_id)
         user = session.query(User).get(post.user_id)
@@ -201,8 +200,9 @@ def post(post_id):
 
         return resp
 
+
 @app.route('/search')
-def search():
+def search() -> flask.Response:
     comments = []
     with ScopedSession() as session:
         q = flask.request.args.get('query', '')
@@ -235,20 +235,15 @@ def search():
     return resp
 
 
-@app.route('/user/id/<user_id>')
-def user_view_id(user_id):
+@app.route('/user/id/<int:user_id>')
+def user_view_id(user_id: int) -> flask.Response:
     with ScopedSession() as session:
-        try:
-            user_id = int(user_id)
-        except ValueError:
-            user_dict = {}
-        else:
-            user = session.query(User).filter(User.user_id == user_id).first()
-            user_dict = {
-                "id": user.user_id,
-                "name": user.name,
-                "avatar": user.avatar_hash
-            } if user is not None else {}
+        user = session.query(User).filter(User.user_id == user_id).first()
+        user_dict = {
+            "id": user.user_id,
+            "name": user.name,
+            "avatar": user.avatar_hash
+        } if user is not None else {}
 
     resp = app.make_response(json.dumps(user_dict, ensure_ascii=False))
     resp.mimetype = 'application/json; charset=utf-8'
@@ -258,7 +253,7 @@ def user_view_id(user_id):
 
 
 @app.route('/user/name/<user_name>')
-def user_view_name(user_name):
+def user_view_name(user_name: str) -> flask.Response:
     with ScopedSession() as session:
         user = session.query(User).filter(User.name == user_name).first()
         user_dict = {

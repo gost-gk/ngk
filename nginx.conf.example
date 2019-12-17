@@ -1,19 +1,19 @@
 server {
     listen 80;
-	server_name gcode.space www.gcode.space gcode-xp.space www.gcode-xp.space;
+    server_name gcode.space www.gcode.space gcode-xp.space www.gcode-xp.space;
     
     access_log /var/log/nginx/ngk/access.log;
     error_log /var/log/nginx/ngk/error.log error;
     
     root /home/python/ngk/static;
     
-	location / {
+    location / {
         index index.html;
-	}
+    }
     
     location /ngk {
         alias /home/python/ngk/static/;
-	}
+    }
     
     location /ngk/db_dumps {
         alias /home/python/ngk/db_dumps;
@@ -30,13 +30,13 @@ server {
         proxy_cache_bypass $http_upgrade;
         
         proxy_pass http://127.0.0.1:42265/;
-	}
+    }
     
     location /.well-known {
         root /home/python/ngk/static;
     }
     
-	location = /robots.txt {
+    location = /robots.txt {
         root /home/python/ngk/static;
     }
     
