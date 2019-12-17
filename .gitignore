@@ -13,3 +13,6 @@ webapp/__pycache__
 webapp/*.log
 logs/
 dumps/
+compress.log
+db_dumps/
+db_dump.log
