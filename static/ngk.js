@@ -1,3 +1,4 @@
+"use strict";
 var app = angular.module('app', ['ngRoute']);
 
 
@@ -476,7 +477,7 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
             return maxSecondId - maxFirstId;
         });
 
-        for (parent of parents) {
+        for (let parent of parents) {
             if (children[parent.id].length > 0) {
                 children[parent.id].sort(function (a, b) { return a.id - b.id; });
                 $scope.comments.push(parent);
@@ -530,7 +531,7 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
 
     function totalChildrenCount() {
         var sum = 0;
-        for (parent of parents) {
+        for (let parent of parents) {
             sum += (children[parent.id] || []).reduce(function (acc, val) { return acc + 1; }, 0);
         }
         return sum;
@@ -566,11 +567,11 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
         }
 
         $http(request).then(function(response) {
-            for (comment of response.data.parents) {
+            for (let comment of response.data.parents) {
                 insertParent(comment);
             }
 
-            for (comment of response.data.children) {
+            for (let comment of response.data.children) {
                 insertChild(comment);
             }
 
