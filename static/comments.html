@@ -4,7 +4,8 @@
     <p>Исходники: <a href="https://github.com/gost-gk/ngk">https://github.com/gost-gk/ngk</a></p>
     <p><a href="" ng-click="unignoreAllUsers($event)">[Разбанить всех]</a>
        <a href="#!/search">[Порыться в говне]</a>
-       <a href="#!/settings">[Настройки фильтра]</a></p>
+       <a href="#!/settings">[Настройки фильтра]</a>
+       <a href="db_dumps">[Дампы базы]</a></p>
 </div>
 <div>
     <div ng-repeat="comment in comments" ng-include="'comment-template-base'" ng-class="{'comment':true, 'new': comment.is_new}">
