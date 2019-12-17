@@ -1,8 +1,8 @@
 from contextlib import contextmanager
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Numeric
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, Numeric, ForeignKey
 from sqlalchemy.dialects.postgresql import TSVECTOR
 from decouple import config
 
@@ -80,7 +80,8 @@ class Comment(Base):
     comment_id = Column(Integer, primary_key=True)
     comment_id_xyz = Column(Integer)
     post_id = Column(Integer)
-    parent_id = Column(Integer)
+    parent_id = Column(Integer, ForeignKey('comments.comment_id'))
+    parent = relationship('Comment', uselist=False, remote_side=[comment_id])
     user_id = Column(Integer)
     text = Column(String)
     text_tsv = Column(TSVECTOR)

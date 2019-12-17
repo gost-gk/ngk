@@ -1,13 +1,16 @@
 import json
 import flask
 import logging
+from collections import defaultdict, namedtuple
 from datetime import datetime, timezone, timedelta
 from schema import ScopedSession, SyncState, User, Post, Comment
 from sqlalchemy.sql.expression import func
+from sqlalchemy.orm import aliased
 import re
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 SEARCH_LIMIT = 50
+COMMENTS_LIMIT = 20
 
 app = flask.Flask(__name__)
 
@@ -45,6 +48,38 @@ def normalize_text(s):
 
     return res + s
 
+
+def make_comment_dict(comment, user, post):
+    return {
+        "id": comment.comment_id,
+        "parent_id": comment.parent_id,
+        "post_id": comment.post_id,
+        "text": normalize_text(comment.text),
+        "posted": comment.posted.strftime(DATE_FORMAT),
+        "posted_timestamp": comment.posted.timestamp(),
+        "user_id": user.user_id,
+        "user_name": user.name,
+        "user_avatar": user.avatar_hash,
+        "comment_list_id": post.comment_list_id,
+        "source": comment.source
+    }
+
+
+def make_post_dict(post, user):
+    return {
+        "id": post.post_id,
+        "code": post.code,
+        "text": normalize_text(post.text),
+        "posted": post.posted.strftime(DATE_FORMAT),
+        "posted_timestamp": post.posted.timestamp(),
+        "user_id": user.user_id,
+        "user_name": user.name,
+        "user_avatar": user.avatar_hash,
+        "comment_list_id": post.comment_list_id,
+        "source": post.source
+    }
+
+
 @app.route('/comments')
 def comments():
     with ScopedSession() as session:
@@ -65,26 +100,82 @@ def comments():
 
         comments = []
 
-        for comment, user, post in query.order_by(Comment.posted.desc()).limit(20).all():
-            comments.append({
-                "id": comment.comment_id,
-                "parent_id": comment.parent_id,
-                "post_id": comment.post_id,
-                "text": normalize_text(comment.text),
-                "posted": comment.posted.strftime(DATE_FORMAT),
-                "posted_timestamp": comment.posted.timestamp(),
-                "user_id": user.user_id,
-                "user_name": user.name,
-                "user_avatar": user.avatar_hash,
-                "comment_list_id": post.comment_list_id,
-                "source": comment.source
-            })
+        for comment, user, post in query.order_by(Comment.posted.desc()).limit(COMMENTS_LIMIT).all():
+            comments.append(make_comment_dict(comment, user, post))
 
     resp = app.make_response(json.dumps(comments, ensure_ascii=False))
     resp.mimetype = 'application/json; charset=utf-8'
     resp.headers['Access-Control-Allow-Origin'] = '*'
 
     return resp
+
+
+Replies = namedtuple('Replies', ['parents', 'children'])
+Replies.__new__.__defaults__ = ([], [])
+def get_replies_to(user_id=None, user_name=None):
+    if user_id is not None:
+        try:
+            user_id = int(user_id)
+        except ValueError:
+            user_id = None
+
+    with ScopedSession() as session:
+        if user_id is not None:
+            parent_user = session.query(User).filter(User.user_id == user_id).first()
+        elif user_name is not None:
+            parent_user = session.query(User).filter(User.name == user_name).first()
+        else:
+            return Replies()
+    
+        if parent_user is None:
+            return Replies()
+
+        comment_parent = aliased(Comment)
+        query = session.query(Comment, comment_parent, User, Post) \
+            .filter(Comment.user_id == User.user_id) \
+            .filter(Comment.post_id == Post.post_id) \
+            .filter(Comment.user_id != parent_user.user_id) \
+            .join(comment_parent, Comment.parent) \
+            .filter(comment_parent.user_id == parent_user.user_id)
+
+        before = flask.request.args.get('before')
+        if before is not None:
+            query = query.filter(Comment.posted < parse_date(before))
+
+        ignore = flask.request.args.get('ignore')
+        if ignore is not None:
+            ignore = [int(u) for u in ignore.split(',')]
+            query = query.filter(Comment.user_id.notin_(ignore))
+
+        parents = {}
+        children = []
+        for comment, parent_comment, user, post in query.order_by(Comment.posted.desc()).limit(COMMENTS_LIMIT).all():
+            if parent_comment.comment_id not in parents:
+                parents[parent_comment.comment_id] = make_comment_dict(parent_comment, parent_user, post)
+            children.append(make_comment_dict(comment, user, post))
+        replies = Replies(
+            list(parents.values()),
+            children
+        )
+
+    return replies
+
+
+@app.route('/replies/id/<user_id>')
+def replies_to_id(user_id):
+    resp = app.make_response(json.dumps(get_replies_to(user_id=user_id)._asdict(), ensure_ascii=False))
+    resp.mimetype = 'application/json; charset=utf-8'
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
+
+
+@app.route('/replies/name/<user_name>')
+def replies_to_name(user_name):
+    resp = app.make_response(json.dumps(get_replies_to(user_name=user_name)._asdict(), ensure_ascii=False))
+    resp.mimetype = 'application/json; charset=utf-8'
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
+   
 
 @app.route('/post/<post_id>')
 def post(post_id):
@@ -94,36 +185,14 @@ def post(post_id):
         post = session.query(Post).get(post_id)
         user = session.query(User).get(post.user_id)
 
-        resp = {
-            "id": post.post_id,
-            "code": post.code,
-            "text": normalize_text(post.text),
-            "posted": post.posted.strftime(DATE_FORMAT),
-            "posted_timestamp": post.posted.timestamp(),
-            "user_id": user.user_id,
-            "user_name": user.name,
-            "user_avatar": user.avatar_hash,
-            "comment_list_id": post.comment_list_id,
-            "source": post.source
-        }
+        resp = make_post_dict(post, user)
 
         comments = []
 
         no_comments = flask.request.args.get('no_comments')
         if not no_comments:
             for comment, user in session.query(Comment, User).filter(Comment.post_id == post_id).filter(Comment.user_id == User.user_id).order_by(Comment.posted.asc()).all():
-                comments.append({
-                    "id": comment.comment_id,
-                    "parent_id": comment.parent_id,
-                    "post_id": comment.post_id,
-                    "text": normalize_text(comment.text),
-                    "posted": comment.posted.strftime(DATE_FORMAT),
-                    "posted_timestamp": comment.posted.timestamp(),
-                    "user_id": user.user_id,
-                    "user_name": user.name,
-                    "user_avatar": user.avatar_hash,
-                    "source": comment.source
-                })
+                comments.append(make_comment_dict(comment, user, post))
         resp["comments"] = comments
 
         resp = app.make_response(json.dumps(resp, ensure_ascii=False))
@@ -157,19 +226,7 @@ def search():
             query = query.filter(Comment.posted < datetime.fromtimestamp(before))
         
         for comment, user, post, highlighted in query.order_by(Comment.posted.desc()).limit(SEARCH_LIMIT).all():
-            comments.append({
-                "id": comment.comment_id,
-                "parent_id": comment.parent_id,
-                "post_id": comment.post_id,
-                "text": normalize_text(highlighted),
-                "posted": comment.posted.strftime(DATE_FORMAT),
-                "posted_timestamp": comment.posted.timestamp(),
-                "user_id": user.user_id,
-                "user_name": user.name,
-                "user_avatar": user.avatar_hash,
-                "comment_list_id": post.comment_list_id,
-                "source": comment.source
-            })
+            comments.append(make_comment_dict(comment, user, post))
 
     resp = app.make_response(json.dumps(comments, ensure_ascii=False))
     resp.mimetype = 'application/json; charset=utf-8'
@@ -178,21 +235,39 @@ def search():
     return resp
 
 
-@app.route('/users')
-def users():
+@app.route('/user/id/<user_id>')
+def user_view_id(user_id):
     with ScopedSession() as session:
-        query = session.query(User)
+        try:
+            user_id = int(user_id)
+        except ValueError:
+            user_dict = {}
+        else:
+            user = session.query(User).filter(User.user_id == user_id).first()
+            user_dict = {
+                "id": user.user_id,
+                "name": user.name,
+                "avatar": user.avatar_hash
+            } if user is not None else {}
 
-        users = []
+    resp = app.make_response(json.dumps(user_dict, ensure_ascii=False))
+    resp.mimetype = 'application/json; charset=utf-8'
+    resp.headers['Access-Control-Allow-Origin'] = '*'
 
-        for user in query.all():
-            users.append({
-                "user_id": user.user_id,
-                "user_name": user.name,
-                "user_avatar": user.avatar_hash
-            })
+    return resp
 
-    resp = app.make_response(json.dumps(users, ensure_ascii=False))
+
+@app.route('/user/name/<user_name>')
+def user_view_name(user_name):
+    with ScopedSession() as session:
+        user = session.query(User).filter(User.name == user_name).first()
+        user_dict = {
+            "id": user.user_id,
+            "name": user.name,
+            "avatar": user.avatar_hash
+        } if user is not None else {}
+
+    resp = app.make_response(json.dumps(user_dict, ensure_ascii=False))
     resp.mimetype = 'application/json; charset=utf-8'
     resp.headers['Access-Control-Allow-Origin'] = '*'
 

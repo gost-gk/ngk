@@ -27,6 +27,7 @@ if (comment.user_id == 25580 && comment.text.match('^_+$')) {
 return false;`;
 
 const SEARCH_LIMIT = 50;
+const COMMENTS_LIMIT = 20;
 
 function formatDate(timestamp_seconds) {
     var date = new Date(timestamp_seconds * 1000);
@@ -266,6 +267,11 @@ app.config(function($routeProvider, $rootScopeProvider) {
         'templateUrl': 'settings.html',
         'controller': 'SettingsController'
     });
+
+    $routeProvider.when('/replies/:userName', {
+        'templateUrl': 'replies.html',
+        'controller': 'RepliesController'
+    });
     
     $routeProvider.when('/:postId', {
         'templateUrl': 'post.html',
@@ -319,7 +325,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     $scope.comments = [];
     var minDate = null;
     var seen = {};
-    var limit = 20;
+    var limit = COMMENTS_LIMIT;
     var notifier = new Notifier();
 
     var spamFilterString = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
@@ -404,7 +410,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     }
 
     $scope.loadMoreComments = function() {
-        limit += 20;
+        limit += COMMENTS_LIMIT;
         loadMoreComments();
         console.log('Loading more.');
     }
@@ -440,6 +446,208 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     });
 });
 
+app.controller('RepliesController', function($scope, $http, $sce, $interval, $route, $routeParams) {
+    $scope.comments = [];
+    $scope.user = $routeParams.userName;
+    $scope.isUserValid = true;
+    var minDate = null;
+    var seenParents = {};
+    var seenChildren = {};
+    var parents = [];
+    var children = {};
+
+    var limit = COMMENTS_LIMIT;
+    $scope.someRepliesLoaded = false;
+    $scope.allRepliesLoaded = false;
+    var notifier = new Notifier();
+
+    var spamFilterString = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
+    var isSpam = new Function("comment", spamFilterString);
+    
+    function rebuildComments() {
+        console.log('Total replies:', totalChildrenCount());
+        $scope.comments = [];
+        parents.sort(function (first, second) {
+            let maxChildIdReducer = function (prevMaxId, child) {
+                return (child.id > prevMaxId ? child.id : prevMaxId);
+            };
+            let maxFirstId = children[first.id].reduce(maxChildIdReducer, 0);
+            let maxSecondId = children[second.id].reduce(maxChildIdReducer, 0);
+            return maxSecondId - maxFirstId;
+        });
+
+        for (parent of parents) {
+            if (children[parent.id].length > 0) {
+                children[parent.id].sort(function (a, b) { return a.id - b.id; });
+                $scope.comments.push(parent);
+                $scope.comments = $scope.comments.concat(children[parent.id]);
+            }
+        }
+    }
+
+    function insertParent(comment) {
+        if (minDate == null || comment.posted < minDate) {
+            minDate = comment.posted;
+        }
+
+        if (isSpam(comment))
+            return;
+
+        if (seenParents[comment.id]) {
+            return;
+        }
+
+        seenParents[comment.id] = true;
+        handleComment(comment);
+
+        comment.indent = 0;
+        comment.is_new = false;
+        parents.push(comment);
+    }
+
+    function insertChild(comment) {
+        if (minDate == null || comment.posted < minDate) {
+            minDate = comment.posted;
+        }
+
+        if (isSpam(comment))
+            return;
+
+        if (seenChildren[comment.id]) {
+            return;
+        }
+        seenChildren[comment.id] = true;
+        handleComment(comment);
+
+        comment.indent = 1;
+        comment.is_new = true;
+        if (children[comment.parent_id]) {  // TODO: defaultdict?
+            children[comment.parent_id].push(comment);
+        } else {
+            children[comment.parent_id] = [comment];
+        }
+    }
+
+    function totalChildrenCount() {
+        var sum = 0;
+        for (parent of parents) {
+            sum += (children[parent.id] || []).reduce(function (acc, val) { return acc + 1; }, 0);
+        }
+        return sum;
+    }
+
+    function handleComment(comment) {
+        comment.posted_local = formatDate(comment.posted_timestamp);
+        comment.source = $sce.trustAsHtml(formatSource(comment.source, "Коммент"));
+        comment.text = $sce.trustAsHtml(comment.text);
+        comment.avatar_url = makeAvatarUrl(comment.user_avatar);
+
+        notifier.onCommentAdded();
+    }
+
+    function loadComments(beforeDate) {
+        var request = {
+            method: 'GET',
+            url: '/ngk/api/replies/name/' + encodeURI($routeParams.userName),
+            params: {}
+        };
+
+        if (beforeDate)
+            request.params.before = beforeDate;
+
+        var ignoredUsers = getIgnoredUsers();
+        if (ignoredUsers) {
+            var ignore = [];
+            for (var k in ignoredUsers)
+                ignore.push(k);
+            ignore = ignore.join(",");
+            if (ignore)
+                request.params.ignore = ignore;
+        }
+
+        $http(request).then(function(response) {
+            for (comment of response.data.parents) {
+                insertParent(comment);
+            }
+
+            for (comment of response.data.children) {
+                insertChild(comment);
+            }
+
+            rebuildComments();
+            $scope.someRepliesLoaded = true;
+            $scope.allRepliesLoaded = response.data.children.length < COMMENTS_LIMIT;
+            if ($scope.allRepliesLoaded) {
+                window.removeEventListener('scroll', infScrollListener);
+            }
+            if (!$scope.allRepliesLoaded && totalChildrenCount() < limit) {
+                loadMoreComments();
+            }
+        });
+    }
+
+    function checkUserName() {
+        var request = {
+            method: 'GET',
+            url: '/ngk/api/user/name/' + encodeURI($routeParams.userName),
+            params: {}
+        };
+
+        $http(request).then(function(response) {
+            if (response.data.name) {
+                $scope.isUserValid = true;
+            } else {
+                $scope.isUserValid = false;
+            }
+        });
+    }
+
+    function loadNewComments() {
+        loadComments(null);
+    }
+
+    function loadMoreComments() {
+        loadComments(minDate);
+    }
+
+    $scope.loadMoreComments = function() {
+        limit += COMMENTS_LIMIT;
+        loadMoreComments();
+        console.log('Loading more.');
+    }
+
+    $scope.ignoreUser = ignoreUser.bind(undefined, $route);
+
+    $scope.unignoreAllUsers = function() {
+        localStorage.removeItem("ignoredUsers");
+        $route.reload();
+    }
+
+    checkUserName();
+    loadComments(null);
+    
+    var updateTimer = $interval(loadNewComments, 5000);
+    var infScroll = throttle(function() {
+        if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
+            $scope.loadMoreComments();
+        }
+    }, 1500);
+    
+    var infScrollListener = function(ev) {
+        if ($scope.someRepliesLoaded
+                && (window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
+            infScroll();
+        }
+    };
+    
+    window.addEventListener('scroll', infScrollListener);
+    
+    $scope.$on('$destroy', function() {
+        window.removeEventListener('scroll', infScrollListener);
+        $interval.cancel(updateTimer);
+        infScroll.cancel();
+    });
+});
 
 app.controller('PostController', function($scope, $http, $sce, $routeParams, $timeout, $anchorScroll, $route) {
     var request = {
