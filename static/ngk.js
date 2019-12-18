@@ -30,11 +30,61 @@ return false;`;
 const SEARCH_LIMIT = 50;
 const COMMENTS_LIMIT = 20;
 
+function SocketTransport(socket) {
+    this.socket = socket;
+    this.isSocketIoConnected = false;
+
+    this.maxId = 0;
+    this.maxIdDirty = false;
+    this.setMaxId = function(newMaxId) {
+        if (newMaxId != this.maxId || this.maxIdDirty) {
+            this.maxId = newMaxId;
+            if (this.isSocketIoConnected) {
+                this.socket.emit('set_max_id', newMaxId, (function() { this.maxIdDirt = false; }).bind(this));
+            } else {
+                this.maxIdDirty = true;
+            }
+        }
+    };
+
+    this.disconnect = function() {
+        this.socket.disconnect();
+    }
+
+    this.onConnect = undefined;
+    this.onDisconnect = undefined;
+    this.onData = undefined;
+
+    socket.on('connect', (function() {
+        console.log('Websockets connected.');
+        this.isSocketIoConnected = true;
+        this.setMaxId(this.maxId);
+        if (this.onConnect) {
+            this.onConnect();
+        }
+    }).bind(this));
+
+    socket.on('disconnect', (function() {
+        console.log('Websockets disconnected.');
+        this.isSocketIoConnected = false;
+        if (this.onDisconnect) {
+            this.onDisconnect();
+        }
+    }).bind(this));
+    
+    socket.on('new_comments', (function(data) {
+        if (this.onData) {
+            this.onData(data);
+        } else {
+            console.log('New_comments arrived, but no dataHandler was set', data);
+        }
+    }).bind(this));
+}
+
 function formatDate(timestamp_seconds) {
     var date = new Date(timestamp_seconds * 1000);
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
 }
-
 
 function formatSource(source, element) {
     switch(source) {
@@ -44,7 +94,6 @@ function formatSource(source, element) {
         default: return "";
     }
 }
-
 
 // Source: https://github.com/jashkenas/underscore/blob/master/underscore.js
 function throttle(func, wait, options) {
@@ -87,7 +136,6 @@ function throttle(func, wait, options) {
 
     return throttled;
 };
-
 
 app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
     var popupStack = [];
@@ -323,6 +371,9 @@ function setLastViewedComments(lastViewed) {
 }
 
 app.controller('CommentsController', function($scope, $http, $sce, $interval, $route) {
+    let socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + '/ngk');
+    let transport = new SocketTransport(socket);
+
     $scope.comments = [];
     var minDate = null;
     var seen = {};
@@ -355,6 +406,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
         if (isSpam(comment))
             return;
 
+        
         comment.text = $sce.trustAsHtml(comment.text);
         comment.avatar_url = makeAvatarUrl(comment.user_avatar);
         comment.is_new = false;
@@ -392,18 +444,28 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
         }
 
         $http(request).then(function(response) {
-            for (var i = 0; i < response.data.length; ++i)
-                insertComment(response.data[i]);
+            let maxId = 0;
+            for (let comment of response.data) {
+                insertComment(comment);
+                maxId = Math.max(comment.id, maxId);
+            }
+
+            if (maxId > transport.maxId) {
+                transport.setMaxId(maxId);
+            }
 
             updateViewedComments();
 
-            if ($scope.comments.length < limit)
+            if ($scope.comments.length < limit) {
                 loadMoreComments();
+            }
         });
     }
 
     function loadNewComments() {
-        loadComments(null);
+        if (!transport.isSocketIoConnected) {
+            loadComments(null);
+        }
     }
 
     function loadMoreComments() {
@@ -423,7 +485,27 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
         $route.reload();
     }
 
+    function socketIOHandler(data) {
+        let ignoredUsers = getIgnoredUsers() || {};
+        let maxId = transport.maxId;
+        for (let comment of data) {
+            if (!(comment.user_id in ignoredUsers)) {
+                insertComment(comment);
+            }
+            if (comment.id > maxId) {
+                maxId = comment.id;
+            }
+        }
+
+        if (maxId != transport.maxId) {
+            transport.setMaxId(maxId);
+        }
+
+        updateViewedComments();
+    }
+
     loadComments(null);
+    transport.onData = socketIOHandler;
 
     var updateTimer = $interval(loadNewComments, 5000);
     var infScroll = throttle(function() {
@@ -441,6 +523,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     window.addEventListener('scroll', infScrollListener);
     
     $scope.$on('$destroy', function() {
+        transport.disconnect();
         $interval.cancel(updateTimer);
         infScroll.cancel();
         window.removeEventListener('scroll', infScrollListener);
@@ -849,7 +932,6 @@ app.controller('SearchController', function($scope, $routeParams, $http, $sce, $
     
     $scope.ignoreUser = ignoreUser.bind(undefined, undefined);
 });
-
 
 app.controller('SettingsController', function($scope, $http, $sce, $interval, $route) {
     var spamFilter = localStorage.getItem("spamFilter") || DEFAULT_FILTER;

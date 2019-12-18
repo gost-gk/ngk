@@ -1,10 +1,14 @@
 from contextlib import contextmanager
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Numeric, ForeignKey
-from sqlalchemy.dialects.postgresql import TSVECTOR
+import re
+from typing import Dict
+
 from decouple import config
+from sqlalchemy import create_engine
+from sqlalchemy import (
+    Boolean, Column, DateTime, ForeignKey, Integer, Numeric, String)
+from sqlalchemy.dialects.postgresql import TSVECTOR
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, sessionmaker
 
 
 engine = create_engine(config('DB_CONNECT_STRING'))
@@ -94,4 +98,59 @@ class Comment(Base):
     SOURCE_GK = 0
     SOURCE_WEBARCHIVE = 1
     SOURCE_XYZ = 2
-    
+
+
+# TODO: shit. Move to a standalone
+DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+
+
+def normalize_text(s: str) -> str:
+    # TODO: hacks below should be integrated into the parser
+    s = s.replace("&#13;", "")
+
+    res = ""
+    while True:
+        m = re.search(r'<a.*?data-cfemail="(.*?)">.*?</a>', s)
+        if not m:
+            break
+
+        encoded = bytes.fromhex(m.group(1))
+        key = encoded[0]
+        decoded = "".join([chr(c ^ key) for c in encoded[1:]])
+
+        res += s[:m.start()]
+        res += decoded
+        s = s[m.end():]
+
+    return res + s
+
+
+def make_comment_dict(comment: Comment, user: User, post: Post) -> Dict:
+    return {
+        "id": comment.comment_id,
+        "parent_id": comment.parent_id,
+        "post_id": comment.post_id,
+        "text": normalize_text(comment.text),
+        "posted": comment.posted.strftime(DATE_FORMAT),
+        "posted_timestamp": comment.posted.timestamp(),
+        "user_id": user.user_id,
+        "user_name": user.name,
+        "user_avatar": user.avatar_hash,
+        "comment_list_id": post.comment_list_id,
+        "source": comment.source
+    }
+
+
+def make_post_dict(post: Post, user: User) -> Dict:
+    return {
+        "id": post.post_id,
+        "code": post.code,
+        "text": normalize_text(post.text),
+        "posted": post.posted.strftime(DATE_FORMAT),
+        "posted_timestamp": post.posted.timestamp(),
+        "user_id": user.user_id,
+        "user_name": user.name,
+        "user_avatar": user.avatar_hash,
+        "comment_list_id": post.comment_list_id,
+        "source": post.source
+    }

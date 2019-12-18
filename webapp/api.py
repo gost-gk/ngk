@@ -1,3 +1,10 @@
+import eventlet
+eventlet.monkey_patch()
+
+import threading
+import time
+import redis
+
 from collections import defaultdict, namedtuple
 from datetime import datetime, timedelta, timezone
 from typing import Dict, Optional
@@ -5,18 +12,30 @@ import json
 import logging
 import re
 
+from decouple import config
 import flask
+from flask_socketio import SocketIO, join_room, leave_room, close_room
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql.expression import func
 
-from schema import Comment, Post, ScopedSession, SyncState, User
+from comments_processor import CommentsProcessor
+from schema import (Comment, Post, ScopedSession, SyncState, User,
+                    make_comment_dict, make_post_dict, DATE_FORMAT)
 
 
-DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 SEARCH_LIMIT = 50
 COMMENTS_LIMIT = 20
+IO_NAMESPACE = '/ngk'
 
 app = flask.Flask(__name__)
+io = SocketIO(app, async_mode='eventlet')
+
+
+logging.basicConfig(
+    filename="../logs/api.log",
+    format="%(asctime)s %(levelname)s %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    level=logging.DEBUG)
 
 
 def parse_date(date: str) -> datetime:
@@ -33,58 +52,6 @@ def state() -> flask.Response:
         "pending": pending,
         "total": total
     })
-
-
-def normalize_text(s: str) -> str:
-    # TODO: hacks below should be integrated into the parser
-    s = s.replace("&#13;", "")
-
-    res = ""
-    while True:
-        m = re.search(r'<a.*?data-cfemail="(.*?)">.*?</a>', s)
-        if not m:
-            break
-
-        encoded = bytes.fromhex(m.group(1))
-        key = encoded[0]
-        decoded = "".join([chr(c ^ key) for c in encoded[1:]])
-
-        res += s[:m.start()]
-        res += decoded
-        s = s[m.end():]
-
-    return res + s
-
-
-def make_comment_dict(comment: Comment, user: User, post: Post) -> Dict:
-    return {
-        "id": comment.comment_id,
-        "parent_id": comment.parent_id,
-        "post_id": comment.post_id,
-        "text": normalize_text(comment.text),
-        "posted": comment.posted.strftime(DATE_FORMAT),
-        "posted_timestamp": comment.posted.timestamp(),
-        "user_id": user.user_id,
-        "user_name": user.name,
-        "user_avatar": user.avatar_hash,
-        "comment_list_id": post.comment_list_id,
-        "source": comment.source
-    }
-
-
-def make_post_dict(post: Post, user: User) -> Dict:
-    return {
-        "id": post.post_id,
-        "code": post.code,
-        "text": normalize_text(post.text),
-        "posted": post.posted.strftime(DATE_FORMAT),
-        "posted_timestamp": post.posted.timestamp(),
-        "user_id": user.user_id,
-        "user_name": user.name,
-        "user_avatar": user.avatar_hash,
-        "comment_list_id": post.comment_list_id,
-        "source": post.source
-    }
 
 
 @app.route('/comments')
@@ -267,3 +234,56 @@ def user_view_name(user_name: str) -> flask.Response:
     resp.headers['Access-Control-Allow-Origin'] = '*'
 
     return resp
+
+###### SocketIO ######
+rooms: Dict[str, int] = {}
+
+
+@io.on('connect', namespace=IO_NAMESPACE)
+def io_connect():
+    logging.debug(f'IO: {flask.request.sid} connected')
+    rooms[flask.request.sid] = 0
+    join_room(flask.request.sid)
+
+
+@io.on('disconnect', namespace=IO_NAMESPACE)
+def io_disconnect():
+    logging.debug(f'IO: {flask.request.sid} left')
+    close_room(flask.request.sid)
+    del rooms[flask.request.sid]
+
+
+@io.on('set_max_id', namespace=IO_NAMESPACE)
+def io_set_max_id(max_id):
+    logging.debug(f'IO: set_max_id {flask.request.sid} -> {max_id}')
+    try:
+        max_id = int(max_id)
+    except ValueError:
+        max_id = 0
+    rooms[flask.request.sid] = max_id
+
+
+def comments_listener(comments_processor: CommentsProcessor):
+    logging.debug('IO: CommentsListenerTask started')
+    for message in comments_processor.listen():
+        comments = json.loads(message, encoding='utf-8')
+        logging.debug(f'CommentsListenerTask: Got {len(comments)} comments')
+        for room in rooms:
+            max_id = rooms[room]
+            to_send = [comment for comment in comments if comment['id'] > max_id]
+            logging.debug(f'CommentsListenerTask: Room {room}, max_id={max_id}, to_send -> {len(to_send)}')
+            if len(to_send) > 0:
+                io.emit('new_comments',
+                        to_send,
+                        namespace=IO_NAMESPACE,
+                        room=room)
+
+
+comments_processor = CommentsProcessor(config('REDIS_HOST'),
+                                       config('REDIS_PORT'),
+                                       config('REDIS_PASSWORD'),
+                                       config('REDIS_CHANNEL'))
+comments_processor.subscribe()
+logging.debug('IO: starting CommentsListenerTask')
+listener_thread = io.start_background_task(comments_listener, comments_processor)
+logging.debug('IO: started a listener_thread: ' + str(listener_thread))

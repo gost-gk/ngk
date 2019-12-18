@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="/ngk/">
     <title>Neon Neon Genesis Govnokod</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"
+            integrity="sha256-Dul4c09cdrWKXVtallPxF558lwxMwCC8dXJdZ0PVW54="
+            crossorigin="anonymous"></script>
     <script type="text/javascript" src="angular.min.js"></script>
     <script type="text/javascript" src="angular-route.min.js"></script>
     <script type="text/javascript" src="ngk.js"></script>
@@ -21,7 +24,7 @@
                 <a href="" ng-click="ignoreUser(comment.user_id, comment.user_name)" class="ignore" title="Забанить">&#x2613;</a>
                 насрал в
                 <a href="https://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>
-                (<a href="#!/{{comment.post_id}}#comment{{comment.id}}">NGK</a>,
+                (<a href="/#!/{{comment.post_id}}#comment{{comment.id}}">NGK</a>,
                     <a href="https://govnokod.xyz/_{{comment.post_id}}">XYZ</a>)
                 ({{comment.posted_local}})
                 <span ng-bind-html="comment.source"></span>

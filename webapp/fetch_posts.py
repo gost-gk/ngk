@@ -1,15 +1,19 @@
-import logging
-import time
-import requests
-import lxml.etree
-import lxml.html
-import re
+from datetime import datetime, timedelta, timezone
 import decimal
-from datetime import datetime, timezone, timedelta
-from schema import ScopedSession, SyncState, User, Post, Comment
+import logging
 import os
 import os.path
+import re
+import time
 
+import lxml
+import lxml.etree
+import lxml.html
+import requests
+from decouple import config
+
+from comments_processor import CommentsProcessor
+from schema import Comment, Post, ScopedSession, SyncState, User
 
 
 logging.basicConfig(
@@ -143,7 +147,7 @@ def dump_post(content):
     with open(os.path.join(subdir_path, file_name), 'wb') as f:
         f.write(content)
 
-def update_post(session, state):
+def update_post(session, state, processor: CommentsProcessor):
     logging.info("Updating post %d...", state.post_id)
 
     r = requests.get(GK_URL + "/" + str(state.post_id))
@@ -172,13 +176,15 @@ def update_post(session, state):
 
     state.last_comment_id = last_comment_id
     update_state(state, 'OK')
+    processor.on_post_updated(post, users, comments)
 
-def update_next_post():
+
+def update_next_post(processor: CommentsProcessor):
     try:
         with ScopedSession() as session:
             state = session.query(SyncState).filter_by(pending=True).order_by(SyncState.priority, SyncState.post_id.desc()).first()
             if state:
-                update_post(session, state)
+                update_post(session, state, processor)
 
         delay = SUCCESS_DELAY
 
@@ -186,11 +192,18 @@ def update_next_post():
         logging.exception(e)
         delay = ERROR_DELAY
 
-    logging.debug("Sleeping for %d seconds...", delay)
     time.sleep(delay)
 
 
-logging.info("=== started ===")
+def main():
+    logging.info("=== started ===")
+    processor = CommentsProcessor(config('REDIS_HOST'),
+                                  config('REDIS_PORT'),
+                                  config('REDIS_PASSWORD'),
+                                  config('REDIS_CHANNEL'))
+    while True:
+        update_next_post(processor)
 
-while True:
-    update_next_post()
+
+if __name__ == '__main__':
+    main()
