@@ -50,7 +50,8 @@ def state() -> flask.Response:
 
     return flask.jsonify({
         "pending": pending,
-        "total": total
+        "total": total,
+        "thread": str(listener_thread)
     })
 
 
@@ -266,17 +267,21 @@ def io_set_max_id(max_id):
 def comments_listener(comments_processor: CommentsProcessor):
     logging.debug('IO: CommentsListenerTask started')
     for message in comments_processor.listen():
-        comments = json.loads(message, encoding='utf-8')
-        logging.debug(f'CommentsListenerTask: Got {len(comments)} comments')
-        for room in rooms:
-            max_id = rooms[room]
-            to_send = [comment for comment in comments if comment['id'] > max_id]
-            logging.debug(f'CommentsListenerTask: Room {room}, max_id={max_id}, to_send -> {len(to_send)}')
-            if len(to_send) > 0:
-                io.emit('new_comments',
-                        to_send,
-                        namespace=IO_NAMESPACE,
-                        room=room)
+        try:
+            comments = json.loads(message, encoding='utf-8')
+            logging.debug(f'IO: CommentsListenerTask: Got {len(comments)} comments')
+            for room in rooms.copy():
+                max_id = rooms[room]
+                to_send = [comment for comment in comments if comment['id'] > max_id]
+                logging.debug(f'IO: CommentsListenerTask: Room {room}, max_id={max_id}, to_send -> {len(to_send)}')
+                if len(to_send) > 0:
+                    io.emit('new_comments',
+                            to_send,
+                            namespace=IO_NAMESPACE,
+                            room=room)
+        except:
+            logging.exception('IO: CommentsListenerTask: exception')
+    logging.warning('IO: CommentsListenerTask: exiting')
 
 
 comments_processor = CommentsProcessor(config('REDIS_HOST'),
