@@ -21,7 +21,7 @@ FAST_TO_SLOW_STEPS = 20
 
 def fetch_latest_comments():
     logging.debug("Fetching comments...")
-    r = requests.get(COMMENTS_URL)
+    r = requests.get(COMMENTS_URL, timeout=30)
     r.raise_for_status()
     root = lxml.etree.HTML(r.content)
 

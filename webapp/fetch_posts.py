@@ -55,7 +55,18 @@ def parse_rating(rating_node):
     rating = decimal.Decimal(rating_node.text.replace('−', '-'))
     return plus, minus, rating
 
+
+# An extremely ugly hack to fix GK's incorrect
+# <pre> usage within the <p> tag
+_RE_DESCRIPTION_TAG_OPEN = re.compile(r'<p\s+class="description">'.encode('utf-8'))
+_RE_DESCRIPTION_TAG_CLOSE = re.compile(r'</p>\s*<p\s+class="author">'.encode('utf-8'))
+def replace_description_tag(content, new_tag):
+    content = _RE_DESCRIPTION_TAG_OPEN .sub(f'<{new_tag} class="description">'.encode('utf-8'), content)
+    return    _RE_DESCRIPTION_TAG_CLOSE.sub(f'</{new_tag}><p class="author">'.encode('utf-8'), content)
+    
+    
 def parse_post(content):
+    content = replace_description_tag(content, 'div')
     post = Post()
     users = []
     comments = []
@@ -79,7 +90,7 @@ def parse_post(content):
     post.language = post_node.xpath('.//a[@rel="chapter"]')[0].text
 
     post.code = post_node.xpath('div[@class="entry-content"]/pre/code')[0].text
-    post.text = inner_html(post_node.xpath('p[@class="description"]')[0])
+    post.text = inner_html(post_node.xpath('div[@class="description"]')[0])
 
     post.posted = parse_date(author_node.xpath('abbr')[0].get('title'))
 
@@ -150,7 +161,7 @@ def dump_post(content):
 def update_post(session, state, processor: CommentsProcessor):
     logging.info("Updating post %d...", state.post_id)
 
-    r = requests.get(GK_URL + "/" + str(state.post_id))
+    r = requests.get(GK_URL + "/" + str(state.post_id), timeout=30)
     if r.status_code != 200:
         update_state(state, 'HTTP error {0}'.format(r.status_code))
         return
