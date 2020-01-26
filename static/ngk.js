@@ -317,6 +317,11 @@ app.config(function($routeProvider, $rootScopeProvider) {
         'controller': 'SettingsController'
     });
 
+    $routeProvider.when('/blacklist', {
+        'templateUrl': 'blacklist.html',
+        'controller': 'BlacklistController'
+    });
+
     $routeProvider.when('/replies/:userName', {
         'templateUrl': 'replies.html',
         'controller': 'RepliesController'
@@ -347,7 +352,7 @@ function getIgnoredUsers() {
 }
 
 function ignoreUser(route, user_id, user_name) {
-    var ignoredUsers = getIgnoredUsers();
+    let ignoredUsers = getIgnoredUsers();
     ignoredUsers[user_id] = user_name;
     localStorage.setItem("ignoredUsers", JSON.stringify(ignoredUsers));
     console.log(ignoredUsers);
@@ -356,7 +361,18 @@ function ignoreUser(route, user_id, user_name) {
         route.reload();
     }
 }
-    
+
+function unignoreUser(route, user_id) {
+    let ignoredUsers = getIgnoredUsers();
+    delete ignoredUsers[user_id];
+    localStorage.setItem("ignoredUsers", JSON.stringify(ignoredUsers));
+    console.log(ignoredUsers);
+
+    if (route && route.reload) {
+        route.reload();
+    }
+}
+
 function getLastViewedComments() {
     var lastViewed = null;
     try {
@@ -948,4 +964,36 @@ app.controller('SettingsController', function($scope, $http, $sce, $interval, $r
             $scope.saveFilter();
         }
     };
+});
+
+app.controller('BlacklistController', function($scope, $http, $sce, $interval, $route) {
+    $scope.rebuildTable = function() {
+        $scope.ignoredUsers = getIgnoredUsers();
+        $scope.blacklist = [];
+        for (let key in $scope.ignoredUsers) {
+            $scope.blacklist.push({id: key, name: $scope.ignoredUsers[key], pardoned: false});
+        }
+    };
+
+    $scope.unignoreUser = function(user_id) {
+        unignoreUser(undefined, user_id);
+        for (let user of $scope.blacklist) {
+            if (user.id == user_id) {
+                user.pardoned = true;
+                break;
+            }
+        }
+    };
+
+    $scope.ignoreUser = function(user_id, user_name) {
+        ignoreUser(undefined, user_id, user_name);
+        for (let user of $scope.blacklist) {
+            if (user.id == user_id) {
+                user.pardoned = false;
+                break;
+            }
+        }
+    };
+
+    $scope.rebuildTable();
 });

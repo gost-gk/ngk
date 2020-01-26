@@ -48,8 +48,6 @@ def generate_tasks():
         except Exception as e:
             logging.exception(e)
             delay = ERROR_DELAY
-
-        logging.debug("Sleeping for %d seconds...", delay)
         time.sleep(delay)
     logging.info("=== dumping done ===")
 

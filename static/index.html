@@ -5,13 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="/ngk/">
     <title>Neon Neon Genesis Govnokod</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"
-            integrity="sha256-Dul4c09cdrWKXVtallPxF558lwxMwCC8dXJdZ0PVW54="
-            crossorigin="anonymous"></script>
-    <script type="text/javascript" src="angular.min.js"></script>
-    <script type="text/javascript" src="angular-route.min.js"></script>
-    <script type="text/javascript" src="ngk.js"></script>
-    <link rel="stylesheet" type="text/css" href="ngk.css">
+    <script src="angular.min.js"></script>
+    <script src="angular-route.min.js"></script>
+    <script src="socket.io.slim.js"></script>
+    <script src="ngk.js"></script>
+    <style>
+.header {
+    border: 1px solid #C0C0C0;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 5px;
+}
+
+.comment {
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    min-height: 74px;
+    border: 1px solid #C0C0C0;
+    border-radius: 5px;
+    min-width: 60%;
+}
+
+.comment .avatar {
+    display: inline-block;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    width: 48px;
+    height: 48px;
+    border: 1px solid #C0C0C0;
+}
+
+.comment .content {
+    margin-left: 64px;
+}
+
+.comment .info {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.comment .text {
+    margin-bottom: 5px;
+}
+
+.nested-comment {
+    margin-left: 20px;
+}
+
+.nested-comment .content {
+    min-height: 48px;
+}
+
+.comment .ignore {
+    color: black;
+    text-decoration: none;
+}
+
+.comment.new {
+    background-color: #e0ffe0;
+}
+
+pre {
+    max-width: 100%;
+    overflow: auto;
+}
+
+
+.comment-popup {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    width: 90%;
+}
+
+body {
+    overflow-x: auto;
+}
+</style>
 </head>
 <body>
     <script type="text/ng-template" id="comment-template-base">

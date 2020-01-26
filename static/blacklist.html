@@ -1,0 +1,34 @@
+<style>
+table {
+    border: 1px solid black;
+}
+th, td {
+    border: 1px solid black;
+    padding: 7px;
+    text-align: center;
+}
+</style>
+
+<div class="header">
+    <a href="#!/">На главную</a><br>
+</div>
+<table>
+    <caption>Список плохих людей</caption>
+    <tr>
+        <th>Ник</th>
+        <th>ID</th>
+        <th>Помилование</th>
+    </tr>
+    <tbody ng-repeat="user in blacklist">
+        <tr>
+            <td><a href="/#!/search?user={{user.name}}">{{user.name}}</a></td>
+            <td><a href="https://govnokod.ru/user/{{user.id}}">{{user.id}}</a></td>
+            <td ng-if="!user.pardoned">
+                <button type="button" ng-click="unignoreUser(user.id)">Помиловать</button>
+            </td>
+            <td ng-if="user.pardoned">
+                <button type="button" ng-click="ignoreUser(user.id, user.name)">Забанить</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

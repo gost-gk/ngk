@@ -193,7 +193,7 @@ def update_post(session, state, processor: CommentsProcessor):
 def update_next_post(processor: CommentsProcessor):
     try:
         with ScopedSession() as session:
-            state = session.query(SyncState).filter_by(pending=True).order_by(SyncState.priority, SyncState.post_id.desc()).first()
+            state = session.query(SyncState).filter_by(pending=True).order_by(SyncState.priority.desc(), SyncState.post_id.desc()).first()
             if state:
                 update_post(session, state, processor)
 
