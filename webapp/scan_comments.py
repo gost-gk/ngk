@@ -76,5 +76,4 @@ while True:
     else:
         delay = SLOW_DELAY
 
-    logging.debug("Sleeping for %d seconds (%d fast requests left)...", delay, fast_requests)
     time.sleep(delay)

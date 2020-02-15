@@ -180,14 +180,23 @@ def update_post(session, state, processor: CommentsProcessor):
         session.merge(user)
 
     last_comment_id = None
+    updated_comments = []
+    new_comments = []
+
     for comment in comments:
-        session.merge(comment)
+        old_text = session.query(Comment.text).filter(Comment.comment_id == comment.comment_id).first()
+        merged_comment = session.merge(comment)
+        if old_text is None:
+            new_comments.append(merged_comment)
+        elif old_text[0] != merged_comment.text:
+            updated_comments.append(merged_comment)
         if last_comment_id is None or comment.comment_id > last_comment_id:
             last_comment_id = comment.comment_id
 
     state.last_comment_id = last_comment_id
     update_state(state, 'OK')
-    processor.on_post_updated(post, users, comments)
+    session.flush()
+    processor.on_comments_update(new_comments, updated_comments)
 
 
 def update_next_post(processor: CommentsProcessor):

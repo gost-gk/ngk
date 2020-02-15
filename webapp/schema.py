@@ -52,6 +52,9 @@ class User(Base):
     avatar_hash = Column(String)
     source = Column(Integer)
 
+    comments = relationship('Comment', back_populates='user', order_by='Comment.posted.asc()')
+    posts = relationship('Post', back_populates='user', order_by='Post.posted.asc()')
+
     SOURCE_GK = 0
     SOURCE_WEBARCHIVE = 1
     SOURCE_XYZ = 2
@@ -62,7 +65,8 @@ class Post(Base):
 
     post_id = Column(Integer, primary_key=True)
     comment_list_id = Column(Integer)
-    user_id = Column(Integer)
+    user_id = Column(Integer, ForeignKey('users.user_id'))
+    user = relationship('User', lazy='joined', back_populates='posts')
     language = Column(String)
     code = Column(String)
     text = Column(String)
@@ -73,20 +77,38 @@ class Post(Base):
     rating = Column(Numeric)
     source = Column(Integer)
 
+    comments = relationship('Comment', back_populates='post', order_by='Comment.posted.asc()')
+
     SOURCE_GK = 0
     SOURCE_WEBARCHIVE = 1
     SOURCE_XYZ = 2
     
+    def to_dict(self):
+        return {
+            'id': self.post_id,
+            'code': self.code,
+            'text': normalize_text(self.text),
+            'posted': self.posted.strftime(DATE_FORMAT),
+            'posted_timestamp': self.posted.timestamp(),
+            'user_id': self.user_id,
+            'user_name': self.user.name,
+            'user_avatar': self.user.avatar_hash,
+            'comment_list_id': self.comment_list_id,
+            'source': self.source
+        }
+
     
 class Comment(Base):
     __tablename__ = 'comments'
 
     comment_id = Column(Integer, primary_key=True)
     comment_id_xyz = Column(Integer)
-    post_id = Column(Integer)
+    post_id = Column(Integer, ForeignKey('posts.post_id'))
+    post = relationship("Post", lazy='joined', back_populates="comments")
     parent_id = Column(Integer, ForeignKey('comments.comment_id'))
     parent = relationship('Comment', uselist=False, remote_side=[comment_id])
-    user_id = Column(Integer)
+    user_id = Column(Integer, ForeignKey('users.user_id'))
+    user = relationship('User', lazy='joined', back_populates='comments')
     text = Column(String)
     text_tsv = Column(TSVECTOR)
     posted = Column(DateTime)
@@ -98,6 +120,21 @@ class Comment(Base):
     SOURCE_GK = 0
     SOURCE_WEBARCHIVE = 1
     SOURCE_XYZ = 2
+
+    def to_dict(self):
+        return {
+            'id': self.comment_id,
+            'parent_id': self.parent_id,
+            'post_id': self.post_id,
+            'text': normalize_text(self.text),
+            'posted': self.posted.strftime(DATE_FORMAT),
+            'posted_timestamp': self.posted.timestamp(),
+            'user_id': self.user_id,
+            'user_name': self.user.name,
+            'user_avatar': self.user.avatar_hash,
+            'comment_list_id': self.post.comment_list_id,
+            'source': self.source
+        }
 
 
 # TODO: shit. Move to a standalone
@@ -123,34 +160,3 @@ def normalize_text(s: str) -> str:
         s = s[m.end():]
 
     return res + s
-
-
-def make_comment_dict(comment: Comment, user: User, post: Post) -> Dict:
-    return {
-        "id": comment.comment_id,
-        "parent_id": comment.parent_id,
-        "post_id": comment.post_id,
-        "text": normalize_text(comment.text),
-        "posted": comment.posted.strftime(DATE_FORMAT),
-        "posted_timestamp": comment.posted.timestamp(),
-        "user_id": user.user_id,
-        "user_name": user.name,
-        "user_avatar": user.avatar_hash,
-        "comment_list_id": post.comment_list_id,
-        "source": comment.source
-    }
-
-
-def make_post_dict(post: Post, user: User) -> Dict:
-    return {
-        "id": post.post_id,
-        "code": post.code,
-        "text": normalize_text(post.text),
-        "posted": post.posted.strftime(DATE_FORMAT),
-        "posted_timestamp": post.posted.timestamp(),
-        "user_id": user.user_id,
-        "user_name": user.name,
-        "user_avatar": user.avatar_hash,
-        "comment_list_id": post.comment_list_id,
-        "source": post.source
-    }

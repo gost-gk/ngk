@@ -19,8 +19,7 @@ from sqlalchemy.orm import aliased
 from sqlalchemy.sql.expression import func
 
 from comments_processor import CommentsProcessor
-from schema import (Comment, Post, ScopedSession, SyncState, User,
-                    make_comment_dict, make_post_dict, DATE_FORMAT)
+from schema import (Comment, Post, ScopedSession, SyncState, User, DATE_FORMAT)
 
 
 SEARCH_LIMIT = 50
@@ -58,7 +57,7 @@ def state() -> flask.Response:
 @app.route('/comments')
 def comments() -> flask.Response:
     with ScopedSession() as session:
-        query = session.query(Comment, User, Post).filter(Comment.user_id == User.user_id).filter(Comment.post_id == Post.post_id)
+        query = session.query(Comment)
 
         id = flask.request.args.get('id')
         if id is not None:
@@ -75,8 +74,8 @@ def comments() -> flask.Response:
 
         comments = []
 
-        for comment, user, post in query.order_by(Comment.posted.desc()).limit(COMMENTS_LIMIT).all():
-            comments.append(make_comment_dict(comment, user, post))
+        for comment in query.order_by(Comment.posted.desc()).limit(COMMENTS_LIMIT).all():
+            comments.append(comment.to_dict())
 
     resp = app.make_response(json.dumps(comments, ensure_ascii=False))
     resp.mimetype = 'application/json; charset=utf-8'
@@ -99,13 +98,11 @@ def get_replies_to(user_id: Optional[int]=None, user_name: Optional[str]=None) -
         if parent_user is None:
             return Replies()
 
-        comment_parent = aliased(Comment)
-        query = session.query(Comment, comment_parent, User, Post) \
-            .filter(Comment.user_id == User.user_id) \
-            .filter(Comment.post_id == Post.post_id) \
+        Comment_parent = aliased(Comment)
+        query = session.query(Comment, Comment_parent) \
             .filter(Comment.user_id != parent_user.user_id) \
-            .join(comment_parent, Comment.parent) \
-            .filter(comment_parent.user_id == parent_user.user_id)
+            .join(Comment_parent, Comment.parent) \
+            .filter(Comment_parent.user_id == parent_user.user_id)
 
         before = flask.request.args.get('before')
         if before is not None:
@@ -118,10 +115,10 @@ def get_replies_to(user_id: Optional[int]=None, user_name: Optional[str]=None) -
 
         parents = {}
         children = []
-        for comment, parent_comment, user, post in query.order_by(Comment.posted.desc()).limit(COMMENTS_LIMIT).all():
+        for comment, parent_comment in query.order_by(Comment.posted.desc()).limit(COMMENTS_LIMIT).all():
             if parent_comment.comment_id not in parents:
-                parents[parent_comment.comment_id] = make_comment_dict(parent_comment, parent_user, post)
-            children.append(make_comment_dict(comment, user, post))
+                parents[parent_comment.comment_id] = parent_comment.to_dict()
+            children.append(comment.to_dict())
         replies = Replies(
             list(parents.values()),
             children
@@ -150,17 +147,15 @@ def replies_to_name(user_name: str) -> flask.Response:
 def post(post_id: int) -> flask.Response:
     with ScopedSession() as session:
         post = session.query(Post).get(post_id)
-        user = session.query(User).get(post.user_id)
-
-        resp = make_post_dict(post, user)
+        resp = post.to_dict()
 
         comments = []
 
         no_comments = flask.request.args.get('no_comments')
         if not no_comments:
-            for comment, user in session.query(Comment, User).filter(Comment.post_id == post_id).filter(Comment.user_id == User.user_id).order_by(Comment.posted.asc()).all():
-                comments.append(make_comment_dict(comment, user, post))
-        resp["comments"] = comments
+            for comment in post.comments:
+                comments.append(comment.to_dict())
+        resp['comments'] = comments
 
         resp = app.make_response(json.dumps(resp, ensure_ascii=False))
         resp.mimetype = 'application/json; charset=utf-8'
@@ -181,20 +176,20 @@ def search() -> flask.Response:
 
         user_name = flask.request.args.get('username', '')
         
-        query = session.query(Comment, User, Post, func.ts_headline('russian', Comment.text, func.plainto_tsquery('russian', q), 'HighlightAll=true').label('highlighted')).filter(Comment.user_id == User.user_id).filter(Comment.post_id == Post.post_id)
+        query = session.query(Comment)
         
         if len(q) > 0:
             query = query.filter(Comment.text_tsv.op('@@')(func.plainto_tsquery('russian', q)))
             
         if len(user_name) > 0:
             user_id = session.query(User.user_id).filter(User.name == user_name).scalar()
-            query = query.filter(User.user_id == user_id)
+            query = query.filter(Comment.user_id == user_id)
         
         if before is not None:
             query = query.filter(Comment.posted < datetime.fromtimestamp(before))
         
-        for comment, user, post, highlighted in query.order_by(Comment.posted.desc()).limit(SEARCH_LIMIT).all():
-            comments.append(make_comment_dict(comment, user, post))
+        for comment in query.order_by(Comment.posted.desc()).limit(SEARCH_LIMIT).all():
+            comments.append(comment.to_dict())
 
     resp = app.make_response(json.dumps(comments, ensure_ascii=False))
     resp.mimetype = 'application/json; charset=utf-8'
@@ -208,9 +203,9 @@ def user_view_id(user_id: int) -> flask.Response:
     with ScopedSession() as session:
         user = session.query(User).filter(User.user_id == user_id).first()
         user_dict = {
-            "id": user.user_id,
-            "name": user.name,
-            "avatar": user.avatar_hash
+            'id': user.user_id,
+            'name': user.name,
+            'avatar': user.avatar_hash
         } if user is not None else {}
 
     resp = app.make_response(json.dumps(user_dict, ensure_ascii=False))
@@ -225,9 +220,9 @@ def user_view_name(user_name: str) -> flask.Response:
     with ScopedSession() as session:
         user = session.query(User).filter(User.name == user_name).first()
         user_dict = {
-            "id": user.user_id,
-            "name": user.name,
-            "avatar": user.avatar_hash
+            'id': user.user_id,
+            'name': user.name,
+            'avatar': user.avatar_hash
         } if user is not None else {}
 
     resp = app.make_response(json.dumps(user_dict, ensure_ascii=False))
@@ -268,11 +263,13 @@ def comments_listener(comments_processor: CommentsProcessor):
     logging.debug('IO: CommentsListenerTask started')
     for message in comments_processor.listen():
         try:
-            comments = json.loads(message, encoding='utf-8')
-            logging.debug(f'IO: CommentsListenerTask: Got {len(comments)} comments')
+            update_event = json.loads(message, encoding='utf-8')
+            new_comments = update_event['new']
+            updated_comments = update_event['updated']
+            logging.debug(f'IO: CommentsListenerTask: Got {len(new_comments)} new comments and {len(updated_comments)} updated comments')
+            to_send = new_comments + updated_comments
             for room in rooms.copy():
                 max_id = rooms[room]
-                to_send = [comment for comment in comments if comment['id'] > max_id]
                 logging.debug(f'IO: CommentsListenerTask: Room {room}, max_id={max_id}, to_send -> {len(to_send)}')
                 if len(to_send) > 0:
                     io.emit('new_comments',

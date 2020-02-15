@@ -4,7 +4,7 @@ from typing import List
 
 import redis
 
-from schema import Comment, User, Post, make_comment_dict, make_post_dict
+from schema import Comment
 
 
 class CommentsProcessor:
@@ -28,14 +28,15 @@ class CommentsProcessor:
             else:
                 yield data
     
-    def on_post_updated(self, post: Post, users: List[User], comments: List[Comment]):
-        logging.debug(f'Listener: got {len(comments)} new comments')
-        self._publish(post, users, comments)
-
-    def _publish(self, post: Post, users: List[User], comments: List[Comment]):
-        users_dict = {user.user_id: user for user in users}
-        published_to = self.redis.publish(self.channel,
-            json.dumps([make_comment_dict(comment, users_dict[comment.user_id], post)
-                        for comment in comments], ensure_ascii=False).encode('utf-8')
+    def on_comments_update(self, new_comments: List[Comment], updated_comments: List[Comment]):
+        logging.debug(f'Listener: got {len(new_comments)} new comments and {len(updated_comments)} updated comments')
+        published_to = self.redis.publish(
+            self.channel,
+            json.dumps(
+                {
+                    'new': [comment.to_dict() for comment in new_comments],
+                    'updated': [comment.to_dict() for comment in updated_comments],
+                }
+                , ensure_ascii=False).encode('utf-8')
         )
         logging.debug(f'Listener: published to {published_to} channels')
