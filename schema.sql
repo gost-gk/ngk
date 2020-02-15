@@ -53,3 +53,7 @@ CREATE INDEX IF NOT EXISTS weighted_tsv_idx_comments ON comments USING GIST (tex
 CREATE INDEX IF NOT EXISTS weighted_tsv_idx_posts ON posts USING GIST (text_tsv);
 CREATE INDEX IF NOT EXISTS user_names ON users(name);
 CREATE INDEX IF NOT EXISTS comments_user_ids ON comments(user_id);
+CREATE INDEX IF NOT EXISTS posts_user_ids ON posts(user_id);
+CREATE INDEX IF NOT EXISTS comments_comment_ids ON comments(comment_id);
+CREATE INDEX IF NOT EXISTS posts_post_ids ON posts(post_id);
+CREATE INDEX IF NOT EXISTS users_user_ids ON users(user_id);
