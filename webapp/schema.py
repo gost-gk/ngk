@@ -2,7 +2,6 @@ from contextlib import contextmanager
 import re
 from typing import Dict
 
-from decouple import config
 from sqlalchemy import create_engine
 from sqlalchemy import (
     Boolean, Column, DateTime, ForeignKey, Integer, Numeric, String)
@@ -10,8 +9,10 @@ from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 
+import config
 
-engine = create_engine(config('DB_CONNECT_STRING'))
+
+engine = create_engine(config.DB_CONNECT_STRING)
 Base = declarative_base()
 Session = sessionmaker()
 Session.configure(bind=engine)

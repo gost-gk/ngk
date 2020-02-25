@@ -1,25 +1,24 @@
 import eventlet
 eventlet.monkey_patch()
 
-import threading
-import time
-import redis
-
 from collections import defaultdict, namedtuple
 from datetime import datetime, timedelta, timezone
-from typing import Dict, Optional
 import json
 import logging
 import re
+import secrets
+from typing import Dict, Optional
 
 from decouple import config
 import flask
-from flask_socketio import SocketIO, join_room, leave_room, close_room
+from flask_socketio import SocketIO, close_room, join_room, leave_room
+import redis
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql.expression import func
 
 from comments_processor import CommentsProcessor
-from schema import (Comment, Post, ScopedSession, SyncState, User, DATE_FORMAT)
+import config
+from schema import Comment, DATE_FORMAT, Post, ScopedSession, SyncState, User
 
 
 SEARCH_LIMIT = 50
@@ -27,6 +26,7 @@ COMMENTS_LIMIT = 20
 IO_NAMESPACE = '/ngk'
 
 app = flask.Flask(__name__)
+app.secret_key = config.SECRET_KEY
 io = SocketIO(app, async_mode='eventlet')
 
 
@@ -231,6 +231,7 @@ def user_view_name(user_name: str) -> flask.Response:
 
     return resp
 
+
 ###### SocketIO ######
 rooms: Dict[str, int] = {}
 
@@ -281,10 +282,10 @@ def comments_listener(comments_processor: CommentsProcessor):
     logging.warning('IO: CommentsListenerTask: exiting')
 
 
-comments_processor = CommentsProcessor(config('REDIS_HOST'),
-                                       config('REDIS_PORT'),
-                                       config('REDIS_PASSWORD'),
-                                       config('REDIS_CHANNEL'))
+comments_processor = CommentsProcessor(config.REDIS_HOST,
+                                       config.REDIS_PORT,
+                                       config.REDIS_PASSWORD,
+                                       config.REDIS_CHANNEL)
 comments_processor.subscribe()
 logging.debug('IO: starting CommentsListenerTask')
 listener_thread = io.start_background_task(comments_listener, comments_processor)
