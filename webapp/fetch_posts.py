@@ -203,9 +203,11 @@ def update_post(session, state, processor: CommentsProcessor):
     if last_comment_id is not None:
         if state.last_comment_id is not None and state.last_comment_id > last_comment_id:
             # scan_comments.py changed state while we were parsing the post
+            logging.warning(f'state.last_comment_id changed during post {post.post_id} '
+                + f'parsing: {state.last_comment_id} > {last_comment_id}')
             state.pending = True 
             session.flush()
-        state.last_comment_id = last_comment_id
+    state.last_comment_id = last_comment_id
 
 
 def update_next_post(processor: CommentsProcessor):
