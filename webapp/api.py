@@ -9,7 +9,6 @@ import re
 import secrets
 from typing import Dict, Optional
 
-from decouple import config
 import flask
 from flask_socketio import SocketIO, close_room, join_room, leave_room
 import redis
