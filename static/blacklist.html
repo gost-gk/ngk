@@ -19,7 +19,7 @@ th, td {
         <th>ID</th>
         <th>Помилование</th>
     </tr>
-    <tbody ng-repeat="user in blacklist">
+    <tbody ng-repeat="user in usersBlacklist">
         <tr>
             <td><a href="/#!/search?user={{user.name}}">{{user.name}}</a></td>
             <td><a href="https://govnokod.ru/user/{{user.id}}">{{user.id}}</a></td>
@@ -28,6 +28,29 @@ th, td {
             </td>
             <td ng-if="user.pardoned">
                 <button type="button" ng-click="ignoreUser(user.id, user.name)">Забанить</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<br>
+<table>
+    <caption>Список плохих постов</caption>
+    <tr>
+        <th>ID</th>
+        <th>XYZ</th>
+        <th>NGK</th>
+        <th>Помилование</th>
+    </tr>
+    <tbody ng-repeat="post in postsBlacklist">
+        <tr>
+            <td><a href="https://govnokod.ru/{{post.id}}">{{post.id}}</a></td>
+            <td><a href="https://govnokod.xyz/_{{post.id}}">{{post.id}}</a></td>
+            <td><a href="/#!/{{post.id}}">{{post.id}}</a></td>
+            <td ng-if="!post.pardoned">
+                <button type="button" ng-click="unignorePost(post.id)">Помиловать</button>
+            </td>
+            <td ng-if="post.pardoned">
+                <button type="button" ng-click="ignorePost(post.id)">Забанить</button>
             </td>
         </tr>
     </tbody>

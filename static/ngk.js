@@ -342,48 +342,95 @@ function makeAvatarUrl(hash) {
     return location.protocol + '//www.gravatar.com/avatar/' + hash + '?size=48&r=pg&default=' + encodeURIComponent(defaultAvatar);
 }
 
-function getIgnoredUsers() {
-    var ignoredUsers = null;
+function getLocalStorageObject(name) {
+    let obj = null;
     try {
-        var ignoredUsers = JSON.parse(localStorage.getItem("ignoredUsers"));
+        obj = JSON.parse(localStorage.getItem(name));
     } catch (e) {
     }
-    return ignoredUsers || {};
+    return obj || {};
+}
+
+function setLocalStorageObject(name, obj) {
+    localStorage.setItem(name, JSON.stringify(obj));
+}
+
+function ignoreObject(route, objId, value, localStorageItemName) {
+    let ignoredList = getLocalStorageObject(localStorageItemName);
+    ignoredList[objId] = value;
+    setLocalStorageObject(localStorageItemName, ignoredList);
+
+    if (route && route.reload) {
+        route.reload();
+    }
+}
+
+function unignoreObject(route, objId, localStorageItemName) {
+    let ignoredList = getLocalStorageObject(localStorageItemName);
+    delete ignoredList[objId];
+    setLocalStorageObject(localStorageItemName, ignoredList);
+
+    if (route && route.reload) {
+        route.reload();
+    }
+}
+
+function getIgnoredUsers() {
+    return getLocalStorageObject('ignoredUsers');
+}
+
+function getIgnoredPosts() {
+    return getLocalStorageObject('ignoredPosts');
 }
 
 function ignoreUser(route, user_id, user_name) {
-    let ignoredUsers = getIgnoredUsers();
-    ignoredUsers[user_id] = user_name;
-    localStorage.setItem("ignoredUsers", JSON.stringify(ignoredUsers));
-    console.log(ignoredUsers);
-
-    if (route && route.reload) {
-        route.reload();
-    }
+    ignoreObject(route, user_id, user_name, 'ignoredUsers');
 }
 
 function unignoreUser(route, user_id) {
-    let ignoredUsers = getIgnoredUsers();
-    delete ignoredUsers[user_id];
-    localStorage.setItem("ignoredUsers", JSON.stringify(ignoredUsers));
-    console.log(ignoredUsers);
+    unignoreObject(route, user_id, 'ignoredUsers');
+}
 
-    if (route && route.reload) {
-        route.reload();
-    }
+function ignorePost(route, post_id) {
+    ignoreObject(route, post_id, true, 'ignoredPosts');
+}
+
+function unignorePost(route, post_id) {
+    unignoreObject(route, post_id, 'ignoredPosts');
+}
+
+function unignoreEverything($route) {
+    console.log('Ignored users: ' + localStorage.getItem('ignoredUsers'));
+    console.log('Ignored posts: ' + localStorage.getItem('ignoredPosts'));
+    localStorage.removeItem('ignoredUsers');
+    localStorage.removeItem('ignoredPosts');
+    $route.reload();
+}
+
+function setRequestIgnoredParams(request) {
+    const ignoredUsers = getIgnoredUsers();
+    let ignore = [];
+    for (let k in ignoredUsers)
+        ignore.push(k);
+    ignore = ignore.join(",");
+    if (ignore)
+        request.params.ignore_u = ignore;
+
+    const ignoredPosts = getIgnoredPosts();
+    ignore = [];
+    for (let k in ignoredPosts)
+        ignore.push(k);
+    ignore = ignore.join(",");
+    if (ignore)
+        request.params.ignore_p = ignore;
 }
 
 function getLastViewedComments() {
-    var lastViewed = null;
-    try {
-        var lastViewed = JSON.parse(localStorage.getItem("lastViewed"));
-    } catch (e) {
-    }
-    return lastViewed || {};
+    return getLocalStorageObject('lastViewed');
 }
 
 function setLastViewedComments(lastViewed) {
-    localStorage.setItem("lastViewed", JSON.stringify(lastViewed));
+    setLocalStorageObject('lastViewed', lastViewed);
 }
 
 app.controller('CommentsController', function($scope, $http, $sce, $interval, $route) {
@@ -449,15 +496,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
         if (beforeDate)
             request.params.before = beforeDate;
 
-        var ignoredUsers = getIgnoredUsers();
-        if (ignoredUsers) {
-            var ignore = [];
-            for (var k in ignoredUsers)
-                ignore.push(k);
-            ignore = ignore.join(",");
-            if (ignore)
-                request.params.ignore = ignore;
-        }
+        setRequestIgnoredParams(request);
 
         $http(request).then(function(response) {
             let maxId = 0;
@@ -495,17 +534,15 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     }
 
     $scope.ignoreUser = ignoreUser.bind(undefined, $route);
-
-    $scope.unignoreAllUsers = function() {
-        localStorage.removeItem("ignoredUsers");
-        $route.reload();
-    }
+    $scope.ignorePost = ignorePost.bind(undefined, $route);
+    $scope.unignoreEverything = unignoreEverything.bind(undefined, $route);
 
     function socketIOHandler(data) {
-        let ignoredUsers = getIgnoredUsers() || {};
+        const ignoredUsers = getIgnoredUsers();
+        const ignoredPosts = getIgnoredPosts();
         let maxId = transport.maxId;
         for (let comment of data) {
-            if (!(comment.user_id in ignoredUsers)) {
+            if (!(comment.user_id in ignoredUsers) && !(comment.post_id in ignoredPosts)) {
                 insertComment(comment);
             }
             if (comment.id > maxId) {
@@ -655,15 +692,7 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
         if (beforeDate)
             request.params.before = beforeDate;
 
-        var ignoredUsers = getIgnoredUsers();
-        if (ignoredUsers) {
-            var ignore = [];
-            for (var k in ignoredUsers)
-                ignore.push(k);
-            ignore = ignore.join(",");
-            if (ignore)
-                request.params.ignore = ignore;
-        }
+        setRequestIgnoredParams(request);
 
         $http(request).then(function(response) {
             for (let comment of response.data.parents) {
@@ -717,11 +746,8 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
     }
 
     $scope.ignoreUser = ignoreUser.bind(undefined, $route);
-
-    $scope.unignoreAllUsers = function() {
-        localStorage.removeItem("ignoredUsers");
-        $route.reload();
-    }
+    $scope.ignorePost = ignorePost.bind(undefined, $route);
+    $scope.unignoreEverything = unignoreEverything.bind(undefined, $route);
 
     checkUserName();
     loadComments(null);
@@ -776,7 +802,8 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
 
         var lastViewed = getLastViewedComments();
         var lastViewedInPost = lastViewed[response.data.id] || 0;
-        var ignoredUsers = getIgnoredUsers();
+        const ignoredUsers = getIgnoredUsers();
+        const ignoredPosts = getIgnoredPosts();
 
         for (var j = 0; j < response.data.comments.length; ++j) {
             var comment = response.data.comments[j];
@@ -819,7 +846,8 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
             for (var j = 0; j < comments.length; ++j) {
                 var comment = comments[j];
                 comment.children = filterIgnoredComments(comment.children);
-                if ((comment.user_id in ignoredUsers) && (comment.children.length == 0))
+                if (((comment.user_id in ignoredUsers) || (comment.post_id in ignoredPosts))
+                        && (comment.children.length == 0))
                     continue;
                 res.push(comment);
             }
@@ -841,6 +869,8 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
     });
 
     $scope.ignoreUser = ignoreUser.bind(undefined, $route);
+    $scope.ignorePost = ignorePost.bind(undefined, $route);
+    $scope.unignoreEverything = unignoreEverything.bind(undefined, $route);
 });
 
 app.controller('SearchController', function($scope, $routeParams, $http, $sce, $interval, $route) {
@@ -946,7 +976,9 @@ app.controller('SearchController', function($scope, $routeParams, $http, $sce, $
         window.removeEventListener('scroll', infScrollListener);
     });
     
-    $scope.ignoreUser = ignoreUser.bind(undefined, undefined);
+    $scope.ignoreUser = ignoreUser.bind(undefined, $route);
+    $scope.ignorePost = ignorePost.bind(undefined, $route);
+    $scope.unignoreEverything = unignoreEverything.bind(undefined, $route);
 });
 
 app.controller('SettingsController', function($scope, $http, $sce, $interval, $route) {
@@ -968,16 +1000,23 @@ app.controller('SettingsController', function($scope, $http, $sce, $interval, $r
 
 app.controller('BlacklistController', function($scope, $http, $sce, $interval, $route) {
     $scope.rebuildTable = function() {
-        $scope.ignoredUsers = getIgnoredUsers();
-        $scope.blacklist = [];
-        for (let key in $scope.ignoredUsers) {
-            $scope.blacklist.push({id: key, name: $scope.ignoredUsers[key], pardoned: false});
+        const ignoredUsers = getIgnoredUsers();
+        const ignoredPosts = getIgnoredPosts();
+
+        $scope.usersBlacklist = [];
+        for (let key in ignoredUsers) {
+            $scope.usersBlacklist.push({id: key, name: ignoredUsers[key], pardoned: false});
+        }
+
+        $scope.postsBlacklist = [];
+        for (let key in ignoredPosts) {
+            $scope.postsBlacklist.push({id: key, pardoned: false});
         }
     };
 
     $scope.unignoreUser = function(user_id) {
         unignoreUser(undefined, user_id);
-        for (let user of $scope.blacklist) {
+        for (let user of $scope.usersBlacklist) {
             if (user.id == user_id) {
                 user.pardoned = true;
                 break;
@@ -987,9 +1026,29 @@ app.controller('BlacklistController', function($scope, $http, $sce, $interval, $
 
     $scope.ignoreUser = function(user_id, user_name) {
         ignoreUser(undefined, user_id, user_name);
-        for (let user of $scope.blacklist) {
+        for (let user of $scope.usersBlacklist) {
             if (user.id == user_id) {
                 user.pardoned = false;
+                break;
+            }
+        }
+    };
+
+    $scope.unignorePost = function(post_id) {
+        unignorePost(undefined, post_id);
+        for (let post of $scope.postsBlacklist) {
+            if (post.id == post_id) {
+                post.pardoned = true;
+                break;
+            }
+        }
+    };
+
+    $scope.ignorePost = function(post_id) {
+        ignorePost(undefined, post_id);
+        for (let post of $scope.postsBlacklist) {
+            if (post.id == post_id) {
+                post.pardoned = false;
                 break;
             }
         }

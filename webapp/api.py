@@ -66,10 +66,14 @@ def comments() -> flask.Response:
             if before is not None:
                 query = query.filter(Comment.posted < parse_date(before))
 
-            ignore = flask.request.args.get('ignore')
-            if ignore:
-                ignore = [int(u) for u in ignore.split(',')]
-                query = query.filter(Comment.user_id.notin_(ignore))
+            ignored_users = flask.request.args.get('ignore_u')
+            ignored_posts = flask.request.args.get('ignore_p')
+            if ignored_users:
+                ignored_users = [int(u) for u in ignored_users.split(',')]
+                query = query.filter(Comment.user_id.notin_(ignored_users))
+            if ignored_posts:
+                ignored_posts = [int(p) for p in ignored_posts.split(',')]
+                query = query.filter(Comment.post_id.notin_(ignored_posts))
 
         comments = []
 
@@ -107,10 +111,14 @@ def get_replies_to(user_id: Optional[int]=None, user_name: Optional[str]=None) -
         if before is not None:
             query = query.filter(Comment.posted < parse_date(before))
 
-        ignore = flask.request.args.get('ignore')
-        if ignore is not None:
-            ignore = [int(u) for u in ignore.split(',')]
-            query = query.filter(Comment.user_id.notin_(ignore))
+        ignored_users = flask.request.args.get('ignore_u')
+        ignored_posts = flask.request.args.get('ignore_p')
+        if ignored_users:
+            ignored_users = [int(u) for u in ignored_users.split(',')]
+            query = query.filter(Comment.user_id.notin_(ignored_users))
+        if ignored_posts:
+            ignored_posts = [int(p) for p in ignored_posts.split(',')]
+            query = query.filter(Comment.post_id.notin_(ignored_posts))
 
         parents = {}
         children = []
