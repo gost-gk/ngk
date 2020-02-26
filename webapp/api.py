@@ -175,7 +175,7 @@ def post(post_id: int) -> flask.Response:
 def search() -> flask.Response:
     comments = []
     with ScopedSession() as session:
-        q = flask.request.args.get('query', '')
+        q: str = flask.request.args.get('query', '').strip()
         try:
             before = float(flask.request.args.get('before', ''))
         except ValueError:
@@ -186,7 +186,10 @@ def search() -> flask.Response:
         query = session.query(Comment)
         
         if len(q) > 0:
-            query = query.filter(Comment.text_tsv.op('@@')(func.plainto_tsquery('russian', q)))
+            if len(q) > 2 and q.startswith('"') and q.endswith('"'):
+                query = query.filter(Comment.text.ilike(f'%{q[1:-1]}%'))
+            else:
+                query = query.filter(Comment.text_tsv.op('@@')(func.plainto_tsquery('russian', q)))
             
         if len(user_name) > 0:
             user_id = session.query(User.user_id).filter(User.name == user_name).scalar()

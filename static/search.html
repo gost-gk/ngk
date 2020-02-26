@@ -7,6 +7,8 @@
     <input ng-model="username" placeholder="{{exampleUsername}}">
     <input ng-click="search()" type="submit" value="Искать">
     </form>
+    Точный поиск: "выражение" (на данный момент поддерживается только поиск
+    по одному полному выражению).
 </div>
 <div ng-switch="state">
     <div ng-switch-when="NO_QUERY">Введите запрос.</div>
