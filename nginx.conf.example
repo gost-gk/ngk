@@ -1,26 +1,72 @@
 server {
     listen 80;
-    server_name gcode.space www.gcode.space gcode-xp.space www.gcode-xp.space;
-    
+	server_name gcode.space;
+
     access_log /var/log/nginx/ngk/access.log;
     error_log /var/log/nginx/ngk/error.log error;
     
+    gzip on;
+    gzip_types text/plain application/xml application/json;
+    gzip_proxied no-cache no-store private expired auth;
+    
     root /home/python/ngk/static;
     
-    location / {
+	location / {
         index index.html;
-    }
-    
-    location /ngk {
-        alias /home/python/ngk/static/;
-    }
-    
-    location /ngk/db_dumps {
+	}
+
+    location /db_dumps/ {
         alias /home/python/ngk/db_dumps;
         autoindex on;
+        
+        etag on;
+        if_modified_since exact;
+        add_header Pragma "public";
+        add_header Cache-Control "max-age=31536000, public";
     }
     
-    location /ngk/api {
+    location = /favicon.ico {
+        root /home/python/ngk/static/img;
+        
+        etag on;
+        if_modified_since exact;
+        add_header Pragma "public";
+        add_header Cache-Control "max-age=31536000, public";
+    }
+    
+    location /.well-known {
+        root /home/python/ngk/static;
+    }
+    
+	location = /robots.txt {
+        root /home/python/ngk/static;
+    }
+    
+    location /img/ {
+        etag on;
+        if_modified_since exact;
+        add_header Pragma "public";
+        add_header Cache-Control "max-age=31536000, public";
+    }
+    
+    location = /socket.io/ {
+        gunzip on;
+        
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_buffering off;
+        
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_cache_bypass $http_upgrade;
+        
+        proxy_pass http://127.0.0.1:1234/socket.io/;
+    }
+    
+    location /api {
+        gunzip on;
+        
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
@@ -29,20 +75,8 @@ server {
         proxy_set_header X-Forwarded-For $remote_addr;
         proxy_cache_bypass $http_upgrade;
         
-        proxy_pass http://127.0.0.1:42265/;
-    }
-    
-    location /.well-known {
-        root /home/python/ngk/static;
-    }
-    
-    location = /robots.txt {
-        root /home/python/ngk/static;
-    }
-    
-    location /AdminPanel_b5a16120030634c {
-        return 301 https://www.youtube.com/watch?v=dQw4w9WgXcQ;
-    }
+        proxy_pass http://127.0.0.1:1234/;
+	}
     
     location /phpmyadmin {
         return 301 https://www.youtube.com/watch?v=dQw4w9WgXcQ;
