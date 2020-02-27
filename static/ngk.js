@@ -154,7 +154,7 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
         if (scope.commentId) {
             var request = {
                 method: 'GET',
-                url: '/ngk/api/comments',
+                url: '/api/comments',
                 params: {id: scope.commentId}
             };
 
@@ -175,7 +175,7 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
         } else {
             var request = {
                 method: 'GET',
-                url: '/ngk/api/post/' + scope.postId,
+                url: '/api/post/' + scope.postId,
                 params: {no_comments: true}
             };
 
@@ -336,7 +336,7 @@ app.config(function($routeProvider, $rootScopeProvider) {
 });
 
 function makeAvatarUrl(hash) {
-    var defaultAvatar = location.protocol + "//" + location.host + "/ngk/default.png";
+    var defaultAvatar = location.protocol + "//" + location.host + "/img/default.png";
     if (!hash)
         return defaultAvatar;
     return location.protocol + '//www.gravatar.com/avatar/' + hash + '?size=48&r=pg&default=' + encodeURIComponent(defaultAvatar);
@@ -489,7 +489,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     function loadComments(beforeDate) {
         var request = {
             method: 'GET',
-            url: '/ngk/api/comments',
+            url: '/api/comments',
             params: {}
         };
 
@@ -685,7 +685,7 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
     function loadComments(beforeDate) {
         var request = {
             method: 'GET',
-            url: '/ngk/api/replies/name/' + encodeURI($routeParams.userName),
+            url: '/api/replies/name/' + encodeURI($routeParams.userName),
             params: {}
         };
 
@@ -718,7 +718,7 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
     function checkUserName() {
         var request = {
             method: 'GET',
-            url: '/ngk/api/user/name/' + encodeURI($routeParams.userName),
+            url: '/api/user/name/' + encodeURI($routeParams.userName),
             params: {}
         };
 
@@ -778,7 +778,7 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
 app.controller('PostController', function($scope, $http, $sce, $routeParams, $timeout, $anchorScroll, $route) {
     var request = {
         method: 'GET',
-        url: '/ngk/api/post/' + $routeParams.postId,
+        url: '/api/post/' + $routeParams.postId,
         params: {}
     };
 
@@ -900,7 +900,7 @@ app.controller('SearchController', function($scope, $routeParams, $http, $sce, $
     var doSearchRequest = function(query, username, beforeTimestamp, callback) {
         var request = {
             method: 'GET',
-            url: '/ngk/api/search',
+            url: '/api/search',
             params: {query: query, username: username, before: beforeTimestamp}
         };
 
