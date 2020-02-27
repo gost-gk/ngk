@@ -16,7 +16,7 @@ server {
 	}
 
     location /db_dumps/ {
-        alias /home/python/ngk/db_dumps;
+        root /home/python/ngk;
         autoindex on;
         
         etag on;
