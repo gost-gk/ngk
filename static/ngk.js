@@ -301,7 +301,13 @@ function Notifier() {
     window.addEventListener("blur", onFocusLost.bind(this));
 }
 
-app.config(function($routeProvider, $rootScopeProvider) {
+app.config(function($templateRequestProvider, $routeProvider, $rootScopeProvider) {
+    $templateRequestProvider.httpOptions({
+        headers: {
+            'Accept': undefined,  // Fuck Chrome
+        }
+    });
+
     $routeProvider.when('/', {
         'templateUrl': 'comments.html',
         'controller': 'CommentsController'
