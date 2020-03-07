@@ -5,9 +5,10 @@
     Порыться в говне:
     <input ng-model="query" placeholder="{{example}}">
     <input ng-model="username" placeholder="{{exampleUsername}}">
-    <input ng-click="search()" type="submit" value="Искать">
+    <button ng-click="search()">Искать!</button>
     </form>
-    Точный поиск: "выражение" (на данный момент поддерживается только поиск
+    <br>
+    Точный поиск: <code>"выражение"</code> (на данный момент поддерживается только поиск
     по одному полному выражению).
 </div>
 <div ng-switch="state">

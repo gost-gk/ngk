@@ -879,10 +879,10 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
     $scope.unignoreEverything = unignoreEverything.bind(undefined, $route);
 });
 
-app.controller('SearchController', function($scope, $routeParams, $http, $sce, $interval, $route) {
+app.controller('SearchController', function($scope, $routeParams, $location, $http, $sce, $interval, $route) {
     $scope.result = [];
 
-    var examples = [
+    let examples = [
         "карманный лев",
         "вореции и кобенации",
         "царский анролл",
@@ -892,7 +892,7 @@ app.controller('SearchController', function($scope, $routeParams, $http, $sce, $
         "крестоблядство"
     ];
 
-    var examplesUsername = [
+    let examplesUsername = [
         "bormand",
         "guest8",
         "wvxvw"
@@ -903,7 +903,7 @@ app.controller('SearchController', function($scope, $routeParams, $http, $sce, $
     $scope.state = 'NO_QUERY';
     $scope.searchComplete = false;
     
-    var doSearchRequest = function(query, username, beforeTimestamp, callback) {
+    let doSearchRequest = function(query, username, beforeTimestamp, callback) {
         var request = {
             method: 'GET',
             url: '/api/search',
@@ -920,13 +920,13 @@ app.controller('SearchController', function($scope, $routeParams, $http, $sce, $
             }
             callback(response);
         });
-    };
+    }; 
     
-    $scope.search = function() {
+    let search = function(username, query) {
         $scope.searchComplete = false;
         $scope.state = 'IN_PROGRESS';
-        
-        doSearchRequest($scope.query, $scope.username, null, function(response) {
+
+        doSearchRequest(query, username, null, function(response) {
             $scope.result = response.data;
             if ($scope.result.length > 0) {
                 $scope.state = 'FOUND';
@@ -938,6 +938,16 @@ app.controller('SearchController', function($scope, $routeParams, $http, $sce, $
                 $scope.searchComplete = true;
             }
         });
+    }
+
+    $scope.search = function() {
+        let query = $scope.query || null;
+        let username = $scope.username || null;
+        if (query == $routeParams.q && username == $routeParams.user) {
+            $route.reload();
+        } else {
+            $location.search({q: query, user: username});
+        }
     }
     
     $scope.nextSearch = function(beforeTimestamp) {
@@ -958,18 +968,19 @@ app.controller('SearchController', function($scope, $routeParams, $http, $sce, $
     }
     
     
-    if ($routeParams.user !== undefined) {
-        $scope.username = $routeParams.user;
-        $scope.search();
+    if ($routeParams.user !== undefined || $routeParams.q !== undefined) {
+        $scope.username = $routeParams.user || null;
+        $scope.query = $routeParams.q || null;
+        search($scope.username, $scope.query);
     }
     
-    var infScroll = throttle(function() {
+    let infScroll = throttle(function() {
         if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
             $scope.loadMoreResults();
         }
     }, 1500);
     
-    var infScrollListener = function(ev) {
+    let infScrollListener = function(ev) {
         if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
             infScroll();
         }

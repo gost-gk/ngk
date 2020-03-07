@@ -116,7 +116,7 @@ body {
     </script>
 
     <script type="text/ng-template" id="post-template-base">
-        <img src="{{post.avatar_url}}" class="avatar">
+        <img ng-src="{{post.avatar_url}}" class="avatar">
         <div class="content">
             <div class="info">
                 <a href="/#!/search?user={{post.user_name}}" target="_blank">{{post.user_name}}</a>
