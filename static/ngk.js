@@ -7,24 +7,6 @@ const DEFAULT_FILTER = `// quick and dirty filter agains guest spam
 if ((comment.user_id == 1) && comment.text.match('http://')) {
     return true;
 }
-if (comment.user_id == 25580 && comment.text.indexOf("Моментальный магазин закладок LegalRF") >= 0) {
-    return true;
-}
-if (comment.user_id == 25580 && comment.text.indexOf("Хелло, Вы спрашивали, как заказать") >= 0) {
-    return true;
-}
-if (comment.user_id == 25580 && comment.text.indexOf("Привет, ваш регион представляется как Краснодар") >= 0) {
-    return true;
-}
-if (comment.user_id == 25580 && comment.text.indexOf("Онлайн-магазин Китайская медицина") >= 0) {
-    return true;
-}
-if (comment.user_id == 25580 && comment.text.indexOf("великолепная природа от тропиков и аризонской пустыни до Ниагарских водопадов") >= 0) {
-    return true;
-}
-if (comment.user_id == 25580 && comment.text.match('^_+$')) {
-    return true;
-}
 return false;`;
 
 const SEARCH_LIMIT = 50;
