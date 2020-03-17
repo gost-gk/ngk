@@ -5,7 +5,7 @@
 </div>
 <div>
     <div class="comment">
-        <img ng-src="{{post.avatar_url}}" class="avatar">
+        <img ng-src="{{post.avatar_url}}" class="avatar" onerror="this.onerror = null; this.src = '/img/default.png';">
         <div class="content">
             <div class="info">
                 <a href="https://govnokod.ru/user/{{post.user_id}}">{{post.user_name}}</a> {{post.posted_local}}

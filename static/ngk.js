@@ -324,10 +324,11 @@ app.config(function($templateRequestProvider, $routeProvider, $rootScopeProvider
 });
 
 function makeAvatarUrl(hash) {
-    var defaultAvatar = location.protocol + "//" + location.host + "/img/default.png";
-    if (!hash)
+    let defaultAvatar = location.protocol + "//" + location.host + "/img/default.png";
+    if (!hash) {
         return defaultAvatar;
-    return location.protocol + '//www.gravatar.com/avatar/' + hash + '?size=48&r=pg&default=' + encodeURIComponent(defaultAvatar);
+    }
+    return location.protocol + '//www.gravatar.com/avatar/' + hash + '?size=48&r=pg&default=404';
 }
 
 function getLocalStorageObject(name) {
