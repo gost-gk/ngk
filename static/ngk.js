@@ -436,19 +436,14 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     var isSpam = new Function("comment", spamFilterString);
     
     function updateViewedComments() {
-        var lastViewed = getLastViewedComments();
-        for (var j = 0; j < $scope.comments.length; ++j) {
-            var comment = $scope.comments[j];
-            var lastViewedInPost = lastViewed[comment.post_id] || 0;
+        let lastViewed = getLastViewedComments();
+        for (let comment of $scope.comments) {
+            let lastViewedInPost = lastViewed[comment.post_id] || 0;
             comment.is_new = comment.id > lastViewedInPost;
         }
     }
     
     function insertComment(comment) {
-        if (seen[comment.id])
-            return;
-        seen[comment.id] = true;
-
         comment.posted_local = formatDate(comment.posted_timestamp);
         comment.source = $sce.trustAsHtml(formatSource(comment.source, "Коммент"));
         
@@ -457,7 +452,6 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
 
         if (isSpam(comment))
             return;
-
         
         comment.text = $sce.trustAsHtml(comment.text);
         comment.avatar_url = makeAvatarUrl(comment.user_avatar);
@@ -465,13 +459,20 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
 
         notifier.onCommentAdded();
 
+        if (seen[comment.id] !== undefined) {
+            $scope.comments[seen[comment.id]] = comment;
+            return;
+        }
+
         for (var j = 0; j < $scope.comments.length; ++j) {
             if (comment.id > $scope.comments[j].id) {
                 $scope.comments.splice(j, 0, comment);
+                seen[comment.id] = j;
                 return;
             }
         }
 
+        seen[comment.id] = $scope.comments.length;
         $scope.comments.push(comment);
     }
 

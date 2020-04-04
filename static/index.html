@@ -105,7 +105,8 @@ body {
                 <a href="https://govnokod.ru/{{comment.post_id}}#comment{{comment.id}}">#{{comment.post_id}}</a>
                 <a href="" ng-click="ignorePost(comment.post_id)" class="ignore" title="Забанить пост">&#x2613;</a>
                 (<a href="/#!/{{comment.post_id}}#comment{{comment.id}}">NGK</a>,
-                    <a href="https://govnokod.xyz/_{{comment.post_id}}">XYZ</a>)
+                    <a ng-if="comment.id_xyz == null" href="https://govnokod.xyz/_{{comment.post_id}}">XYZ</a>
+                    <a ng-if="comment.id_xyz != null" href="https://govnokod.xyz/_{{comment.post_id}}/#comment-{{comment.id_xyz}}">XYZ</a>)
                 ({{comment.posted_local}})
                 <span ng-bind-html="comment.source"></span>
                 <ngk-comment-popup comment-id="{{comment.parent_id}}" post-id="{{comment.post_id}}" />

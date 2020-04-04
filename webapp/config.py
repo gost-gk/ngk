@@ -13,6 +13,11 @@ API_NONCE_EXPIRATION_SECONDS: int = config('API_NONCE_EXPIRATION_SECONDS', cast=
 
 DB_CONNECT_STRING: str = config('DB_CONNECT_STRING')
 
+BOT_USER_AGENT: str = config('BOT_USER_AGENT')
+DEFAULT_HEADERS = {
+    'User-Agent': BOT_USER_AGENT
+}
+
 REDIS_HOST: str = config('REDIS_HOST')
 REDIS_PORT: int = config('REDIS_PORT', cast=int)
 REDIS_PASSWORD: str = config('REDIS_PASSWORD')

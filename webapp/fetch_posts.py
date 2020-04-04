@@ -10,10 +10,11 @@ import lxml
 import lxml.etree
 import lxml.html
 import requests
-from decouple import config
 
 from comments_processor import CommentsProcessor
 from schema import Comment, Post, ScopedSession, SyncState, User
+from html_util import inner_html_ru, normalize_text
+import config
 
 
 logging.basicConfig(
@@ -28,14 +29,6 @@ SUCCESS_DELAY = 5
 ERROR_DELAY = 60
 DUMP_DIR = "../dumps"
 
-def inner_html(node):
-    tmp = lxml.etree.Element("root")
-    tmp.text = node.text
-    for child in node:
-        tmp.append(child)
-
-    res = lxml.html.tostring(tmp, encoding='unicode')
-    return re.sub(r'</root>$', '', re.sub(r'^<root>', '', res)).strip()
 
 def parse_date(date):
     date = re.sub(r'(\d\d):(\d\d)$', r'\1\2', date)
@@ -90,7 +83,7 @@ def parse_post(content):
     post.language = post_node.xpath('.//a[@rel="chapter"]')[0].text
 
     post.code = post_node.xpath('div[@class="entry-content"]/pre/code')[0].text
-    post.text = inner_html(post_node.xpath('div[@class="description"]')[0])
+    post.text = normalize_text(inner_html_ru(post_node.xpath('div[@class="description"]')[0]))
 
     post.posted = parse_date(author_node.xpath('abbr')[0].get('title'))
 
@@ -123,7 +116,7 @@ def parse_post(content):
         else:
             comment.parent_id = None
 
-        comment.text = inner_html(comment_node.xpath('.//span[@class="comment-text"]')[0])
+        comment.text = normalize_text(inner_html_ru(comment_node.xpath('.//span[@class="comment-text"]')[0]))
 
         info_node = comment_node.xpath('p[@class="entry-info"]')[0]
 
@@ -161,7 +154,7 @@ def dump_post(content):
 def update_post(session, state, processor: CommentsProcessor):
     logging.info("Updating post %d...", state.post_id)
 
-    r = requests.get(GK_URL + "/" + str(state.post_id), timeout=30)
+    r = requests.get(GK_URL + "/" + str(state.post_id), headers=config.DEFAULT_HEADERS, timeout=30)
     if r.status_code != 200:
         update_state(state, 'HTTP error {0}'.format(r.status_code))
         return
@@ -228,10 +221,10 @@ def update_next_post(processor: CommentsProcessor):
 
 def main():
     logging.info("=== started ===")
-    processor = CommentsProcessor(config('REDIS_HOST'),
-                                  config('REDIS_PORT'),
-                                  config('REDIS_PASSWORD'),
-                                  config('REDIS_CHANNEL'))
+    processor = CommentsProcessor(config.REDIS_HOST,
+                                  config.REDIS_PORT,
+                                  config.REDIS_PASSWORD,
+                                  config.REDIS_CHANNEL)
     while True:
         update_next_post(processor)
 

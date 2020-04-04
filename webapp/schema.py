@@ -10,6 +10,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 
 import config
+from html_util import normalize_text
 
 
 engine = create_engine(config.DB_CONNECT_STRING)
@@ -125,6 +126,7 @@ class Comment(Base):
     def to_dict(self):
         return {
             'id': self.comment_id,
+            'id_xyz': self.comment_id_xyz,
             'parent_id': self.parent_id,
             'post_id': self.post_id,
             'text': normalize_text(self.text),
@@ -140,24 +142,3 @@ class Comment(Base):
 
 # TODO: shit. Move to a standalone
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
-
-
-def normalize_text(s: str) -> str:
-    # TODO: hacks below should be integrated into the parser
-    s = s.replace("&#13;", "")
-
-    res = ""
-    while True:
-        m = re.search(r'<a.*?data-cfemail="(.*?)">.*?</a>', s)
-        if not m:
-            break
-
-        encoded = bytes.fromhex(m.group(1))
-        key = encoded[0]
-        decoded = "".join([chr(c ^ key) for c in encoded[1:]])
-
-        res += s[:m.start()]
-        res += decoded
-        s = s[m.end():]
-
-    return res + s
