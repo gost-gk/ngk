@@ -103,7 +103,7 @@ def update_xyz_states(comments: Sequence[parser_xyz.CommentXyz], processor: Comm
         for comment in comments:
             if comment.id_xyz is not None and comment.id_ru is not None:
                 comment_db = session.query(Comment).filter(Comment.comment_id == comment.id_ru).first()
-                if comment_db is None:
+                if comment_db is None or comment_db.comment_id_storage is None:
                     id_storage = session.query(CommentIdStorage).filter(CommentIdStorage.comment_id_ru == comment.id_ru).first()
                     if id_storage is None:
                         id_storage = CommentIdStorage()
@@ -114,6 +114,10 @@ def update_xyz_states(comments: Sequence[parser_xyz.CommentXyz], processor: Comm
                     elif id_storage.comment_id_xyz != comment.id_xyz:
                         id_storage.comment_id_xyz = comment.id_xyz
                         prefetched_comment_id_pairs.append((comment.id_ru, comment.id_xyz))
+
+                    if comment_db is not None:
+                        comment_db.comment_id_storage = id_storage
+                        updated_comments.append(comment_db)
 
                 elif comment_db.comment_id_storage.comment_id_xyz != comment.id_xyz:
                     comment_db.comment_id_storage.comment_id_xyz = comment.id_xyz
@@ -129,7 +133,7 @@ def update_xyz_states(comments: Sequence[parser_xyz.CommentXyz], processor: Comm
 
         if len(updated_comments) > 0:
             session.commit()
-            to_print = [(c.comment_id, c.comment_ids_storage.comment_id_xyz) for c in updated_comments[:5]]
+            to_print = [(c.comment_id, c.comment_id_storage.comment_id_xyz) for c in updated_comments[:5]]
             if len(updated_comments) > 5:
                 to_print.append('...')
             logging.info(f'Fetched xyz ids for {len(updated_comments)} comments: [{", ".join(map(str, to_print))}]')
