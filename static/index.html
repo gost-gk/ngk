@@ -95,7 +95,7 @@ body {
 <body>
     <script type="text/ng-template" id="comment-template-base">
         <img ng-src="{{comment.avatar_url}}" class="avatar" onerror="this.onerror = null; this.src = '/img/default.png';">
-        <div class="content">
+        <div class="content" id="comment{{comment.id}}">
             <div class="info">
                 <a href="/#!/search?user={{comment.user_name}}" target="_blank">{{comment.user_name}}</a>
                 (<a href="https://govnokod.ru/user/{{comment.user_id}}">U</a>, 
