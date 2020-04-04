@@ -457,17 +457,20 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
         comment.avatar_url = makeAvatarUrl(comment.user_avatar);
         comment.is_new = false;
 
-        notifier.onCommentAdded();
-
         if (seen[comment.id] !== undefined) {
             $scope.comments[seen[comment.id]] = comment;
             return;
         }
 
-        for (var j = 0; j < $scope.comments.length; ++j) {
+        notifier.onCommentAdded();
+        
+        for (let j = 0; j < $scope.comments.length; ++j) {
             if (comment.id > $scope.comments[j].id) {
                 $scope.comments.splice(j, 0, comment);
                 seen[comment.id] = j;
+                for (let i = j + 1; i < $scope.comments.length; i++) {
+                    seen[$scope.comments[i].id] = i;
+                }
                 return;
             }
         }
