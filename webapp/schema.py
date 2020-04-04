@@ -2,7 +2,7 @@ from contextlib import contextmanager
 import re
 from typing import Dict
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
 from sqlalchemy import (
     Boolean, Column, DateTime, ForeignKey, Integer, Numeric, String)
 from sqlalchemy.dialects.postgresql import TSVECTOR
@@ -103,8 +103,9 @@ class Post(Base):
 class Comment(Base):
     __tablename__ = 'comments'
 
-    comment_id = Column(Integer, primary_key=True)
-    comment_id_xyz = Column(Integer)
+    comment_id = Column(Integer, ForeignKey('comment_ids_storage.comment_id_ru'), primary_key=True)
+    comment_id_storage = relationship('CommentIdStorage', lazy='joined', foreign_keys=[comment_id], uselist=False, cascade='')
+
     post_id = Column(Integer, ForeignKey('posts.post_id'))
     post = relationship("Post", lazy='joined', back_populates="comments")
     parent_id = Column(Integer, ForeignKey('comments.comment_id'))
@@ -123,10 +124,13 @@ class Comment(Base):
     SOURCE_WEBARCHIVE = 1
     SOURCE_XYZ = 2
 
+    def __init__(self, comment_id: int):
+        self.comment_id = comment_id
+
     def to_dict(self):
         return {
             'id': self.comment_id,
-            'id_xyz': self.comment_id_xyz,
+            'id_xyz': self.comment_id_storage.comment_id_xyz if self.comment_id_storage is not None else None,
             'parent_id': self.parent_id,
             'post_id': self.post_id,
             'text': normalize_text(self.text),
@@ -138,6 +142,13 @@ class Comment(Base):
             'comment_list_id': self.post.comment_list_id,
             'source': self.source
         }
+
+
+class CommentIdStorage(Base):
+    __tablename__ = 'comment_ids_storage'
+
+    comment_id_ru = Column(Integer, primary_key=True)
+    comment_id_xyz = Column(Integer)
 
 
 # TODO: shit. Move to a standalone

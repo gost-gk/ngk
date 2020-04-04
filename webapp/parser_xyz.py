@@ -13,7 +13,7 @@ import lxml.sax
 import requests
 
 from html_util import inner_html_xyz, normalize_text
-from schema import Comment, DATE_FORMAT, ScopedSession
+from schema import DATE_FORMAT
 
 
 _COMMENT_LINK_XYZ_RE = re.compile(r'^https?://govnokod.xyz/_(\d+)/#comment-(\d+)/?$')
@@ -51,11 +51,11 @@ class CommentXyz:
     def __str__(self):
         time_posted = datetime.datetime.fromtimestamp(self.time_posted).strftime(DATE_FORMAT)
         time_parsed = datetime.datetime.fromtimestamp(self.time_parsed).strftime(DATE_FORMAT)
-        return f'Update comment {self.id_ru}/{self.id_xyz}, user_id_ru {self.user_id_ru}, ' + \
+        return f'XYZ Comment {self.id_ru}/{self.id_xyz}, user_id_ru {self.user_id_ru}, ' + \
                f'user_id_xyz {self.user_id_xyz}, post_id {self.post_id}, posted {time_posted}, parsed {time_parsed}'
 
     def __repr__(self):
-        return f'CommentUpdate({self.id_ru}, {self.id_xyz}, {self.post_id},' + \
+        return f'CommentXyz({self.id_ru}, {self.id_xyz}, {self.post_id},' + \
                f'{self.text}, {self.user_id_ru}, {self.user_id_xyz}, {self.time_posted}, {self.time_parsed})'
 
 
@@ -86,6 +86,19 @@ def parse_comments(root) -> List[CommentXyz]:
         post_id = None
         comment_text = normalize_text(inner_html_xyz(comment_node))
 
+        comment_link_nodes = info_node.xpath('a[@class="comment-link"]')
+        if len(comment_link_nodes) == 0:
+            raise ParseError('No comment-link node found')
+        comment_link = comment_link_nodes[0]
+        
+        href = comment_link.get('href', None)
+        if href is None:
+            raise ParseError('No href attribute in the comment-link node found')
+
+        id_ru_attr = comment_link.get('data-legacy-id', None)
+        if id_ru_attr is not None:
+            id_ru = int(id_ru_attr)
+        
         for link_node in info_node.xpath('a'):
             link = link_node.get('href', '')
 

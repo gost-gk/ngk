@@ -15,7 +15,7 @@ from comments_processor import CommentsProcessor
 import config
 from html_util import normalize_text, inner_html_ru
 import parser_xyz
-from schema import Comment, ScopedSession, SyncState
+from schema import Comment, CommentIdStorage, ScopedSession, SyncState
 
 
 logging.basicConfig(
@@ -99,28 +99,40 @@ def update_sync_states(comments, processor: CommentsProcessor):
 def update_xyz_states(comments: Sequence[parser_xyz.CommentXyz], processor: CommentsProcessor):
     with ScopedSession() as session:   
         updated_comments = []
+        prefetched_comment_id_pairs = []
         for comment in comments:
-            if comment.id_xyz is not None:
-                if comment.id_ru is not None:
-                    comment_db = session.query(Comment).filter(Comment.comment_id == comment.id_ru).first()
-                    if comment_db is not None and comment_db.comment_id_xyz != comment.id_xyz:
-                        comment_db.comment_id_xyz = comment.id_xyz
-                        updated_comments.append(comment_db)
+            if comment.id_xyz is not None and comment.id_ru is not None:
+                comment_db = session.query(Comment).filter(Comment.comment_id == comment.id_ru).first()
+                if comment_db is None:
+                    id_storage = session.query(CommentIdStorage).filter(CommentIdStorage.comment_id_ru == comment.id_ru).first()
+                    if id_storage is None:
+                        id_storage = CommentIdStorage()
+                        id_storage.comment_id_ru = comment.id_ru
+                        id_storage.comment_id_xyz = comment.id_xyz
+                        session.add(id_storage)
+                        prefetched_comment_id_pairs.append((comment.id_ru, comment.id_xyz))
+                    elif id_storage.comment_id_xyz != comment.id_xyz:
+                        id_storage.comment_id_xyz = comment.id_xyz
+                        prefetched_comment_id_pairs.append((comment.id_ru, comment.id_xyz))
 
-                else:
-                    if comment.user_id_xyz is None:  # xyz's guest
-                        q = session.query(Comment).filter(Comment.post_id == comment.post_id)
-                        q = q.filter(Comment.user_id == GK_GUEST8_ID)
-                        q = q.filter(Comment.posted >= datetime.datetime.fromtimestamp(comment.time_posted))
-                        q = q.filter(Comment.text == comment.text)
-                        comment_db = q.first()
-                        if comment_db is not None and comment_db.comment_id_xyz != comment.id_xyz:
-                            comment_db.comment_id_xyz = comment.id_xyz
-                            updated_comments.append(comment_db)
-        if len(updated_comments) > 0:
-            logging.info(f'Fetched xyz-ids for {len(updated_comments)} comments')
+                elif comment_db.comment_id_storage.comment_id_xyz != comment.id_xyz:
+                    comment_db.comment_id_storage.comment_id_xyz = comment.id_xyz
+                    session.merge(comment_db.comment_id_storage)
+                    updated_comments.append(comment_db)
+
+        if len(prefetched_comment_id_pairs) > 0:
             session.flush()
+            to_print: list = prefetched_comment_id_pairs[:5]
+            if len(prefetched_comment_id_pairs) > 5:
+                to_print.append('...')
+            logging.info(f'Prefetched xyz ids for {len(prefetched_comment_id_pairs)} comments: [{", ".join(map(str, to_print))}]')
+
+        if len(updated_comments) > 0:
             session.commit()
+            to_print = [(c.comment_id, c.comment_ids_storage.comment_id_xyz) for c in updated_comments[:5]]
+            if len(updated_comments) > 5:
+                to_print.append('...')
+            logging.info(f'Fetched xyz ids for {len(updated_comments)} comments: [{", ".join(map(str, to_print))}]')
             processor.on_comments_update([], updated_comments)
 
 

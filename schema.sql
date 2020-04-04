@@ -31,7 +31,7 @@ create table if not exists posts(
 
 create table if not exists comments(
     comment_id integer primary key,
-    comment_id_xyz INTEGER,
+    comment_id_xyz INTEGER,  -- Deprecated
     post_id integer,
     parent_id integer,
     user_id integer,
@@ -44,6 +44,10 @@ create table if not exists comments(
     source INTEGER
 );
 
+CREATE TABLE IF NOT EXISTS comment_ids_storage(
+    comment_id_ru INTEGER PRIMARY KEY,
+    comment_id_xyz INTEGER
+);
 
 CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE OF text ON comments FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(text_tsv, 'pg_catalog.russian', text);
 CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE OF text ON posts FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(text_tsv, 'pg_catalog.russian', text);
@@ -58,3 +62,5 @@ CREATE INDEX IF NOT EXISTS posts_user_ids ON posts(user_id);
 CREATE INDEX IF NOT EXISTS comments_comment_ids ON comments(comment_id);
 CREATE INDEX IF NOT EXISTS posts_post_ids ON posts(post_id);
 CREATE INDEX IF NOT EXISTS users_user_ids ON users(user_id);
+CREATE INDEX IF NOT EXISTS comment_ids_storage_ids_ru_xyz ON comment_ids_storage(comment_id_ru, comment_id_xyz);
+CREATE INDEX IF NOT EXISTS comment_ids_storage_ids_xyz_ru ON comment_ids_storage(comment_id_xyz, comment_id_ru);

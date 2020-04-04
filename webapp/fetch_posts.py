@@ -17,17 +17,17 @@ from html_util import inner_html_ru, normalize_text
 import config
 
 
-logging.basicConfig(
-    filename="../logs/fetch_posts.log",
-    format="%(asctime)s %(levelname)s %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-    level=logging.DEBUG)
-
-
 GK_URL = "http://govnokod.ru"
 SUCCESS_DELAY = 5
 ERROR_DELAY = 60
 DUMP_DIR = "../dumps"
+
+
+root_logger= logging.getLogger()
+root_logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler('../logs/fetch_posts.log', 'w', 'utf-8')
+handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s', '%Y-%m-%d %H:%M:%S'))
+root_logger.addHandler(handler)
 
 
 def parse_date(date):
@@ -103,10 +103,10 @@ def parse_post(content):
 
     # comments
     for comment_node in comments_node.xpath('.//div[@class="entry-comment-wrapper"]'):
-        comment = Comment()
+        comment_id = int(re.match(r'comment-(\d+)$', comment_node.get('id')).group(1))
 
+        comment = Comment(comment_id)
         comment.source = Comment.SOURCE_GK
-        comment.comment_id = int(re.match(r'comment-(\d+)$', comment_node.get('id')).group(1))
         comment.post_id = post.post_id
 
         parent_node = comment_node.getparent().getparent().getparent()
