@@ -2,6 +2,7 @@ import atexit
 import datetime
 import logging
 import re
+import signal
 import threading
 import time
 from typing import List, Sequence
@@ -12,6 +13,7 @@ import requests
 
 from comments_processor import CommentsProcessor
 import config
+from html_util import normalize_text, inner_html_ru
 import parser_xyz
 from schema import Comment, ScopedSession, SyncState
 
@@ -42,11 +44,13 @@ def fetch_latest_comments():
     root = lxml.etree.HTML(r.content)
 
     comments = []
-    for link in root.xpath('//a[@class="comment-link"]'):
-        m = re.search("/([0-9]+)#comment([0-9]+)", link.get("href"))
+    for comment_entry in root.xpath('//li[@class="hcomment"]'):
+        comment_link = comment_entry.xpath('.//a[@class="comment-link"]')[0]
+        m = re.search("/([0-9]+)#comment([0-9]+)", comment_link.get("href"))
         post_id = int(m.group(1))
         comment_id = int(m.group(2))
-        comments.append((post_id, comment_id))
+        comment_text = normalize_text(inner_html_ru(comment_entry.xpath('.//div[@class="entry-comment"]')[0]))
+        comments.append((post_id, comment_id, comment_text))
 
     return comments
 
@@ -59,11 +63,16 @@ def fetch_latest_comments_xyz() -> List[parser_xyz.CommentXyz]:
     return parser_xyz.parse_comments(root)
 
 
-def update_sync_states(comments):
+def update_sync_states(comments, processor: CommentsProcessor):
     has_updates = False
-
+    updated_comments = []
     with ScopedSession() as session:
-        for post_id, comment_id in comments:
+        for post_id, comment_id, comment_text in comments:
+            comment_db = session.query(Comment).filter(Comment.comment_id == comment_id).first()
+            if comment_db is not None and comment_db.text != comment_text:
+                comment_db.text = comment_text
+                updated_comments.append(comment_db)
+
             state = session.query(SyncState).filter(SyncState.post_id == post_id).one_or_none()
             if not state:
                 logging.info("Got new comment %d for new post %d", comment_id, post_id)
@@ -77,6 +86,12 @@ def update_sync_states(comments):
                     state.last_comment_id = comment_id
                     state.pending = True
                     state.priority=SyncState.PRIORITY_HAS_COMMENTS
+
+        if len(updated_comments) > 0:
+            logging.info(f'Fast-fetched {len(updated_comments)} updated ' + \
+                         f'comment{"s" if len(updated_comments) > 1 else ""}: {updated_comments}')
+            session.commit()
+            processor.on_comments_update([], updated_comments)
 
     return has_updates
 
@@ -111,12 +126,16 @@ def update_xyz_states(comments: Sequence[parser_xyz.CommentXyz], processor: Comm
 
 def worker_ru(thread_exited_event: threading.Event):
     thread_exited_event.clear()
+    processor = CommentsProcessor(config.REDIS_HOST,
+                                  config.REDIS_PORT,
+                                  config.REDIS_PASSWORD,
+                                  config.REDIS_CHANNEL)
     logging.info("=== ru worker started ===")
     fast_requests = 0
     while True:
         try:
             comments = fetch_latest_comments()
-            has_updates = update_sync_states(comments)
+            has_updates = update_sync_states(comments, processor)
             if has_updates:
                 fast_requests = FAST_TO_SLOW_STEPS
         except Exception as e:
@@ -168,7 +187,7 @@ def worker_xyz(thread_exited_event: threading.Event):
     thread_exited_event.set()
 
 
-def graceful_exit():
+def graceful_exit(signum, frames):
     logging.info('Exiting...')
     exit_event.set()
     while not all((e.is_set() for e in threads_exited_events)):
@@ -184,7 +203,8 @@ def main():
     threads_exited_events.append(threading.Event())
     thread_xyz = threading.Thread(target=worker_xyz, name='RU', args=(threads_exited_events[-1],))
 
-    atexit.register(graceful_exit)
+    signal.signal(signal.SIGINT, graceful_exit)
+    signal.signal(signal.SIGTERM, graceful_exit)
 
     thread_ru.start()
     thread_xyz.start()
