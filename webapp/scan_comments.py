@@ -89,7 +89,7 @@ def update_sync_states(comments, processor: CommentsProcessor):
 
         if len(updated_comments) > 0:
             logging.info(f'Fast-fetched {len(updated_comments)} updated ' + \
-                         f'comment{"s" if len(updated_comments) > 1 else ""}: {updated_comments}')
+                         f'comment{"s" if len(updated_comments) > 1 else ""}: {[c.comment_id for c in updated_comments]}')
             session.commit()
             processor.on_comments_update([], updated_comments)
 
