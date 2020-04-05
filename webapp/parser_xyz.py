@@ -96,7 +96,7 @@ def parse_comments(root) -> List[CommentXyz]:
             raise ParseError('No href attribute in the comment-link node found')
 
         id_ru_attr = comment_link.get('data-legacy-id', None)
-        if id_ru_attr is not None:
+        if id_ru_attr is not None and len(id_ru_attr) > 0:
             id_ru = int(id_ru_attr)
         
         for link_node in info_node.xpath('a'):
