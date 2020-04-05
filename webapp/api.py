@@ -88,7 +88,8 @@ def comments() -> flask.Response:
 
 
 Replies = namedtuple('Replies', ['parents', 'children'])
-Replies.__new__.__defaults__ = ([], [])
+
+
 def get_replies_to(user_id: Optional[int]=None, user_name: Optional[str]=None) -> Replies:
     with ScopedSession() as session:
         if user_id is not None:
@@ -96,10 +97,10 @@ def get_replies_to(user_id: Optional[int]=None, user_name: Optional[str]=None) -
         elif user_name is not None:
             parent_user = session.query(User).filter(User.name == user_name).first()
         else:
-            return Replies()
+            return Replies([], [])
     
         if parent_user is None:
-            return Replies()
+            return Replies([], [])
 
         Comment_parent = aliased(Comment)
         query = session.query(Comment, Comment_parent) \
@@ -120,7 +121,7 @@ def get_replies_to(user_id: Optional[int]=None, user_name: Optional[str]=None) -
             ignored_posts = [int(p) for p in ignored_posts.split(',')]
             query = query.filter(Comment.post_id.notin_(ignored_posts))
 
-        parents = {}
+        parents: Dict[int, str] = {}
         children = []
         for comment, parent_comment in query.order_by(Comment.posted.desc()).limit(COMMENTS_LIMIT).all():
             if parent_comment.comment_id not in parents:
@@ -177,7 +178,7 @@ def search() -> flask.Response:
     with ScopedSession() as session:
         q: str = flask.request.args.get('query', '').strip()
         try:
-            before = float(flask.request.args.get('before', ''))
+            before: Optional[float] = float(flask.request.args.get('before', ''))
         except ValueError:
             before = None
 

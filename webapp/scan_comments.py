@@ -5,7 +5,7 @@ import re
 import signal
 import threading
 import time
-from typing import List, Sequence
+from typing import List, Sequence, Tuple
 
 import lxml
 import lxml.etree
@@ -13,7 +13,8 @@ import requests
 
 from comments_processor import CommentsProcessor
 import config
-from html_util import normalize_text, inner_html_ru
+from html_util import inner_html_ru, normalize_text
+from parse_error import ParseError
 import parser_xyz
 from schema import Comment, CommentIdStorage, ScopedSession, SyncState
 
@@ -37,16 +38,18 @@ exit_event = threading.Event()
 threads_exited_events: List[threading.Event] = []
 
 
-def fetch_latest_comments():
+def fetch_latest_comments() -> List[Tuple[int, int, str]]:
     logging.debug("Fetching comments from ru...")
     r = requests.get(COMMENTS_URL, headers=config.DEFAULT_HEADERS, timeout=30)
     r.raise_for_status()
     root = lxml.etree.HTML(r.content)
 
-    comments = []
+    comments: List[Tuple[int, int, str]] = []
     for comment_entry in root.xpath('//li[@class="hcomment"]'):
         comment_link = comment_entry.xpath('.//a[@class="comment-link"]')[0]
         m = re.search("/([0-9]+)#comment([0-9]+)", comment_link.get("href"))
+        if m is None:
+            raise ParseError('Invalid comment-link (no regex match)')
         post_id = int(m.group(1))
         comment_id = int(m.group(2))
         comment_text = normalize_text(inner_html_ru(comment_entry.xpath('.//div[@class="entry-comment"]')[0]))
@@ -63,9 +66,9 @@ def fetch_latest_comments_xyz() -> List[parser_xyz.CommentXyz]:
     return parser_xyz.parse_comments(root)
 
 
-def update_sync_states(comments, processor: CommentsProcessor):
+def update_sync_states(comments: Sequence[Tuple[int, int, str]], processor: CommentsProcessor):
     has_updates = False
-    updated_comments = []
+    updated_comments: List[Comment] = []
     with ScopedSession() as session:
         for post_id, comment_id, comment_text in comments:
             comment_db = session.query(Comment).filter(Comment.comment_id == comment_id).first()

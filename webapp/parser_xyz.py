@@ -13,6 +13,7 @@ import lxml.sax
 import requests
 
 from html_util import inner_html_xyz, normalize_text
+from parse_error import ParseError
 from schema import DATE_FORMAT
 
 
@@ -20,11 +21,6 @@ _COMMENT_LINK_XYZ_RE = re.compile(r'^https?://govnokod.xyz/_(\d+)/#comment-(\d+)
 _COMMENT_LINK_RU_RE = re.compile(r'^https?://govnokod.ru/(\d+)#comment(\d+)/?$')
 _USER_LINK_XYZ_RE = re.compile(r'^https?://govnokod.xyz/user/(\d+)/?$')
 _USER_LINK_RU_RE = re.compile(r'^https?://govnokod.ru/user/(\d+)/?$')
-
-
-class ParseError(Exception):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
 
 class CommentXyz:
