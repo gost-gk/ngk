@@ -26,7 +26,7 @@ def normalize_text(s: str) -> str:
     return res + s
 
 
-def _inner_html(node):
+def _inner_html(node: lxml.etree._Element) -> str:
     tmp = lxml.etree.Element('root')
     tmp.text = node.text
     for child in node:
@@ -41,11 +41,11 @@ def _inner_html(node):
     return res
 
 
-def inner_html_ru(node):
+def inner_html_ru(node: lxml.etree._Element) -> str:
     return _inner_html(node)
 
 
-def inner_html_xyz(node):
+def inner_html_xyz(node: lxml.etree._Element) -> str:
     node = copy.deepcopy(node)
     lxml.etree.strip_tags(node, 'a')
     return _inner_html(node)

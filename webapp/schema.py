@@ -1,12 +1,13 @@
 from contextlib import contextmanager
 import re
-from typing import Dict
+from typing import Any, Dict, Iterator
 
 from sqlalchemy import create_engine, event
 from sqlalchemy import (
     Boolean, Column, DateTime, ForeignKey, Integer, Numeric, String)
 from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy.ext.declarative import declarative_base
+import sqlalchemy.orm
 from sqlalchemy.orm import relationship, sessionmaker
 
 import config
@@ -20,7 +21,7 @@ Session.configure(bind=engine)
 
 
 @contextmanager
-def ScopedSession():
+def ScopedSession() -> Iterator[sqlalchemy.orm.Session]:
     session = Session()
     try:
         yield session
@@ -85,13 +86,13 @@ class Post(Base):
     SOURCE_WEBARCHIVE = 1
     SOURCE_XYZ = 2
     
-    def to_dict(self):
+    def to_dict(self) -> Dict[str, Any]:
         return {
             'id': self.post_id,
             'code': self.code,
             'text': normalize_text(self.text),
-            'posted': self.posted.strftime(DATE_FORMAT),
-            'posted_timestamp': self.posted.timestamp(),
+            'posted': self.posted.strftime(DATE_FORMAT) if self.posted is not None else None,
+            'posted_timestamp': self.posted.timestamp() if self.posted is not None else None,
             'user_id': self.user_id,
             'user_name': self.user.name,
             'user_avatar': self.user.avatar_hash,
@@ -127,15 +128,15 @@ class Comment(Base):
     def __init__(self, comment_id: int):
         self.comment_id = comment_id
 
-    def to_dict(self):
+    def to_dict(self) -> Dict[str, Any]:
         return {
             'id': self.comment_id,
             'id_xyz': self.comment_id_storage.comment_id_xyz if self.comment_id_storage is not None else None,
             'parent_id': self.parent_id,
             'post_id': self.post_id,
             'text': normalize_text(self.text),
-            'posted': self.posted.strftime(DATE_FORMAT),
-            'posted_timestamp': self.posted.timestamp(),
+            'posted': self.posted.strftime(DATE_FORMAT) if self.posted is not None else None,
+            'posted_timestamp': self.posted.timestamp() if self.posted is not None else None,
             'user_id': self.user_id,
             'user_name': self.user.name,
             'user_avatar': self.user.avatar_hash,

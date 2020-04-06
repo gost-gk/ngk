@@ -44,18 +44,18 @@ class CommentXyz:
         self.time_posted: float = time_posted
         self.time_parsed: float = time_parsed
     
-    def __str__(self):
+    def __str__(self) -> str:
         time_posted = datetime.datetime.fromtimestamp(self.time_posted).strftime(DATE_FORMAT)
         time_parsed = datetime.datetime.fromtimestamp(self.time_parsed).strftime(DATE_FORMAT)
         return f'XYZ Comment {self.id_ru}/{self.id_xyz}, user_id_ru {self.user_id_ru}, ' + \
                f'user_id_xyz {self.user_id_xyz}, post_id {self.post_id}, posted {time_posted}, parsed {time_parsed}'
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'CommentXyz({self.id_ru}, {self.id_xyz}, {self.post_id},' + \
                f'{self.text}, {self.user_id_ru}, {self.user_id_xyz}, {self.time_posted}, {self.time_parsed})'
 
 
-def parse_comments(root) -> List[CommentXyz]:
+def parse_comments(root: lxml.etree._Element) -> List[CommentXyz]:
     comments: List[CommentXyz] = []
 
     comment_entry_nodes = root.xpath('//li[@class="hcomment"]')

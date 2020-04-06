@@ -248,30 +248,30 @@ rooms: Dict[str, int] = {}
 
 
 @io.on('connect', namespace=IO_NAMESPACE)
-def io_connect():
+def io_connect() -> None:
     logging.debug(f'IO: {flask.request.sid} connected')
     rooms[flask.request.sid] = 0
     join_room(flask.request.sid)
 
 
 @io.on('disconnect', namespace=IO_NAMESPACE)
-def io_disconnect():
+def io_disconnect() -> None:
     logging.debug(f'IO: {flask.request.sid} left')
     close_room(flask.request.sid)
     del rooms[flask.request.sid]
 
 
 @io.on('set_max_id', namespace=IO_NAMESPACE)
-def io_set_max_id(max_id):
+def io_set_max_id(max_id: str) -> None:
     logging.debug(f'IO: set_max_id {flask.request.sid} -> {max_id}')
     try:
-        max_id = int(max_id)
+        max_id_int = int(max_id)
     except ValueError:
-        max_id = 0
-    rooms[flask.request.sid] = max_id
+        max_id_int = 0
+    rooms[flask.request.sid] = max_id_int
 
 
-def comments_listener(comments_processor: CommentsProcessor):
+def comments_listener(comments_processor: CommentsProcessor) -> None:
     logging.debug('IO: CommentsListenerTask started')
     for message in comments_processor.listen():
         try:

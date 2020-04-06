@@ -11,6 +11,7 @@ import lxml
 import lxml.etree
 import lxml.html
 import requests
+import sqlalchemy.orm
 
 from comments_processor import CommentsProcessor
 import config
@@ -45,7 +46,7 @@ def parse_avatar(url: str) -> Optional[str]:
         return None
 
 
-def parse_rating(rating_node) -> Tuple[int, int, decimal.Decimal]:
+def parse_rating(rating_node: lxml.etree._Element) -> Tuple[int, int, decimal.Decimal]:
     title: str = rating_node.get('title', '')
     m = re.match(r'(\d+) .* (\d+) .*$', title)
     if m is None:
@@ -165,14 +166,14 @@ def parse_post(content: bytes) -> Tuple[Post, List[User], List[Comment]]:
     return (post, users, comments)
 
 
-def update_state(state: SyncState, result: str):
+def update_state(state: SyncState, result: str) -> None:
     logging.info("Update result: %s", result)
     state.pending = False
     state.synced = datetime.utcnow()
     state.result = result
 
 
-def dump_post(content: bytes):
+def dump_post(content: bytes) -> None:
     time = datetime.utcnow()
     subdir_path = os.path.join(DUMP_DIR, time.strftime("%Y-%m-%d"))
     file_name = time.strftime("%H-%M-%S") + ".html"
@@ -182,7 +183,7 @@ def dump_post(content: bytes):
         f.write(content)
 
 
-def update_post(session, state: SyncState, processor: CommentsProcessor):
+def update_post(session: sqlalchemy.orm.Session, state: SyncState, processor: CommentsProcessor) -> None:
     logging.info("Updating post %d...", state.post_id)
 
     r = requests.get(GK_URL + "/" + str(state.post_id), headers=config.DEFAULT_HEADERS, timeout=30)
@@ -234,7 +235,7 @@ def update_post(session, state: SyncState, processor: CommentsProcessor):
     state.last_comment_id = last_comment_id
 
 
-def update_next_post(processor: CommentsProcessor):
+def update_next_post(processor: CommentsProcessor) -> None:
     try:
         with ScopedSession() as session:
             state = session.query(SyncState).filter_by(pending=True).order_by(SyncState.priority.desc(), SyncState.post_id.desc()).first()
@@ -250,7 +251,7 @@ def update_next_post(processor: CommentsProcessor):
     time.sleep(delay)
 
 
-def main():
+def main() -> None:
     logging.info("=== started ===")
     processor = CommentsProcessor(config.REDIS_HOST,
                                   config.REDIS_PORT,

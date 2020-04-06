@@ -5,7 +5,7 @@ import re
 import signal
 import threading
 import time
-from typing import List, Sequence, Tuple
+from typing import Any, List, Sequence, Tuple
 
 import lxml
 import lxml.etree
@@ -66,7 +66,7 @@ def fetch_latest_comments_xyz() -> List[parser_xyz.CommentXyz]:
     return parser_xyz.parse_comments(root)
 
 
-def update_sync_states(comments: Sequence[Tuple[int, int, str]], processor: CommentsProcessor):
+def update_sync_states(comments: Sequence[Tuple[int, int, str]], processor: CommentsProcessor) -> bool:
     has_updates = False
     updated_comments: List[Comment] = []
     with ScopedSession() as session:
@@ -99,7 +99,7 @@ def update_sync_states(comments: Sequence[Tuple[int, int, str]], processor: Comm
     return has_updates
 
 
-def update_xyz_states(comments: Sequence[parser_xyz.CommentXyz], processor: CommentsProcessor):
+def update_xyz_states(comments: Sequence[parser_xyz.CommentXyz], processor: CommentsProcessor) -> None:
     with ScopedSession() as session:   
         updated_comments = []
         prefetched_comment_id_pairs = []
@@ -143,7 +143,7 @@ def update_xyz_states(comments: Sequence[parser_xyz.CommentXyz], processor: Comm
             processor.on_comments_update([], updated_comments)
 
 
-def worker_ru(thread_exited_event: threading.Event):
+def worker_ru(thread_exited_event: threading.Event) -> None:
     thread_exited_event.clear()
     processor = CommentsProcessor(config.REDIS_HOST,
                                   config.REDIS_PORT,
@@ -173,7 +173,7 @@ def worker_ru(thread_exited_event: threading.Event):
     thread_exited_event.set()
 
 
-def worker_xyz(thread_exited_event: threading.Event):
+def worker_xyz(thread_exited_event: threading.Event) -> None:
     thread_exited_event.clear()
     processor = CommentsProcessor(config.REDIS_HOST,
                                   config.REDIS_PORT,
@@ -206,7 +206,7 @@ def worker_xyz(thread_exited_event: threading.Event):
     thread_exited_event.set()
 
 
-def graceful_exit(signum, frames):
+def graceful_exit(signum: int, frames: Any) -> None:
     logging.info('Exiting...')
     exit_event.set()
     while not all((e.is_set() for e in threads_exited_events)):
@@ -215,7 +215,7 @@ def graceful_exit(signum, frames):
     logging.info('All threads stopped. Goodbye!')
 
 
-def main():
+def main() -> None:
     threads_exited_events.append(threading.Event())
     thread_ru = threading.Thread(target=worker_ru, name='RU', args=(threads_exited_events[-1],))
 
