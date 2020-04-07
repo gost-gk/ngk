@@ -17,8 +17,12 @@ from sqlalchemy.sql.expression import func
 
 from ngk.comments_processor import CommentsProcessor
 from ngk import config
+from ngk.log import get_logger, redirect_basic_logging
 from ngk.schema import Comment, DATE_FORMAT, Post, ScopedSession, SyncState, User
 
+
+L = get_logger('api', logging.DEBUG)
+redirect_basic_logging(L, logging.WARNING)
 
 SEARCH_LIMIT = 50
 COMMENTS_LIMIT = 20
@@ -27,13 +31,6 @@ IO_NAMESPACE = '/ngk'
 app = flask.Flask(__name__)
 app.secret_key = config.SECRET_KEY
 io = SocketIO(app, async_mode='eventlet')
-
-
-logging.basicConfig(
-    filename=config.get_log_path('api.log'),
-    format="%(asctime)s %(levelname)s %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-    level=logging.DEBUG)
 
 
 def parse_date(date: str) -> datetime:
@@ -249,21 +246,21 @@ rooms: Dict[str, int] = {}
 
 @io.on('connect', namespace=IO_NAMESPACE)
 def io_connect() -> None:
-    logging.debug(f'IO: {flask.request.sid} connected')
+    L.debug(f'IO: {flask.request.sid} connected')
     rooms[flask.request.sid] = 0
     join_room(flask.request.sid)
 
 
 @io.on('disconnect', namespace=IO_NAMESPACE)
 def io_disconnect() -> None:
-    logging.debug(f'IO: {flask.request.sid} left')
+    L.debug(f'IO: {flask.request.sid} left')
     close_room(flask.request.sid)
     del rooms[flask.request.sid]
 
 
 @io.on('set_max_id', namespace=IO_NAMESPACE)
 def io_set_max_id(max_id: str) -> None:
-    logging.debug(f'IO: set_max_id {flask.request.sid} -> {max_id}')
+    L.debug(f'IO: set_max_id {flask.request.sid} -> {max_id}')
     try:
         max_id_int = int(max_id)
     except ValueError:
@@ -272,32 +269,33 @@ def io_set_max_id(max_id: str) -> None:
 
 
 def comments_listener(comments_processor: CommentsProcessor) -> None:
-    logging.debug('IO: CommentsListenerTask started')
+    L.debug('IO: CommentsListenerTask started')
     for message in comments_processor.listen():
         try:
             update_event = json.loads(message, encoding='utf-8')
             new_comments = update_event['new']
             updated_comments = update_event['updated']
-            logging.debug(f'IO: CommentsListenerTask: Got {len(new_comments)} new comments and {len(updated_comments)} updated comments')
+            L.debug(f'IO: CommentsListenerTask: Got {len(new_comments)} new comments and {len(updated_comments)} updated comments')
             to_send = new_comments + updated_comments
             for room in rooms.copy():
                 max_id = rooms[room]
-                logging.debug(f'IO: CommentsListenerTask: Room {room}, max_id={max_id}, to_send -> {len(to_send)}')
+                L.debug(f'IO: CommentsListenerTask: Room {room}, max_id={max_id}, to_send -> {len(to_send)}')
                 if len(to_send) > 0:
                     io.emit('new_comments',
                             to_send,
                             namespace=IO_NAMESPACE,
                             room=room)
         except:
-            logging.exception('IO: CommentsListenerTask: exception')
-    logging.warning('IO: CommentsListenerTask: exiting')
+            L.exception('IO: CommentsListenerTask: exception')
+    L.warning('IO: CommentsListenerTask: exiting')
 
 
 comments_processor = CommentsProcessor(config.REDIS_HOST,
                                        config.REDIS_PORT,
                                        config.REDIS_PASSWORD,
-                                       config.REDIS_CHANNEL)
+                                       config.REDIS_CHANNEL,
+                                       L)
 comments_processor.subscribe()
-logging.debug('IO: starting CommentsListenerTask')
+L.debug('IO: starting CommentsListenerTask')
 listener_thread = io.start_background_task(comments_listener, comments_processor)
-logging.debug('IO: started a listener_thread: ' + str(listener_thread))
+L.debug('IO: started a listener_thread: ' + str(listener_thread))

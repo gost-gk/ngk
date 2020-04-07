@@ -15,21 +15,18 @@ import sqlalchemy.orm
 
 from ngk.comments_processor import CommentsProcessor
 from ngk import config
+from ngk.log import get_logger, redirect_basic_logging
 from ngk.html_util import inner_html_ru, normalize_text
 from ngk.parse_error import ParseError
 from ngk.schema import Comment, Post, ScopedSession, SyncState, User
 
 
+L = get_logger('fetch_posts', logging.DEBUG)
+redirect_basic_logging(L)
+
 GK_URL = "http://govnokod.ru"
 SUCCESS_DELAY = 5
 ERROR_DELAY = 60
-
-
-root_logger= logging.getLogger()
-root_logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler(config.get_log_path('fetch_posts.log'), 'w', 'utf-8')
-handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s', '%Y-%m-%d %H:%M:%S'))
-root_logger.addHandler(handler)
 
 
 def parse_date(date: str) -> datetime:
@@ -50,8 +47,8 @@ def parse_rating(rating_node: lxml.etree._Element) -> Tuple[int, int, float]:
     m = re.match(r'(\d+) .* (\d+) .*$', title)
     if m is None:
         _MAX_PRINT_LEN = 100
-        logging.warning(f'Could not parse rating: no regex match in' +\
-                        f'"{title[:_MAX_PRINT_LEN]}{"..." if len(title) > _MAX_PRINT_LEN else ""}"')
+        L.warning(f'Could not parse rating: no regex match in' +\
+                  f'"{title[:_MAX_PRINT_LEN]}{"..." if len(title) > _MAX_PRINT_LEN else ""}"')
         return (0, 0, 0)
     plus = int(m.group(1))
     minus = int(m.group(2))
@@ -166,7 +163,7 @@ def parse_post(content: bytes) -> Tuple[Post, List[User], List[Comment]]:
 
 
 def update_state(state: SyncState, result: str) -> None:
-    logging.info("Update result: %s", result)
+    L.info("Update result: %s", result)
     state.pending = False
     state.synced = datetime.utcnow()
     state.result = result
@@ -183,7 +180,7 @@ def dump_post(content: bytes) -> None:
 
 
 def update_post(session: sqlalchemy.orm.Session, state: SyncState, processor: CommentsProcessor) -> None:
-    logging.info("Updating post %d...", state.post_id)
+    L.info("Updating post %d...", state.post_id)
 
     r = requests.get(GK_URL + "/" + str(state.post_id), headers=config.DEFAULT_HEADERS, timeout=30)
     if r.status_code != 200:
@@ -195,7 +192,7 @@ def update_post(session: sqlalchemy.orm.Session, state: SyncState, processor: Co
     try:
         post, users, comments = parse_post(r.content)
     except Exception as e:
-        logging.exception(e)
+        L.exception(e)
         update_state(state, 'Parse error')
         return
 
@@ -227,8 +224,8 @@ def update_post(session: sqlalchemy.orm.Session, state: SyncState, processor: Co
     if last_comment_id is not None:
         if state.last_comment_id is not None and state.last_comment_id > last_comment_id:
             # scan_comments.py changed state while we were parsing the post
-            logging.warning(f'state.last_comment_id changed during post {post.post_id} '
-                + f'parsing: {state.last_comment_id} > {last_comment_id}')
+            L.warning(f'state.last_comment_id changed during post {post.post_id} ' \
+                    + f'parsing: {state.last_comment_id} > {last_comment_id}')
             state.pending = True 
             session.flush()
     state.last_comment_id = last_comment_id
@@ -244,18 +241,19 @@ def update_next_post(processor: CommentsProcessor) -> None:
         delay = SUCCESS_DELAY
 
     except Exception as e:
-        logging.exception(e)
+        L.exception(e)
         delay = ERROR_DELAY
 
     time.sleep(delay)
 
 
 def main() -> None:
-    logging.info("=== started ===")
+    L.info("=== started ===")
     processor = CommentsProcessor(config.REDIS_HOST,
                                   config.REDIS_PORT,
                                   config.REDIS_PASSWORD,
-                                  config.REDIS_CHANNEL)
+                                  config.REDIS_CHANNEL,
+                                  L)
     while True:
         update_next_post(processor)
 

@@ -4,11 +4,15 @@ from typing import List, Iterator, Dict
 
 import redis
 
+from ngk.log import get_logger
 from ngk.schema import Comment
 
 
+L = get_logger('comments_processor', logging.INFO)
+
 class CommentsProcessor:
-    def __init__(self, redis_host: str, redis_port: int, redis_password: str, redis_channel: str):
+    def __init__(self, redis_host: str, redis_port: int, redis_password: str, redis_channel: str, logger: logging.Logger = L):
+        self.logger = logger
         self.redis = redis.Redis(host=redis_host, port=redis_port, password=redis_password)
         self.pubsub = self.redis.pubsub(ignore_subscribe_messages=True)
         self.channel = redis_channel
@@ -29,7 +33,7 @@ class CommentsProcessor:
                 yield data
     
     def on_comments_update(self, new_comments: List[Comment], updated_comments: List[Comment]) -> None:
-        logging.debug(f'Listener: got {len(new_comments)} new comments and {len(updated_comments)} updated comments')
+        self.logger.debug(f'Listener: got {len(new_comments)} new comments and {len(updated_comments)} updated comments')
         published_to = self.redis.publish(
             self.channel,
             json.dumps(
@@ -39,4 +43,4 @@ class CommentsProcessor:
                 }
                 , ensure_ascii=False).encode('utf-8')
         )
-        logging.debug(f'Listener: published to {published_to} channels')
+        self.logger.debug(f'Listener: published to {published_to} channels')

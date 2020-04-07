@@ -13,17 +13,14 @@ import requests
 
 from ngk import config, parser_xyz
 from ngk.comments_processor import CommentsProcessor
+from ngk.log import get_logger, redirect_basic_logging
 from ngk.html_util import inner_html_ru, normalize_text
 from ngk.parse_error import ParseError
 from ngk.schema import Comment, CommentIdStorage, ScopedSession, SyncState
 
 
-logging.basicConfig(
-    filename=config.get_log_path('scan_comments.log'),
-    format="%(asctime)s %(levelname)s %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-    level=logging.INFO)
-
+L = get_logger('scan_comments', logging.INFO)
+redirect_basic_logging(L)
 
 COMMENTS_URL = 'http://govnokod.ru/comments'
 COMMENTS_URL_XYZ = 'https://govnokod.xyz/comments/'
@@ -38,7 +35,7 @@ threads_exited_events: List[threading.Event] = []
 
 
 def fetch_latest_comments() -> List[Tuple[int, int, str]]:
-    logging.debug("Fetching comments from ru...")
+    L.debug("Fetching comments from ru...")
     r = requests.get(COMMENTS_URL, headers=config.DEFAULT_HEADERS, timeout=30)
     r.raise_for_status()
     root = lxml.etree.HTML(r.content)
@@ -58,7 +55,7 @@ def fetch_latest_comments() -> List[Tuple[int, int, str]]:
 
 
 def fetch_latest_comments_xyz() -> List[parser_xyz.CommentXyz]:
-    logging.debug("Fetching comments from xyz...")
+    L.debug("Fetching comments from xyz...")
     r = requests.get(COMMENTS_URL_XYZ, headers=config.DEFAULT_HEADERS, timeout=30)
     r.raise_for_status()
     root = lxml.etree.HTML(r.content)
@@ -77,21 +74,21 @@ def update_sync_states(comments: Sequence[Tuple[int, int, str]], processor: Comm
 
             state = session.query(SyncState).filter(SyncState.post_id == post_id).one_or_none()
             if not state:
-                logging.info("Got new comment %d for new post %d", comment_id, post_id)
+                L.info("Got new comment %d for new post %d", comment_id, post_id)
                 has_updates = True
                 state = SyncState(post_id=post_id, last_comment_id=comment_id, pending=True, priority=SyncState.PRIORITY_HAS_COMMENTS)
                 session.add(state)
             else:
                 if state.last_comment_id is None or comment_id > state.last_comment_id:
-                    logging.info("Got new comment %d for post %d", comment_id, post_id)
+                    L.info("Got new comment %d for post %d", comment_id, post_id)
                     has_updates = True
                     state.last_comment_id = comment_id
                     state.pending = True
                     state.priority=SyncState.PRIORITY_HAS_COMMENTS
 
         if len(updated_comments) > 0:
-            logging.info(f'Fast-fetched {len(updated_comments)} updated ' + \
-                         f'comment{"s" if len(updated_comments) > 1 else ""}: {[c.comment_id for c in updated_comments]}')
+            L.info(f'Fast-fetched {len(updated_comments)} updated ' + \
+                   f'comment{"s" if len(updated_comments) > 1 else ""}: {[c.comment_id for c in updated_comments]}')
             session.commit()
             processor.on_comments_update([], updated_comments)
 
@@ -131,14 +128,14 @@ def update_xyz_states(comments: Sequence[parser_xyz.CommentXyz], processor: Comm
             to_print: list = prefetched_comment_id_pairs[:5]
             if len(prefetched_comment_id_pairs) > 5:
                 to_print.append('...')
-            logging.info(f'Prefetched xyz ids for {len(prefetched_comment_id_pairs)} comments: [{", ".join(map(str, to_print))}]')
+            L.info(f'Prefetched xyz ids for {len(prefetched_comment_id_pairs)} comments: [{", ".join(map(str, to_print))}]')
 
         if len(updated_comments) > 0:
             session.commit()
             to_print = [(c.comment_id, c.comment_id_storage.comment_id_xyz) for c in updated_comments[:5]]
             if len(updated_comments) > 5:
                 to_print.append('...')
-            logging.info(f'Fetched xyz ids for {len(updated_comments)} comments: [{", ".join(map(str, to_print))}]')
+            L.info(f'Fetched xyz ids for {len(updated_comments)} comments: [{", ".join(map(str, to_print))}]')
             processor.on_comments_update([], updated_comments)
 
 
@@ -147,8 +144,9 @@ def worker_ru(thread_exited_event: threading.Event) -> None:
     processor = CommentsProcessor(config.REDIS_HOST,
                                   config.REDIS_PORT,
                                   config.REDIS_PASSWORD,
-                                  config.REDIS_CHANNEL)
-    logging.info("=== ru worker started ===")
+                                  config.REDIS_CHANNEL,
+                                  L)
+    L.info("=== ru worker started ===")
     fast_requests = 0
     while True:
         try:
@@ -157,7 +155,7 @@ def worker_ru(thread_exited_event: threading.Event) -> None:
             if has_updates:
                 fast_requests = FAST_TO_SLOW_STEPS
         except Exception as e:
-            logging.exception(e)
+            L.exception(e)
             fast_requests = 0
 
         if fast_requests > 0:
@@ -177,8 +175,9 @@ def worker_xyz(thread_exited_event: threading.Event) -> None:
     processor = CommentsProcessor(config.REDIS_HOST,
                                   config.REDIS_PORT,
                                   config.REDIS_PASSWORD,
-                                  config.REDIS_CHANNEL)
-    logging.info("=== xyz worker started ===")
+                                  config.REDIS_CHANNEL,
+                                  L)
+    L.info("=== xyz worker started ===")
     fast_requests = 0
     last_xyz_id: Optional[int] = -1
     while True:
@@ -190,7 +189,7 @@ def worker_xyz(thread_exited_event: threading.Event) -> None:
                 fast_requests = FAST_TO_SLOW_STEPS
                 last_xyz_id = comments[0].id_xyz
         except Exception as e:
-            logging.exception(e)
+            L.exception(e)
             fast_requests = 0
 
         if fast_requests > 0:
@@ -206,12 +205,12 @@ def worker_xyz(thread_exited_event: threading.Event) -> None:
 
 
 def graceful_exit(signum: int, frames: Any) -> None:
-    logging.info('Exiting...')
+    L.info('Exiting...')
     exit_event.set()
     while not all((e.is_set() for e in threads_exited_events)):
         for e in threads_exited_events:
             e.wait()
-    logging.info('All threads stopped. Goodbye!')
+    L.info('All threads stopped. Goodbye!')
 
 
 def main() -> None:
