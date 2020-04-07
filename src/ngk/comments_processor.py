@@ -4,7 +4,7 @@ from typing import List, Iterator, Dict
 
 import redis
 
-from schema import Comment
+from ngk.schema import Comment
 
 
 class CommentsProcessor:

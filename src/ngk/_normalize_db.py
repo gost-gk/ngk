@@ -4,8 +4,8 @@ import time
 
 from sqlalchemy.sql.expression import func
 
-from schema import Comment, Post, ScopedSession, User
-from html_util import normalize_text
+from ngk.schema import Comment, Post, ScopedSession, User
+from ngk.html_util import normalize_text
 
 
 def main():

@@ -11,16 +11,15 @@ import lxml
 import lxml.etree
 import requests
 
-from comments_processor import CommentsProcessor
-import config
-from html_util import inner_html_ru, normalize_text
-from parse_error import ParseError
-import parser_xyz
-from schema import Comment, CommentIdStorage, ScopedSession, SyncState
+from ngk import config, parser_xyz
+from ngk.comments_processor import CommentsProcessor
+from ngk.html_util import inner_html_ru, normalize_text
+from ngk.parse_error import ParseError
+from ngk.schema import Comment, CommentIdStorage, ScopedSession, SyncState
 
 
 logging.basicConfig(
-    filename="../../logs/scan_comments.log",
+    filename=config.get_log_path('scan_comments.log'),
     format="%(asctime)s %(levelname)s %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
     level=logging.INFO)

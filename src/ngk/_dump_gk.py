@@ -1,15 +1,17 @@
-import logging
-import time
-import requests
-import lxml.etree
-import lxml.html
-import re
 import decimal
-from datetime import datetime, timezone, timedelta
-from schema import ScopedSession, SyncState, User, Post, Comment
+import logging
 import os
 import os.path
+import re
 import sys
+import time
+from datetime import datetime, timedelta, timezone
+
+import lxml.etree
+import lxml.html
+import requests
+
+from ngk.schema import Comment, Post, ScopedSession, SyncState, User
 
 
 logging.basicConfig(

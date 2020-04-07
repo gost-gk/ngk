@@ -15,9 +15,9 @@ import redis
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql.expression import func
 
-from comments_processor import CommentsProcessor
-import config
-from schema import Comment, DATE_FORMAT, Post, ScopedSession, SyncState, User
+from ngk.comments_processor import CommentsProcessor
+from ngk import config
+from ngk.schema import Comment, DATE_FORMAT, Post, ScopedSession, SyncState, User
 
 
 SEARCH_LIMIT = 50
@@ -30,7 +30,7 @@ io = SocketIO(app, async_mode='eventlet')
 
 
 logging.basicConfig(
-    filename="../../logs/api.log",
+    filename=config.get_log_path('api.log'),
     format="%(asctime)s %(levelname)s %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
     level=logging.DEBUG)

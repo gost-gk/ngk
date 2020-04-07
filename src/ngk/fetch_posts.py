@@ -13,22 +13,21 @@ import lxml.html
 import requests
 import sqlalchemy.orm
 
-from comments_processor import CommentsProcessor
-import config
-from html_util import inner_html_ru, normalize_text
-from parse_error import ParseError
-from schema import Comment, Post, ScopedSession, SyncState, User
+from ngk.comments_processor import CommentsProcessor
+from ngk import config
+from ngk.html_util import inner_html_ru, normalize_text
+from ngk.parse_error import ParseError
+from ngk.schema import Comment, Post, ScopedSession, SyncState, User
 
 
 GK_URL = "http://govnokod.ru"
 SUCCESS_DELAY = 5
 ERROR_DELAY = 60
-DUMP_DIR = "../../dumps"
 
 
 root_logger= logging.getLogger()
 root_logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler('../../logs/fetch_posts.log', 'w', 'utf-8')
+handler = logging.FileHandler(config.get_log_path('fetch_posts.log'), 'w', 'utf-8')
 handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s', '%Y-%m-%d %H:%M:%S'))
 root_logger.addHandler(handler)
 
@@ -175,7 +174,7 @@ def update_state(state: SyncState, result: str) -> None:
 
 def dump_post(content: bytes) -> None:
     time = datetime.utcnow()
-    subdir_path = os.path.join(DUMP_DIR, time.strftime("%Y-%m-%d"))
+    subdir_path = config.get_dumps_path(time.strftime("%Y-%m-%d"))
     file_name = time.strftime("%H-%M-%S") + ".html"
     if not os.path.isdir(subdir_path):
         os.makedirs(subdir_path)

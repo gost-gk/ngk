@@ -1,6 +1,6 @@
-from comments_processor import CommentsProcessor
+from ngk import config
+from ngk.comments_processor import CommentsProcessor
 
-import config
 
 processor = CommentsProcessor(config.REDIS_HOST,
                               config.REDIS_PORT,

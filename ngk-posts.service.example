@@ -4,8 +4,8 @@ PartOf=ngk.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/python/ngk/src/ngk
-ExecStart=/usr/bin/env python3 fetch_posts.py
+WorkingDirectory=/home/python/ngk/src
+ExecStart=/usr/bin/env python3 ngk/fetch_posts.py
 StandardOutput=journal
 StandardError=journal
 

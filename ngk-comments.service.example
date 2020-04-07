@@ -3,8 +3,8 @@ Description=NGK comments scanner
 
 [Service]
 Type=simple
-WorkingDirectory=/home/python/ngk/src/ngk
-ExecStart=/usr/bin/env python3 scan_comments.py
+WorkingDirectory=/home/python/ngk/src
+ExecStart=/usr/bin/env python3 ngk/scan_comments.py
 StandardOutput=journal
 StandardError=journal
 

@@ -13,9 +13,9 @@ import lxml.html
 import lxml.sax
 import requests
 
-from html_util import inner_html_xyz, normalize_text
-from parse_error import ParseError
-from schema import DATE_FORMAT
+from ngk.html_util import inner_html_xyz, normalize_text
+from ngk.parse_error import ParseError
+from ngk.schema import DATE_FORMAT
 
 
 _COMMENT_LINK_XYZ_RE = re.compile(r'^https?://govnokod.xyz/_(\d+)/#comment-(\d+)/?$')

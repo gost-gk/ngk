@@ -1,8 +1,10 @@
+import pathlib
+
 import redis
 from decouple import config
 from nacl.signing import SigningKey, VerifyKey
 
-from ngk_crypt import get_signing_key, get_verify_key
+from ngk.ngk_crypt import get_signing_key, get_verify_key
 
 
 SECRET_KEY: str = config('SECRET_KEY')
@@ -25,6 +27,9 @@ REDIS_CHANNEL: str = config('REDIS_CHANNEL')
 REDIS_DB: int = config('REDIS_DB', cast=int)
 REDIS_PREFIX: str = config('REDIS_PREFIX')
 
+WORKING_DIR_PATH: pathlib.Path = pathlib.Path(config('WORKING_DIR'))
+LOGS_DIR_PATH: pathlib.Path = pathlib.Path(config('LOGS_DIR'))
+DUMPS_DIR_PATH: pathlib.Path = pathlib.Path(config('DUMPS_DIR'))
 
 API_INTERNAL_NAMESPACE: str = '/internal/'
 
@@ -39,3 +44,10 @@ API_SIGNING_KEY: SigningKey = get_signing_key(API_PRIVATE_KEY)
 API_VERIFY_KEY: VerifyKey = get_verify_key(API_SIGNING_KEY)
 API_NONCE_SIZE: int = 32
 API_NONCE_TIMEOUT_SECONDS: int = 10
+
+
+def get_log_path(filename: str) -> str:
+    return str(LOGS_DIR_PATH.joinpath(filename))
+
+def get_dumps_path(filename: str) -> str:
+    return str(DUMPS_DIR_PATH.joinpath(filename))
