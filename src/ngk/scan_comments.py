@@ -5,7 +5,7 @@ import re
 import signal
 import threading
 import time
-from typing import Any, List, Sequence, Tuple
+from typing import Any, List, Optional, Sequence, Tuple
 
 import lxml
 import lxml.etree
@@ -180,7 +180,7 @@ def worker_xyz(thread_exited_event: threading.Event) -> None:
                                   config.REDIS_CHANNEL)
     logging.info("=== xyz worker started ===")
     fast_requests = 0
-    last_xyz_id = -1
+    last_xyz_id: Optional[int] = -1
     while True:
         try:
             comments = fetch_latest_comments_xyz()

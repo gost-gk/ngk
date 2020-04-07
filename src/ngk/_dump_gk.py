@@ -11,11 +11,12 @@ import lxml.etree
 import lxml.html
 import requests
 
+from ngk import config
 from ngk.schema import Comment, Post, ScopedSession, SyncState, User
 
 
 logging.basicConfig(
-    filename="../../logs/dump_gk.log",
+    filename=config.get_log_path('dump_gk.log'),
     format="%(asctime)s %(levelname)s %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
     level=logging.DEBUG)
@@ -25,10 +26,10 @@ SUCCESS_DELAY = 8
 ERROR_DELAY = 30
 
     
-def generate_tasks():
+def generate_tasks() -> None:
     if len(sys.argv) != 3:
         print('Usage: {} <start post id> <end post id>'.format(sys.argv[0]))
-        sys.exit(1);
+        sys.exit(1)
     
     logging.info("=== started ===")
     start_id = int(sys.argv[1])

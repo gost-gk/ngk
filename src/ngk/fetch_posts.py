@@ -45,17 +45,17 @@ def parse_avatar(url: str) -> Optional[str]:
         return None
 
 
-def parse_rating(rating_node: lxml.etree._Element) -> Tuple[int, int, decimal.Decimal]:
+def parse_rating(rating_node: lxml.etree._Element) -> Tuple[int, int, float]:
     title: str = rating_node.get('title', '')
     m = re.match(r'(\d+) .* (\d+) .*$', title)
     if m is None:
         _MAX_PRINT_LEN = 100
         logging.warning(f'Could not parse rating: no regex match in' +\
                         f'"{title[:_MAX_PRINT_LEN]}{"..." if len(title) > _MAX_PRINT_LEN else ""}"')
-        return (0, 0, decimal.Decimal(0))
+        return (0, 0, 0)
     plus = int(m.group(1))
     minus = int(m.group(2))
-    rating = decimal.Decimal(rating_node.text.replace('−', '-'))
+    rating = float(decimal.Decimal(rating_node.text.replace('−', '-')))
     return plus, minus, rating
 
 

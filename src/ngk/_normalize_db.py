@@ -8,7 +8,7 @@ from ngk.schema import Comment, Post, ScopedSession, User
 from ngk.html_util import normalize_text
 
 
-def main():
+def main() -> None:
     BATCH_SIZE = 50000
     total_count = 0
     with ScopedSession() as session:

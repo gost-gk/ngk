@@ -90,7 +90,7 @@ class Post(Base):
         return {
             'id': self.post_id,
             'code': self.code,
-            'text': normalize_text(self.text),
+            'text': normalize_text(self.text or ''),
             'posted': self.posted.strftime(DATE_FORMAT) if self.posted is not None else None,
             'posted_timestamp': self.posted.timestamp() if self.posted is not None else None,
             'user_id': self.user_id,
@@ -134,7 +134,7 @@ class Comment(Base):
             'id_xyz': self.comment_id_storage.comment_id_xyz if self.comment_id_storage is not None else None,
             'parent_id': self.parent_id,
             'post_id': self.post_id,
-            'text': normalize_text(self.text),
+            'text': normalize_text(self.text or ''),
             'posted': self.posted.strftime(DATE_FORMAT) if self.posted is not None else None,
             'posted_timestamp': self.posted.timestamp() if self.posted is not None else None,
             'user_id': self.user_id,
