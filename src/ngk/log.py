@@ -57,7 +57,7 @@ def get_logger(name: str,
     return logger
 
 
-def redirect_basic_logging(to_logger: logging.Logger, level: Optional[int]) -> None:
+def redirect_basic_logging(to_logger: logging.Logger, level: Optional[int] = None) -> None:
     for handler in logging.root.handlers:
         logging.root.removeHandler(handler)
     for handler in to_logger.handlers:
