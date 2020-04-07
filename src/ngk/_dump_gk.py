@@ -13,7 +13,7 @@ import sys
 
 
 logging.basicConfig(
-    filename="../logs/dump_gk.log",
+    filename="../../logs/dump_gk.log",
     format="%(asctime)s %(levelname)s %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
     level=logging.DEBUG)

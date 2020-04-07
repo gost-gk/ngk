@@ -4,13 +4,13 @@ stop.sh
 
 # dev-version
 static-dev/
-webapp/api_dev.py
+src/ngk/api_dev.py
 
 # secret keys
-webapp/.env
+src/ngk/.env
 
-webapp/__pycache__
-webapp/*.log
+src/ngk/__pycache__
+src/ngk/*.log
 logs/
 dumps/
 compress.log

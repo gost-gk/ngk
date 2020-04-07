@@ -1,10 +1,11 @@
 import copy
 import datetime
 import logging
+import math
 import re
 import time
 import timeit
-from typing import List, Optional
+from typing import Any, List, Optional
 
 import lxml
 import lxml.etree
@@ -44,6 +45,19 @@ class CommentXyz:
         self.time_posted: float = time_posted
         self.time_parsed: float = time_parsed
     
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, CommentXyz):
+            attrs = set(CommentXyz.__slots__)
+            attrs.remove('time_posted')
+            attrs.remove('time_parsed')
+            return all((
+                math.isclose(self.time_posted, other.time_posted),
+                math.isclose(self.time_parsed, other.time_parsed),
+                all((getattr(self, attr) == getattr(other, attr) for attr in attrs))
+            ))
+        else:
+            return False
+
     def __str__(self) -> str:
         time_posted = datetime.datetime.fromtimestamp(self.time_posted).strftime(DATE_FORMAT)
         time_parsed = datetime.datetime.fromtimestamp(self.time_parsed).strftime(DATE_FORMAT)

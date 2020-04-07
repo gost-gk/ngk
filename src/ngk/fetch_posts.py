@@ -23,12 +23,12 @@ from schema import Comment, Post, ScopedSession, SyncState, User
 GK_URL = "http://govnokod.ru"
 SUCCESS_DELAY = 5
 ERROR_DELAY = 60
-DUMP_DIR = "../dumps"
+DUMP_DIR = "../../dumps"
 
 
 root_logger= logging.getLogger()
 root_logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler('../logs/fetch_posts.log', 'w', 'utf-8')
+handler = logging.FileHandler('../../logs/fetch_posts.log', 'w', 'utf-8')
 handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s', '%Y-%m-%d %H:%M:%S'))
 root_logger.addHandler(handler)
 

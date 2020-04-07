@@ -30,7 +30,7 @@ io = SocketIO(app, async_mode='eventlet')
 
 
 logging.basicConfig(
-    filename="../logs/api.log",
+    filename="../../logs/api.log",
     format="%(asctime)s %(levelname)s %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
     level=logging.DEBUG)

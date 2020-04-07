@@ -20,7 +20,7 @@ from schema import Comment, CommentIdStorage, ScopedSession, SyncState
 
 
 logging.basicConfig(
-    filename="../logs/scan_comments.log",
+    filename="../../logs/scan_comments.log",
     format="%(asctime)s %(levelname)s %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
     level=logging.INFO)
