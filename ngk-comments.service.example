@@ -1,0 +1,12 @@
+[Unit]
+Description=NGK comments scanner
+
+[Service]
+Type=simple
+WorkingDirectory=/home/python/ngk/src/ngk
+ExecStart=/usr/bin/env python3 scan_comments.py
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

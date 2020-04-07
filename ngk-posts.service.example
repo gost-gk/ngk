@@ -1,0 +1,13 @@
+[Unit]
+Description=NGK posts scanner
+PartOf=ngk.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/python/ngk/src/ngk
+ExecStart=/usr/bin/env python3 fetch_posts.py
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,12 @@
+[Unit]
+Description=Gunicorn instance to serve gcode.space
+After=network.target
+
+[Service]
+User=python
+Group=www-data
+WorkingDirectory=/home/python/ngk/src/ngk
+ExecStart=/usr/local/bin/gunicorn --worker-class eventlet -w 1 --error-logfile ../../logs/error.log --bind 0.0.0.0:30002 api:app
+
+[Install]
+WantedBy=multi-user.target
