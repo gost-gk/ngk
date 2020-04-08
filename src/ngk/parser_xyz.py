@@ -4,7 +4,7 @@ import math
 import re
 import time
 import timeit
-from typing import Any, List, Optional
+from typing import Any, Dict, Mapping, Union, List, Optional
 
 import lxml
 import lxml.etree
@@ -44,6 +44,24 @@ class CommentXyz:
         self.time_posted: float = time_posted
         self.time_parsed: float = time_parsed
     
+    def to_dict(self) -> Dict[str, Union[int, str, float, None]]:
+        return {k: getattr(self, k) for k in CommentXyz.__slots__}
+    
+    @staticmethod
+    def from_dict(dictionary: Mapping[str, Union[int, str, float, None]]) -> 'CommentXyz':
+        slots_set = set(CommentXyz.__slots__)
+        dict_set = set(dictionary.keys())
+
+        required_keys = slots_set.difference(dict_set)
+        if len(required_keys) > 0:
+            raise TypeError(f'Not enough keys: {required_keys} required')
+
+        unexpected_keys = dict_set.difference(slots_set.intersection(dict_set))
+        if len(unexpected_keys) > 0:
+            raise TypeError(f'Unexpected keys present: {unexpected_keys}')
+
+        return CommentXyz(**dictionary)  # type: ignore
+
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, CommentXyz):
             attrs = set(CommentXyz.__slots__)
@@ -108,7 +126,7 @@ def parse_comments(root: lxml.etree._Element) -> List[CommentXyz]:
         if id_ru_attr is not None and len(id_ru_attr) > 0:
             id_ru = int(id_ru_attr)
         
-        for link_node in info_node.xpath('a'):
+        for link_node in info_node.xpath('.//a'):
             link = link_node.get('href', '')
 
             match = _COMMENT_LINK_XYZ_RE.match(link)

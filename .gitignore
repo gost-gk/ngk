@@ -10,6 +10,7 @@ src/ngk/api_dev.py
 src/ngk/.env
 
 src/ngk/__pycache__
+src/tests/__pycache__
 src/ngk/*.log
 logs/
 dumps/

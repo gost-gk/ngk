@@ -1,0 +1,2648 @@
+<!DOCTYPE html>
+<html lang="ru-RU" class="no-js no-svg">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+	<link rel="icon" href="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/favicon.ico" type="image/x-icon" />
+	<meta name="keywords" content="говнокод, смешной код, быдлокод, быдлокодеры, индусы, для программистов, про программистов, индусский код, записки программиста, говно, говнокод на php, mysql, perl" />
+
+        	    <meta name="description" content="Сборник говнокода на различных языках программирования" />
+    		<meta property="og:image" content="http://govnokod.ru/images/brand.gif" />
+    	
+	<title>Сток &#8211; Говнокод</title>
+<link rel='dns-prefetch' href='//ajax.googleapis.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Говнокод &raquo; Лента" href="https://govnokod.xyz/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Говнокод &raquo; Лента комментариев" href="https://govnokod.xyz/comments/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/govnokod.xyz\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.13"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56760,9792,65039],[55358,56760,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='gk-style-css'  href='https://govnokod.xyz/wp-content/themes/govnokod/style.css?ver=1.0.72' type='text/css' media='all' />
+<link rel='stylesheet' id='um_fonticons_ii-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-fonticons-ii.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_fonticons_fa-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-fonticons-fa.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='select2-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/select2/select2.min.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_crop-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-crop.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_modal-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-modal.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_styles-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-styles.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_members-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-members.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_profile-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-profile.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_account-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-account.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_misc-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-misc.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_fileupload-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-fileupload.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_datetime-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/pickadate/default.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_datetime_date-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/pickadate/default.date.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_datetime_time-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/pickadate/default.time.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_raty-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-raty.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_scrollbar-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/simplebar.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_tipsy-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-tipsy.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_responsive-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-responsive.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_default_css-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-old-default.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_old_css-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/../../uploads/ultimatemember/um_old_settings.css?ver=4.9.13' type='text/css' media='all' />
+<script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js?ver=1.12.4'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-gdpr.min.js?ver=2.0.56'></script>
+<link rel='https://api.w.org/' href='https://govnokod.xyz/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://govnokod.xyz/xmlrpc.php?rsd" />
+<link rel='shortlink' href='https://govnokod.xyz/?p=49' />
+<link rel="alternate" type="application/json+oembed" href="https://govnokod.xyz/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fgovnokod.xyz%2Fcomments%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://govnokod.xyz/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fgovnokod.xyz%2Fcomments%2F&#038;format=xml" />
+<script>var TEMPLATE_PATH = "https:\/\/govnokod.xyz\/wp-content\/themes\/govnokod";</script><style>#header h1 a {background-image:url('https://govnokod.xyz/wp-content/themes/govnokod/assets/images/brand.gif')}</style>		<style type="text/css">
+			.request_name {
+				display: none !important;
+			}
+		</style>
+	    <script>
+        var anr_onloadCallback = function() {
+            window.recaptchaEnabled = false;
+            for (var i = 0; i < document.forms.length; i++) {
+                var form = document.forms[i];
+                var captcha_div = form.querySelector('.anr_captcha_field_div');
+
+                if (null === captcha_div) {
+                    continue;
+                }
+
+                captcha_div.innerHTML = '';
+                (function(form) {	
+                    var anr_captcha = grecaptcha.render( captcha_div,{
+                        'sitekey' : '6Lduh7oUAAAAAFWqQdxwehVVzPPMvISc7OAl049K',
+                        'size'  : 'invisible',
+                        'theme' : 'light',
+                        'badge' : 'bottomright',
+                        'callback' : function (token) {
+                            onSubmitComment();
+                            grecaptcha.reset(anr_captcha);
+                        },
+                        'expired-callback' : function() {
+                            grecaptcha.reset( anr_captcha );
+                        }
+                    });
+                    
+                    window.recaptchaEnabled = true;
+                    form.onsubmit = function(e) {
+                        e.preventDefault();
+                        grecaptcha.execute(anr_captcha);
+                    };
+                })(form);
+            }
+            jQuery('#submit').removeClass('disabled'); // TODO: submit может ещё не быть
+        };
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=anr_onloadCallback&#038;render=explicit" async defer></script>
+    <script>window.recaptchaEnabled = true;</script>
+</head>
+
+<body class="page-template-default page page-id-49 group-blog">
+
+<div id="page">
+	<div id="header">
+		<h1><a rel="homepage" href="https://govnokod.xyz"><!--Говнокод: по колено в коде.--></a></h1>
+
+		<div id="userpane">
+			<ul class="menu" style="background-size: contain; background-image: url('https://secure.gravatar.com/avatar/?s=20&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g');">
+								<li>
+											<li><a id="expand-trigger0" href="https://govnokod.xyz/login/">Войти в говнокод</a></li>
+									</li>
+
+				
+			</ul>
+
+
+			<div class="pane-content">
+				<ul>
+					<li><a href="">Кабинка</a></li>
+					<li><a href="https://govnokod.xyz/account/">Настройки</a></li>
+					<li>&nbsp;</li>
+					<li><a href="https://govnokod.xyz/logout/">Выйти</a></li>
+				</ul>
+			</div>
+
+		</div>
+
+					<div class="menu-menu-1-container"><ul id="navigation" class="menu"><li id="menu-item-87" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-87"><a href="http://govnokod.xyz/">Все</a></li>
+<li id="menu-item-97" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-49 current_page_item menu-item-97"><a href="https://govnokod.xyz/comments/">Сток</a></li>
+<li id="menu-item-93" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-93"><a href="https://govnokod.xyz/search/">Глупый поиск</a></li>
+<li id="menu-item-94" class="add menu-item menu-item-type-post_type menu-item-object-page menu-item-94"><a href="https://govnokod.xyz/add/">Наговнокодить!</a></li>
+<li id="menu-item-47015" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-47015"><a href="https://govnokod.xyz/guest-settings/">Настройки гостя</a></li>
+</ul></div>		
+		<p id="entrance">
+			Нашли или выдавили из себя код, который нельзя назвать нормальным,
+			на который без улыбки не взглянешь?
+			Не торопитесь его удалять или рефакторить, &mdash; запостите его на
+			говнокод.ру, посмеёмся вместе!
+		</p>
+
+		<ol id="language">
+		<li class=""><a href="https://govnokod.xyz/language/php/">"PHP"</a> <span>(6080)</span></li><li class=""><a href="https://govnokod.xyz/language/other/">Куча</a> <span>(3038)</span></li><li class=""><a href="https://govnokod.xyz/language/cpp/">C++</a> <span>(2648)</span></li><li class=""><a href="https://govnokod.xyz/language/cs/">C#</a> <span>(2012)</span></li><li class=""><a href="https://govnokod.xyz/language/js/">JavaScript</a> <span>(2000)</span></li><li class=""><a href="https://govnokod.xyz/language/java/">Java</a> <span>(1616)</span></li><li class=""><a href="https://govnokod.xyz/language/c/">C</a> <span>(1175)</span></li><li class=""><a href="https://govnokod.xyz/language/pascal/">Pascal</a> <span>(749)</span></li><li class=""><a href="https://govnokod.xyz/language/py/">Python</a> <span>(747)</span></li><li class=""><a href="https://govnokod.xyz/language/sql/">SQL</a> <span>(550)</span></li><li class=""><a href="https://govnokod.xyz/language/1c/">1C</a> <span>(496)</span></li><li class=""><a href="https://govnokod.xyz/language/actionscript/">ActionScript</a> <span>(416)</span></li><li class=""><a href="https://govnokod.xyz/language/objc/">Objective C</a> <span>(286)</span></li><li class=""><a href="https://govnokod.xyz/language/ruby/">Ruby</a> <span>(279)</span></li><li class=""><a href="https://govnokod.xyz/language/bash/">Bash</a> <span>(263)</span></li><li class=""><a href="https://govnokod.xyz/language/perl/">Perl</a> <span>(257)</span></li><li class=""><a href="https://govnokod.xyz/language/vb/">VisualBasic</a> <span>(191)</span></li><li class=""><a href="https://govnokod.xyz/language/asm/">Assembler</a> <span>(127)</span></li><li class=""><a href="https://govnokod.xyz/language/lua/">Lua</a> <span>(79)</span></li><li class=""><a href="https://govnokod.xyz/language/haskell/">Haskell</a> <span>(44)</span></li><li class=""><a href="https://govnokod.xyz/language/swift/">Swift</a> <span>(43)</span></li><li class=""><a href="https://govnokod.xyz/language/kotlin/">Kotlin</a> <span>(4)</span></li><li class=""><a href="https://govnokod.xyz/language/html/">HTML</a> <span>(1)</span></li>		</ol>
+	</div>
+
+	<div id="content">
+	<div class="posts">
+		<article id="post-49" class="post-49 page type-page status-publish hentry">
+<script>jQuery(document.scripts[document.scripts.length - 1]).closest('.posts').removeClass('posts');</script><script>jQuery(document.scripts[document.scripts.length - 1]).closest('.hentry').removeClass('hentry');</script>
+<ol class="all-comments posts hatom"
+    data-update-url="https://govnokod.xyz/wp-admin/admin-ajax.php?action=all-comments&amp;_ajax_nonce=6c4a9a42be"
+    data-update-delay="5"
+    data-update-interval="15"
+>
+<li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26561/">говнокоду #26561</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/46ee8a8bfdd70d2b7a0d63e5293e6586?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8394' rel='external nofollow' class='url'>Fike</a></b></strong>
+
+    <time datetime="2020-04-08T01:28:54+00:00">
+        1 минута ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26561/#comment-521451" data-legacy-id="538726">#</a>
+
+    
+            <a href="http://govnokod.ru/26561#comment538726" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">тут разве что в тернарник можно последний иф запихнуть, признай</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26561/#comment-521451">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li>
+<article id="post-49267" class="hentry post-49267 post type-post status-publish format-standard category-1 language-cs">
+	<h2 class="entry-header">
+		<a rel="chapter" href="https://govnokod.xyz/language/cs/">C#</a> /		<a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26561/">Говнокод #26561</a>
+
+					<a href="http://govnokod.ru/26561" target="_blank" style="">
+				<img title="Этот пост является копией поста с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+					 alt="Ссылка на оригинал"
+					 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+				>
+			</a>
+		
+	</h2>
+
+	
+<p class="vote my-voted">
+    
+    <strong class="just-rating" title="0 за и 0 против">0</strong>
+    </p>
+	<div class="entry-content">
+		    <ol><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li></ol>
+    <pre><code class="cs">public async Task&lt;ActionResult&gt; Enable2FA(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest(&quot;Invalid user Id&quot;);
+            }
+
+            User user = await userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return BadRequest(USER_NOT_FOUND_MESSAGE);
+            }
+
+            EnableAuthenticatorModel model = await LoadSharedKeyAndQrCodeUriAsync(user);
+            return Ok(model);
+        }</code></pre>
+    	</div>
+
+	<p class="description">
+		Что-то мне подсказывает что можно более логичнее написать сие кусок кода	</p>
+
+	<p class="author">
+							<a target="_blank" href="http://govnokod.ru/user/67573"><img src="//gravatar.com/avatar/1afc1e11527c021c7be7f31665b34c93?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=20" class="avatar" width="20" height="20" alt="horil97821"></a>
+			<a target="_blank" href="http://govnokod.ru/user/67573">horil97821</a>,
+				<time class="entry-date published" datetime="2020-04-08T01:03:09+00:00">08.04.2020</time> (Updated <time class="updated" datetime="2020-04-08T01:04:03+00:00">08.04.2020</time>)	</p>
+
+	Комментарии <span class="enrty-comments-count">(1)</span></article>
+<li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26556/">говнокоду #26556</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-08T00:40:20+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26556/#comment-521435" data-legacy-id="538711">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">Рус&shy;ня, сегодня я нашел в мусорке шуруповерт. Старый, с тяжелым никель-кадмиевым аккумулятором, без части бит и сверел, но полностью рабочий.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26556/#comment-521435">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-08T00:40:20+00:00">
+        50 минут ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26556/#comment-521450" data-legacy-id="538725">#</a>
+
+    
+            <a href="http://govnokod.ru/26556#comment538725" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">Фотку-то хоть покажи, интересно же.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26556/#comment-521450">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26556/">говнокоду #26556</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">MAKAKA</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-08T00:39:36+00:00">
+        58 минут ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26556/#comment-521448" data-legacy-id="538723">#</a>
+
+    
+            <a href="http://govnokod.ru/26556#comment538723" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+                            </p>
+
+                        <div class="entry-comment">Сёма день деньской по помойкам рыщет</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26556/#comment-521448">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-08T00:39:36+00:00">
+        51 минута ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26556/#comment-521449" data-legacy-id="538724">#</a>
+
+    
+            <a href="http://govnokod.ru/26556#comment538724" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">Ну это уже давно не новость.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26556/#comment-521449">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26556/">говнокоду #26556</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-08T00:32:06+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26556/#comment-521435" data-legacy-id="538711">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">Рус&shy;ня, сегодня я нашел в мусорке шуруповерт. Старый, с тяжелым никель-кадмиевым аккумулятором, без части бит и сверел, но полностью рабочий.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26556/#comment-521435">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-08T00:32:06+00:00">
+        58 минут ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26556/#comment-521448" data-legacy-id="538723">#</a>
+
+    
+            <a href="http://govnokod.ru/26556#comment538723" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">Сёма день деньской по помойкам рыщет</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26556/#comment-521448">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">gost</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-08T00:30:17+00:00">
+        1 час ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521446" data-legacy-id="538721">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538721" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+                            </p>
+
+                        <div class="entry-comment">&gt;&gt;&gt; IT Оффтоп #38<br />
+<pre><code class="php">Перекат!
+<a href="https://govnokod.ru/26556" rel="nofollow">https://govnokod.ru/26556</a>
+<a href="https://govnokod.xyz/_26556" rel="nofollow">https://govnokod.xyz/_26556</a></code></pre><br />
+<span style="color:blue;"><span style="text-decoration:underline;"><a href="https://govnokod.xyz/_26539/#comment-521255" rel="nofollow">https://govnokod.xyz/_26539/#comment-521255</a></span></span><br />
+26556 = «IT Оффтоп #39»<br />
+<br />
+&gt;&gt;&gt; Новая нить Бесконечного Стока имени Борманда.<br />
+<pre><code class="php">Странно, я вроде перекатывал, но сейчас коммента найти не могу.
+Перекат!
+<a href="https://govnokod.ru/26544" rel="nofollow">https://govnokod.ru/26544</a>
+<a href="https://govnokod.xyz/_26544" rel="nofollow">https://govnokod.xyz/_26544</a></code></pre><br />
+<span style="color:blue;"><span style="text-decoration:underline;"><a href="https://govnokod.xyz/_25921/#comment-520584" rel="nofollow">https://govnokod.xyz/_25921/#comment-520584</a></span></span><br />
+26544 = «Бесконечный оффтоп имени Борманда #3»</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521446">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-08T00:30:17+00:00">
+        60 минут ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521447" data-legacy-id="538722">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">Больше всего пишут в айти оффтоп<br />
+кажется, это сайт админок, и его надо переименовать в &quot;говносеть.ру&quot; или &quot;говносервер.ру&quot;</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521447">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-08T00:27:53+00:00">
+        1 час ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521440" data-legacy-id="538716">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">&gt;Бесконечный оффтоп имени Борманда #3</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521440">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-08T00:27:53+00:00">
+        1 час ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521446" data-legacy-id="538721">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538721" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">&gt;&gt;&gt; IT Оффтоп #38<br />
+<pre><code class="php">Перекат!
+<a href="https://govnokod.ru/26556" rel="nofollow">https://govnokod.ru/26556</a>
+<a href="https://govnokod.xyz/_26556" rel="nofollow">https://govnokod.xyz/_26556</a></code></pre><br />
+<span style="color:blue;"><span style="text-decoration:underline;"><a href="https://govnokod.xyz/_26539/#comment-521255" rel="nofollow">https://govnokod.xyz/_26539/#comment-521255</a></span></span><br />
+26556 = «IT Оффтоп #39»<br />
+<br />
+&gt;&gt;&gt; Новая нить Бесконечного Стока имени Борманда.<br />
+<pre><code class="php">Странно, я вроде перекатывал, но сейчас коммента найти не могу.
+Перекат!
+<a href="https://govnokod.ru/26544" rel="nofollow">https://govnokod.ru/26544</a>
+<a href="https://govnokod.xyz/_26544" rel="nofollow">https://govnokod.xyz/_26544</a></code></pre><br />
+<span style="color:blue;"><span style="text-decoration:underline;"><a href="https://govnokod.xyz/_25921/#comment-520584" rel="nofollow">https://govnokod.xyz/_25921/#comment-520584</a></span></span><br />
+26544 = «Бесконечный оффтоп имени Борманда #3»</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521446">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-08T00:27:19+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521431" data-legacy-id="538707">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">Ты отсосало, чмо. Хоть бы реальный лог посмотрело перед тем как это высрать.<br />
+<br />
+<pre><code class="">127.0.0.1 - - [25/Dec/2014:18:31:54 +0100] &quot;GET / HTTP/1.1&quot; 400 0 &quot;-&quot; &quot;Mozilla/5.0 (Windows NT 5.1; rv:34.0) Gecko/20100101 Firefox/34.0&quot;</code></pre></div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521431">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-08T00:27:19+00:00">
+        1 час ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521445" data-legacy-id="538720">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">Сёма, ты настолько тупой криворукий *******, что я вообще не понимаю, почему тебя не держат в специальном заведении. Тебе же опасно в реальном мире жить.<br />
+<br />
+Ты, сука, даже не осилил мой скрипт скопировать.<br />
+<pre><code class="">$ echo &#039;127.0.0.1 - - [25/Dec/2014:18:31:54 +0100] &quot;GET / HTTP/1.1&quot; 400 0 &quot;-&quot; &quot;Mozilla/5.0 (Windows NT 5.1; rv:34.0) Gecko/20100101 Firefox/34.0&quot;&#039; |cut  -d&quot; &quot; -f1
+127.0.0.1</code></pre><br />
+Что ***** у тебя не работает?<br />
+<br />
+Кстати, я <b>всегда</b> проверяю, перед тем, как написать. Так что в отличие от твоих высеров про разворот в окошка в винде, моим словам можно верить.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521445">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-08T00:24:32+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521432" data-legacy-id="538708">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">Это такой же архиватор как и гзип. Он тоже умеет только 1 файл жать.<br />
+<br />
+&gt;Скорость совершенно не важна<br />
+Ну если ты так сказал.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521432">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-08T00:24:32+00:00">
+        1 час ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521444" data-legacy-id="538719">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538719" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">&gt; Он тоже умеет только 1 файл жать.<br />
+Да. И именно поэтому и «zstd», и «gzip» — это <b>не</b> архиваторы. Это утилиты для сжатия данных, не больше.<br />
+<br />
+А вот «tar» — это архиватор, потому что он умеет создавать <i>архивы</i>, только несжатые. Как, например, и «WinRar», и «zip», и «7zip».</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521444">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">gost</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-08T00:21:03+00:00">
+        1 час ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521438" data-legacy-id="538714">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538714" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+                            </p>
+
+                        <div class="entry-comment">УМВР.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521438">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-08T00:21:03+00:00">
+        1 час ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521443" data-legacy-id="538718">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">Что у тебя ВР?</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521443">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26556/">говнокоду #26556</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">admin</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img src="https://gravatar.com/avatar/731caaee14d3c4d2e6f55aa22251285f?s=400&amp;r=G&amp;d=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png" class="gravatar avatar avatar-28 um-avatar um-avatar-gravatar" width="28" height="28" alt="admin" data-default="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png" onerror="if ( ! this.getAttribute('data-load-error') ){ this.setAttribute('data-load-error', '1');this.setAttribute('src', this.getAttribute('data-default'));}" />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a href="https://govnokod.xyz/user/1/">admin</a></b></strong>
+
+    <time datetime="2020-04-08T00:20:38+00:00">
+        1 час ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26556/#comment-521437" data-legacy-id="538713">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">Какой багор )))</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26556/#comment-521437">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-08T00:20:38+00:00">
+        1 час ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26556/#comment-521441" data-legacy-id="538717">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">У тебя?</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26556/#comment-521441">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">gost</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-08T00:20:15+00:00">
+        1 час ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521439" data-legacy-id="538715">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538715" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+                            </p>
+
+                        <div class="entry-comment">Это не я ***** перекатил, это вы ***** перекатились.<br />
+<pre><code class="php">gost 7 часов назад #+2
+Перекат!
+<a href="https://govnokod.ru/26556" rel="nofollow">https://govnokod.ru/26556</a>
+<a href="https://govnokod.xyz/_26556" rel="nofollow">https://govnokod.xyz/_26556</a></code></pre></div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521439">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-08T00:20:15+00:00">
+        1 час ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521440" data-legacy-id="538716">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">&gt;Бесконечный оффтоп имени Борманда #3</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521440">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-08T00:19:29+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521434" data-legacy-id="538710">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">*****, это про сток тред. Гост, ты очень ***** перекатил.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521434">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-08T00:19:29+00:00">
+        1 час ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521439" data-legacy-id="538715">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538715" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">Это не я ***** перекатил, это вы ***** перекатились.<br />
+<pre><code class="php">gost 7 часов назад #+2
+Перекат!
+<a href="https://govnokod.ru/26556" rel="nofollow">https://govnokod.ru/26556</a>
+<a href="https://govnokod.xyz/_26556" rel="nofollow">https://govnokod.xyz/_26556</a></code></pre></div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521439">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-08T00:18:55+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521431" data-legacy-id="538707">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">Ты отсосало, чмо. Хоть бы реальный лог посмотрело перед тем как это высрать.<br />
+<br />
+<pre><code class="">127.0.0.1 - - [25/Dec/2014:18:31:54 +0100] &quot;GET / HTTP/1.1&quot; 400 0 &quot;-&quot; &quot;Mozilla/5.0 (Windows NT 5.1; rv:34.0) Gecko/20100101 Firefox/34.0&quot;</code></pre></div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521431">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-08T00:18:55+00:00">
+        1 час ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521438" data-legacy-id="538714">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538714" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">УМВР.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521438">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26556/">говнокоду #26556</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-08T00:02:30+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26556/#comment-521435" data-legacy-id="538711">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">Рус&shy;ня, сегодня я нашел в мусорке шуруповерт. Старый, с тяжелым никель-кадмиевым аккумулятором, без части бит и сверел, но полностью рабочий.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26556/#comment-521435">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img src="https://gravatar.com/avatar/731caaee14d3c4d2e6f55aa22251285f?s=400&amp;r=G&amp;d=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png" class="gravatar avatar avatar-28 um-avatar um-avatar-gravatar" width="28" height="28" alt="admin" data-default="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png" onerror="if ( ! this.getAttribute('data-load-error') ){ this.setAttribute('data-load-error', '1');this.setAttribute('src', this.getAttribute('data-default'));}" />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a href="https://govnokod.xyz/user/1/">admin</a></b></strong>
+
+    <time datetime="2020-04-08T00:02:30+00:00">
+        1 час ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26556/#comment-521437" data-legacy-id="538713">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">Какой багор )))</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26556/#comment-521437">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-08T00:02:24+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521434" data-legacy-id="538710">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">*****, это про сток тред. Гост, ты очень ***** перекатил.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521434">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img src="https://gravatar.com/avatar/731caaee14d3c4d2e6f55aa22251285f?s=400&amp;r=G&amp;d=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png" class="gravatar avatar avatar-28 um-avatar um-avatar-gravatar" width="28" height="28" alt="admin" data-default="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png" onerror="if ( ! this.getAttribute('data-load-error') ){ this.setAttribute('data-load-error', '1');this.setAttribute('src', this.getAttribute('data-default'));}" />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a href="https://govnokod.xyz/user/1/">admin</a></b></strong>
+
+    <time datetime="2020-04-08T00:02:24+00:00">
+        1 час ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521436" data-legacy-id="538712">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">Какой багор )))</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521436">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26556/">говнокоду #26556</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T23:59:53+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26556/#comment-521435" data-legacy-id="538711">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">Рус&shy;ня, сегодня я нашел в мусорке шуруповерт. Старый, с тяжелым никель-кадмиевым аккумулятором, без части бит и сверел, но полностью рабочий.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26556/#comment-521435">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T23:58:43+00:00">
+        5 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521338" data-legacy-id="538620">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">Как узнать, почему сервер забанил пользователя?<br />
+<br />
+Юниксоид<br />
+<pre><code class="">$ grep petuh /var/logs/програ_для_банинья_пользователей.log</code></pre><br />
+<br />
+Виндузятник:<br />
+Да вообще не вопрос<br />
+<pre><code class="">Function Get-ADUserLockouts {
+    [CmdletBinding(
+        DefaultParameterSetName = &#039;All&#039;
+    )]
+    param (
+        [Parameter(
+            ValueFromPipeline = $true,
+            ParameterSetName = &#039;ByUser&#039;
+        )]
+        [Microsoft.ActiveDirectory.Management.ADUser]$Identity
+        ,
+        [datetime]$StartTime
+        ,
+        [datetime]$EndTime
+    )
+    Begin{
+        $filterHt = @{
+            LogName = &#039;Security&#039;
+            ID = 4740
+        }
+        if ($PSBoundParameters.ContainsKey(&#039;StartTime&#039;)){
+            $filterHt[&#039;StartTime&#039;] = $StartTime
+        }
+        if ($PSBoundParameters.ContainsKey(&#039;EndTime&#039;)){
+            $filterHt[&#039;EndTime&#039;] = $EndTime
+        }
+        $PDCEmulator = (Get-ADDomain).PDCEmulator
+        # Query the event log just once instead of for each user if using the pipeline
+        $events = Get-WinEvent -ComputerName $PDCEmulator -FilterHashtable $filterHt
+    }
+    Process {
+        if ($PSCmdlet.ParameterSetName -eq &#039;ByUser&#039;){
+            $user = Get-ADUser $Identity
+            # Filter the events
+            $output = $events | Where-Object {$_.Properties[0].Value -eq $user.SamAccountName}
+        } else {
+            $output = $events
+        }
+        foreach ($event in $output){
+            [pscustomobject]@{
+                UserName = $event.Properties[0].Value
+                CallerComputer = $event.Properties[1].Value
+                TimeStamp = $event.TimeCreated
+            }
+        }
+    }
+    End{}
+}</code></pre>.<br />
+<br />
+Windows. Чтобы не пирдолиться</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521338">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T23:58:43+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521434" data-legacy-id="538710">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">*****, это про сток тред. Гост, ты очень ***** перекатил.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521434">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T23:58:07+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521413" data-legacy-id="538691">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">питух, ты же на десятке уже гнездо свил?</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521413">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T23:58:07+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521433" data-legacy-id="538709">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">На ней мой сервачок, основной ноут всё еще на xp. На сервачке проц очень дохлый, увы.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521433">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">gost</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T23:57:39+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521415" data-legacy-id="538692">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538692" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+                            </p>
+
+                        <div class="entry-comment">&gt; ээээ...<br />
+Что «ээээ»? «zstd.exe» — это не архиватор, это реализация <i>алгоритма</i>. Она знать не знает про всякие «папки», «файлы», «атрибуты» и прочую питушню, она берёт набор байт и выдаёт другой набор байт. Поэтому чтобы сжать что-то сложнее одного файла (два файла, например) их необходимо преобразовать в этот самый набор байт и добавить метаданные.<br />
+<br />
+&gt; Маладец, а скорость?<br />
+Что «скорость»? Скорость совершенно не важна, пока она не вырождается в мегабайт за сутки. На стандартных размерах словарей и максимальной степени зожатия «7zip» зожимает за 86 секунд, розжимает за 3 секунды, «Rar» — 28 и 4 секунды соответственно.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521415">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T23:57:39+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521432" data-legacy-id="538708">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">Это такой же архиватор как и гзип. Он тоже умеет только 1 файл жать.<br />
+<br />
+&gt;Скорость совершенно не важна<br />
+Ну если ты так сказал.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521432">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T23:55:22+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521412" data-legacy-id="538690">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">да свинюш, а в чем проблема?<br />
+<br />
+--Ахалай-махалай, покажи кто ко мне в гости ходит? Какие ошибки бывают? <br />
+--Вжжух<br />
+<pre><code class="">cut access.log -d&quot; &quot; -f1 | sort -u
+cut access.log -d&quot; &quot; -f9 | sort -u
+cut access.log -d&quot; &quot; -f1,9</code></pre><br />
+--Вижу, мощный ты, махалай, а какие браузеры бывают?<br />
+--Вжух<br />
+<pre><code class="">cut access.log -d&quot; &quot; -f12 | sort -u</code></pre><br />
+<br />
+Что не так?</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521412">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T23:55:22+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521431" data-legacy-id="538707">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">Ты отсосало, чмо. Хоть бы реальный лог посмотрело перед тем как это высрать.<br />
+<br />
+<pre><code class="">127.0.0.1 - - [25/Dec/2014:18:31:54 +0100] &quot;GET / HTTP/1.1&quot; 400 0 &quot;-&quot; &quot;Mozilla/5.0 (Windows NT 5.1; rv:34.0) Gecko/20100101 Firefox/34.0&quot;</code></pre></div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521431">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">MAKAKA</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-07T23:36:23+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521429" data-legacy-id="538705">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538705" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+                            </p>
+
+                        <div class="entry-comment">Ну тут как всегда: либо ты сам все пилишь руками, либо покупаешь готовое за 100500. <br />
+<br />
+&gt;&gt;Какой багор<br />
+Представляешь, как ********** было в 2000-м получить вот такую картинку<br />
+<a href="https://andreyex.ru/wp-content/uploads/2019/12/Kak-ustanovit-i-nastroit-veb-statistiku-Awstats-dlya-WordPress-i-drugih-sajtov.png" rel="nofollow">https://andreyex.ru/wp-content/uploads/2019/12/Kak-ustanovit-i-nastroit-veb-statistiku-Awstats-dlya-WordPress-i-drugih-sajtov.png</a><br />
+<br />
+А работала она именно потому, что формат логов w3c стандартный, у перла был готовый модуль, и чуваки научились их парсить, агрегировать, и строить картинки и графики</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521429">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T23:36:23+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521430" data-legacy-id="538706">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538706" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">Да, выглядит **********.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521430">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">gost</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T23:33:18+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521428" data-legacy-id="538704">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538704" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+                            </p>
+
+                        <div class="entry-comment">&gt; Хотя логи лучше собирать с фронта, в твоем случае с клаудфлёра.<br />
+200+ долларов в месяц :-).<br />
+Причём 200 — это только «Business» план, а для доступа к логам надо «Enterprise», цена которого вообще напоказ не выставляется.<br />
+<br />
+&gt; awstats<br />
+&gt;&gt;&gt; Первый выпуск: 2 мая 2000 г.; <b>несколько</b> (19) лет назад<br />
+Какой багор )))</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521428">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-07T23:33:18+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521429" data-legacy-id="538705">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538705" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">Ну тут как всегда: либо ты сам все пилишь руками, либо покупаешь готовое за 100500. <br />
+<br />
+&gt;&gt;Какой багор<br />
+Представляешь, как ********** было в 2000-м получить вот такую картинку<br />
+<a href="https://andreyex.ru/wp-content/uploads/2019/12/Kak-ustanovit-i-nastroit-veb-statistiku-Awstats-dlya-WordPress-i-drugih-sajtov.png" rel="nofollow">https://andreyex.ru/wp-content/uploads/2019/12/Kak-ustanovit-i-nastroit-veb-statistiku-Awstats-dlya-WordPress-i-drugih-sajtov.png</a><br />
+<br />
+А работала она именно потому, что формат логов w3c стандартный, у перла был готовый модуль, и чуваки научились их парсить, агрегировать, и строить картинки и графики</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521429">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T23:18:04+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521423" data-legacy-id="538700">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">Да, это годно. Хотя логи лучше собирать с фронта, в твоем случае с клаудфлёра.<br />
+<br />
+Вообще в нагруженных сайтах срать логами лучше в elastic logs, субд, или что такое, где можно по-перши привязать отсылку емейла при 50X-й ошибке, во-вторых быстро найти что-то чреез SQLеобразный интерфейс<br />
+<br />
+<br />
+зы: помню времена, когда все ставили awstats для парсинга логов.<br />
+*****, я старый...</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521423">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T23:18:04+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521428" data-legacy-id="538704">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538704" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">&gt; Хотя логи лучше собирать с фронта, в твоем случае с клаудфлёра.<br />
+200+ долларов в месяц :-).<br />
+Причём 200 — это только «Business» план, а для доступа к логам надо «Enterprise», цена которого вообще напоказ не выставляется.<br />
+<br />
+&gt; awstats<br />
+&gt;&gt;&gt; Первый выпуск: 2 мая 2000 г.; <b>несколько</b> (19) лет назад<br />
+Какой багор )))</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521428">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T23:15:17+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521424" data-legacy-id="538701">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">тупая гомосятная чушь это всегда стертор</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521424">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T23:15:17+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521427" data-legacy-id="538703">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538703" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">Но коронавирус — это же не гомосятина, а вполне себе остроумный флуд.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521427">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">MAKAKA</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-07T23:14:16+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521422" data-legacy-id="538699">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538699" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+                            </p>
+
+                        <div class="entry-comment">&gt;xml.etree.Elemnt<br />
+чтобы потом<br />
+&gt;re.sub(<br />
+может лучше всё таки бютифул суп?<br />
+<br />
+&gt;                 (&lt;a href=&quot;/#!/{{comment.post_id}}#comment{{comment.id}  }&quot;&gt;NGK&lt;/a&gt;,<br />
+фу конечно так ссылки генерить, но наверное во фласке иначе ниак</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521422">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T23:14:16+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521426" data-legacy-id="538702">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538702" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">&gt; чтобы потом<br />
+В «lxml» «innerHTML» не завезли, приходится писать такое говно. Благодаря «^» и «$» оно работает устойчиво, в принципе, можно было бы тупо на слайс заменить.<br />
+Суп охуенен, но это лишняя прослойка, а в «NGK» парсер и так тормозит.<br />
+<br />
+&gt; фу конечно так ссылки генерить, но наверное во фласке иначе ниак<br />
+А как по-другому можно?<br />
+UPD: и да, это не фласк, это «AngularJS».</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521426">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">gost</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T23:06:05+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521421" data-legacy-id="538698">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538698" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+                            </p>
+
+                        <div class="entry-comment">*** его знает.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521421">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T23:06:05+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521424" data-legacy-id="538701">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">тупая гомосятная чушь это всегда стертор</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521424">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">gost</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T23:05:39+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521419" data-legacy-id="538696">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538696" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+                            </p>
+
+                        <div class="entry-comment">Шоб було́!<br />
+А вообще — «remote_addr» на заголовок прокси заменить — чтобы запросы от «Cloudflare» логгировались с реальными адресами, например.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521419">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T23:05:39+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521423" data-legacy-id="538700">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">Да, это годно. Хотя логи лучше собирать с фронта, в твоем случае с клаудфлёра.<br />
+<br />
+Вообще в нагруженных сайтах срать логами лучше в elastic logs, субд, или что такое, где можно по-перши привязать отсылку емейла при 50X-й ошибке, во-вторых быстро найти что-то чреез SQLеобразный интерфейс<br />
+<br />
+<br />
+зы: помню времена, когда все ставили awstats для парсинга логов.<br />
+*****, я старый...</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521423">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">gost</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T23:02:00+00:00">
+        3 дня ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-520684" data-legacy-id="537989">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment537989" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+                            </p>
+
+                        <div class="entry-comment">Пофиксил вроде. Проверяйте.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-520684">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-07T23:02:00+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521422" data-legacy-id="538699">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538699" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">&gt;xml.etree.Elemnt<br />
+чтобы потом<br />
+&gt;re.sub(<br />
+может лучше всё таки бютифул суп?<br />
+<br />
+&gt;                 (&lt;a href=&quot;/#!/{{comment.post_id}}#comment{{comment.id}  }&quot;&gt;NGK&lt;/a&gt;,<br />
+фу конечно так ссылки генерить, но наверное во фласке иначе ниак</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521422">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">MAKAKA</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-07T23:00:54+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521418" data-legacy-id="538695">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538695" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+                            </p>
+
+                        <div class="entry-comment">а короновирус кто?</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521418">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T23:00:54+00:00">
+        2 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521421" data-legacy-id="538698">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538698" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">*** его знает.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521421">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">gost</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T22:59:47+00:00">
+        3 дня ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-520683" data-legacy-id="537988">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment537988" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+                            </p>
+
+                        <div class="entry-comment">testtesttest</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-520683">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-07T22:59:47+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521420" data-legacy-id="538697">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538697" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">rss fixed</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521420">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T22:58:59+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521417" data-legacy-id="538694">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">да, но зачем, если есть стандарт для логов w3c?<br />
+IIS, как ни странно, тоже умеет.<br />
+<br />
+А жаль: было бы лулзовее, если бы он логировал через EWT, и для просмотра имел бы хуево документированную GUI тулу, и всё.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521417">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T22:58:59+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521419" data-legacy-id="538696">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538696" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">Шоб було́!<br />
+А вообще — «remote_addr» на заголовок прокси заменить — чтобы запросы от «Cloudflare» логгировались с реальными адресами, например.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521419">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">gost</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T22:56:25+00:00">
+        2 дня ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-520836" data-legacy-id="538139">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538139" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+                            </p>
+
+                        <div class="entry-comment">Окстись, Доктор уже давным-давно сгнил где-то.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-520836">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-07T22:56:25+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521418" data-legacy-id="538695">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538695" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">а короновирус кто?</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521418">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">gost</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T22:53:51+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521416" data-legacy-id="538693">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538693" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+                            </p>
+
+                        <div class="entry-comment">Причём формат логов «nginx» полностью настраивается, можно хоть «Аве Марию», разделённую табуляциями, записывать.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521416">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T22:53:51+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521417" data-legacy-id="538694">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">да, но зачем, если есть стандарт для логов w3c?<br />
+IIS, как ни странно, тоже умеет.<br />
+<br />
+А жаль: было бы лулзовее, если бы он логировал через EWT, и для просмотра имел бы хуево документированную GUI тулу, и всё.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521417">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T22:50:06+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521412" data-legacy-id="538690">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">да свинюш, а в чем проблема?<br />
+<br />
+--Ахалай-махалай, покажи кто ко мне в гости ходит? Какие ошибки бывают? <br />
+--Вжжух<br />
+<pre><code class="">cut access.log -d&quot; &quot; -f1 | sort -u
+cut access.log -d&quot; &quot; -f9 | sort -u
+cut access.log -d&quot; &quot; -f1,9</code></pre><br />
+--Вижу, мощный ты, махалай, а какие браузеры бывают?<br />
+--Вжух<br />
+<pre><code class="">cut access.log -d&quot; &quot; -f12 | sort -u</code></pre><br />
+<br />
+Что не так?</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521412">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T22:50:06+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521416" data-legacy-id="538693">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538693" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">Причём формат логов «nginx» полностью настраивается, можно хоть «Аве Марию», разделённую табуляциями, записывать.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521416">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T22:48:19+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521403" data-legacy-id="538681">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">&gt; zstd.exe<br />
+&gt; не архиватор<br />
+ээээ...<br />
+<br />
+&gt; на ультра-настройках<br />
+Маладец, а скорость? <br />
+<br />
+&gt;Бамп отсосу **********!<br />
+Они по возможностям уже давно почти идентичны. Вот гуй у 7зип *****.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521403">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='//gravatar.com/avatar/?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=28'  class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8086' rel='external nofollow' class='url'>gost</a></b></strong>
+
+    <time datetime="2020-04-07T22:48:19+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521415" data-legacy-id="538692">#</a>
+
+    
+            <a href="http://govnokod.ru/26544#comment538692" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                                            </p>
+
+                    <div class="entry-comment">&gt; ээээ...<br />
+Что «ээээ»? «zstd.exe» — это не архиватор, это реализация <i>алгоритма</i>. Она знать не знает про всякие «папки», «файлы», «атрибуты» и прочую питушню, она берёт набор байт и выдаёт другой набор байт. Поэтому чтобы сжать что-то сложнее одного файла (два файла, например) их необходимо преобразовать в этот самый набор байт и добавить метаданные.<br />
+<br />
+&gt; Маладец, а скорость?<br />
+Что «скорость»? Скорость совершенно не важна, пока она не вырождается в мегабайт за сутки. На стандартных размерах словарей и максимальной степени зожатия «7zip» зожимает за 86 секунд, розжимает за 3 секунды, «Rar» — 28 и 4 секунды соответственно.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521415">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T22:44:46+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521411" data-legacy-id="538689">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">Ой ***, оно под xp не запускается. Нинужно.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521411">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T22:44:46+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521413" data-legacy-id="538691">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">питух, ты же на десятке уже гнездо свил?</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521413">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T22:43:59+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521409" data-legacy-id="538687">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">У меня под рукой только логи &quot;nginx&quot;. Они &quot;ненормальные&quot;, пердоль?</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521409">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T22:43:59+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521412" data-legacy-id="538690">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">да свинюш, а в чем проблема?<br />
+<br />
+--Ахалай-махалай, покажи кто ко мне в гости ходит? Какие ошибки бывают? <br />
+--Вжжух<br />
+<pre><code class="">cut access.log -d&quot; &quot; -f1 | sort -u
+cut access.log -d&quot; &quot; -f9 | sort -u
+cut access.log -d&quot; &quot; -f1,9</code></pre><br />
+--Вижу, мощный ты, махалай, а какие браузеры бывают?<br />
+--Вжух<br />
+<pre><code class="">cut access.log -d&quot; &quot; -f12 | sort -u</code></pre><br />
+<br />
+Что не так?</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521412">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T22:39:19+00:00">
+        5 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521336" data-legacy-id="538618">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">Что за свинячее говно? Можно перевести в нормальные команды? По сути это cat file.tar | zstd.exe ...? Оно только соснольное? Под винду есть? Ладно, посмотрим потом.<br />
+<br />
+Если это г не умеет разжимать 7zip или winrar то хуево.</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521336">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T22:39:19+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521411" data-legacy-id="538689">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">Ой ***, оно под xp не запускается. Нинужно.</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521411">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T22:37:29+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521408" data-legacy-id="538686">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">мой гуй к архиваторам на винде называется &quot;far&quot;<br />
+я в душе не *** какие там у кого гуи</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521408">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T22:37:29+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521410" data-legacy-id="538688">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">Только консолечка, только в срачло!</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521410">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li><li class="hentry">
+        
+    <h2>
+        Комментарий к <a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26544/">говнокоду #26544</a>
+                    в ответ <a class="show-parent" title="Показать комментарий" href="#">guest</a>
+            </h2>
+    <div class="entry-comments">
+        <ul>
+                            <li class="hcomment comment-parent">
+                    <div class="entry-comment-wrapper">
+                        <p class="entry-info">
+                            <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T22:36:40+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521406" data-legacy-id="538684">#</a>
+
+    
+                            </p>
+
+                        <div class="entry-comment">нормальные логи разделены табуляциями, тебе помогут cut и awk. Греп с регуляркой в тяжелом случае. c</div>
+                        <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521406">Ответить</a>
+                    </div>
+                </li>
+            
+            <li class="hcomment">
+                <div class="entry-comment-wrapper">
+                    <p class="entry-info">
+                        <img alt='ava' src='https://secure.gravatar.com/avatar/?s=28&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=56&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-28 photo avatar-default avatar' height='28' width='28' />
+    <strong class="comment-author vcard entry-author"><b class="fn">guest</b></strong>
+
+    <time datetime="2020-04-07T22:36:40+00:00">
+        3 часа ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26544/#comment-521409" data-legacy-id="538687">#</a>
+
+    
+    
+                                            </p>
+
+                    <div class="entry-comment">У меня под рукой только логи &quot;nginx&quot;. Они &quot;ненормальные&quot;, пердоль?</div>
+
+                    <a class="comment-reply-link" href="https://govnokod.xyz/_26544/#comment-521409">Ответить</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li>    <div id="more-comments" class="um-load-items">
+        <button class="um-ajax-paginate um-button">загрузить ещё комментарии</button>
+    </div>
+</ol>
+</article>
+	</div>
+
+            </div>
+            <div id="footer">
+                <address>
+                    <span>&copy; 2018-2020 &laquo;Govnokod.xyz&raquo;</span>
+
+                                            <div class="menu-backlink-menu-container"><ul id="navigation_backlink" class="menu"><li id="menu-item-41697" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-41697"><a href="https://govnokod.xyz/feedback/">Обратная связь</a></li>
+<li id="menu-item-41698" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-41698"><a href="https://govnokod.xyz/license/">Лицензионное соглашение</a></li>
+</ul></div>                                    </address>
+            </div>
+        </div>
+
+        
+<div id="um_upload_single" style="display:none"></div>
+<div id="um_view_photo" style="display:none">
+
+	<a href="javascript:void(0);" data-action="um_remove_modal" class="um-modal-close"><i class="um-faicon-times"></i></a>
+
+	<div class="um-modal-body photo">
+		<div class="um-modal-photo"></div>
+	</div>
+
+</div><link rel='stylesheet' id='gk_highlight_js-css'  href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs.min.css?ver=9.12.0' type='text/css' media='all' />
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/themes/govnokod/assets/js/global.js?ver=1.0.72'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-includes/js/imagesloaded.min.js?ver=3.2.0'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-includes/js/masonry.min.js?ver=3.3.2'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-includes/js/jquery/jquery.masonry.min.js?ver=3.1.2b'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/select2/select2.full.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-includes/js/underscore.min.js?ver=1.8.3'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var _wpUtilSettings = {"ajax":{"url":"\/wp-admin\/admin-ajax.php"}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-includes/js/wp-util.min.js?ver=4.9.13'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-crop.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-modal.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-jquery-form.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-fileupload.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/pickadate/picker.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/pickadate/picker.date.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/pickadate/picker.time.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/pickadate/legacy.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/pickadate/translations/ru_RU.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-raty.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-tipsy.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/simplebar.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-functions.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-responsive.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-conditional.min.js?ver=2.0.56'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var um_scripts = {"nonce":"0603162e70"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-scripts.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-members.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-profile.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-account.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-includes/js/wp-embed.min.js?ver=4.9.13'></script>
+<script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js?ver=9.12.0'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-includes/js/comment-reply.min.js?ver=4.9.13'></script>
+		<script type="text/javascript">
+			jQuery( '#request' ).val( '' );
+		</script>
+		</body>
+</html>
+
+<!--62 queries in 0,160 seconds. -->
+
+<!--
+-->

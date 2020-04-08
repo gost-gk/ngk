@@ -1,0 +1,202 @@
+[
+    {
+        "id_ru": 538452,
+        "id_xyz": 521164,
+        "post_id": 26555,
+        "text": "\n                сео: гавно",
+        "user_id_ru": 67285,
+        "user_id_xyz": null,
+        "time_posted": 1586219103.0,
+        "time_parsed": 1586337598.3571167
+    },
+    {
+        "id_ru": 538453,
+        "id_xyz": 521165,
+        "post_id": 26555,
+        "text": "\n                errara:<br>\n* \"повести\" следует читать как \"повести на крышу, и оттудава бросить\"",
+        "user_id_ru": 67285,
+        "user_id_xyz": null,
+        "time_posted": 1586219303.0,
+        "time_parsed": 1586337598.3571167
+    },
+    {
+        "id_ru": 538454,
+        "id_xyz": 521166,
+        "post_id": 26555,
+        "text": "\n                errata:<br>\n* «errara» следует читать как «errata»",
+        "user_id_ru": 8394,
+        "user_id_xyz": null,
+        "time_posted": 1586224276.0,
+        "time_parsed": 1586337598.3571167
+    },
+    {
+        "id_ru": 538458,
+        "id_xyz": 521170,
+        "post_id": 26555,
+        "text": "\n                В «PHP» такое есть. Функция implode, например. У неё два аргумента: один строка, другой — массив, порядок может быть любым. Строка используется как клей для элементов массива.",
+        "user_id_ru": 67575,
+        "user_id_xyz": null,
+        "time_posted": 1586240888.0,
+        "time_parsed": 1586337598.3581138
+    },
+    {
+        "id_ru": 538459,
+        "id_xyz": 521171,
+        "post_id": 26555,
+        "text": "\n                P.S. Реальный пример:<br>\n<pre><code class=\"\">&lt;?php\necho implode('; ', ['проказница мартышка', 'осёл', 'козёл', 'косолапый мишка']), PHP_EOL;\necho implode(['проказница мартышка', 'осёл', 'козёл', 'косолапый мишка'], '; '), PHP_EOL;</code></pre><br>\n<br>\n<span style=\"color:blue;\"><span style=\"text-decoration:underline;\">https://ideone.com/CjF0Pp</span></span>",
+        "user_id_ru": 67575,
+        "user_id_xyz": null,
+        "time_posted": 1586241070.0,
+        "time_parsed": 1586337598.3581138
+    },
+    {
+        "id_ru": 538466,
+        "id_xyz": 521178,
+        "post_id": 26555,
+        "text": "\n                Именно поэтому я за console.log(['проказница мартышка', 'осёл', 'козёл', 'косолапый мишка'].join('; '));",
+        "user_id_ru": 67223,
+        "user_id_xyz": null,
+        "time_posted": 1586248390.0,
+        "time_parsed": 1586337598.3581138
+    },
+    {
+        "id_ru": 538482,
+        "id_xyz": 521194,
+        "post_id": 26555,
+        "text": "\n                просто ты не осилил «PHP», признай",
+        "user_id_ru": 8394,
+        "user_id_xyz": null,
+        "time_posted": 1586272555.0,
+        "time_parsed": 1586337598.3581138
+    },
+    {
+        "id_ru": 538484,
+        "id_xyz": 521196,
+        "post_id": 26555,
+        "text": "\n                &gt; Осёл, Козёл, Мартышка, и криворукий Мишка<br>\nЭто про комитет по стандартам?",
+        "user_id_ru": 67285,
+        "user_id_xyz": null,
+        "time_posted": 1586273238.0,
+        "time_parsed": 1586337598.3581138
+    },
+    {
+        "id_ru": 538485,
+        "id_xyz": 521197,
+        "post_id": 26555,
+        "text": "\n                Комитет по стандартам — это Лебедь, Рак и Щука.",
+        "user_id_ru": 67292,
+        "user_id_xyz": null,
+        "time_posted": 1586273497.0,
+        "time_parsed": 1586337598.3581138
+    },
+    {
+        "id_ru": 538494,
+        "id_xyz": 521206,
+        "post_id": 26555,
+        "text": "\n                xkcd_про_стандарты",
+        "user_id_ru": 67285,
+        "user_id_xyz": null,
+        "time_posted": 1586274751.0,
+        "time_parsed": 1586337598.3581138
+    },
+    {
+        "id_ru": 538487,
+        "id_xyz": 521199,
+        "post_id": 26555,
+        "text": "\n                пися в том, что это груви. Стат типизация там опциональна, так что не всегда можно понять на какую перегрузку ты попал",
+        "user_id_ru": 67285,
+        "user_id_xyz": null,
+        "time_posted": 1586273748.0,
+        "time_parsed": 1586337598.3581138
+    },
+    {
+        "id_ru": 538490,
+        "id_xyz": 521202,
+        "post_id": 26555,
+        "text": "\n                Какой багор )))",
+        "user_id_ru": 67292,
+        "user_id_xyz": null,
+        "time_posted": 1586274320.0,
+        "time_parsed": 1586337598.3591113
+    },
+    {
+        "id_ru": 538488,
+        "id_xyz": 521201,
+        "post_id": 26555,
+        "text": "\n                запусти неск раз<br>\n<pre><code class=\"\">def val = new Random().nextBoolean()\ndef first\ndef second\nif (val) {\n\t\tfirst = new File(\"c:/\")\n\t\tsecond = \"windows\"\n} else {\n\t\tfirst = \"c:/\"\n\t\tsecond = new File(\"windows\")\n}\n \n\n\nprint(new File(first, second))</code></pre>",
+        "user_id_ru": 67285,
+        "user_id_xyz": null,
+        "time_posted": 1586274038.0,
+        "time_parsed": 1586337598.3591113
+    },
+    {
+        "id_ru": 538491,
+        "id_xyz": 521203,
+        "post_id": 26555,
+        "text": "\n                Это на каком языке?",
+        "user_id_ru": 5528,
+        "user_id_xyz": null,
+        "time_posted": 1586274332.0,
+        "time_parsed": 1586337598.3591113
+    },
+    {
+        "id_ru": 538492,
+        "id_xyz": 521204,
+        "post_id": 26555,
+        "text": "\n                груви",
+        "user_id_ru": 67285,
+        "user_id_xyz": null,
+        "time_posted": 1586274347.0,
+        "time_parsed": 1586337598.3591113
+    },
+    {
+        "id_ru": 538612,
+        "id_xyz": 521330,
+        "post_id": 26555,
+        "text": "\n                Ну и срань, зачем писать на всяком низкоуровневом говне, когда есть Java Script ?",
+        "user_id_ru": 67223,
+        "user_id_xyz": null,
+        "time_posted": 1586291758.0,
+        "time_parsed": 1586337598.3591113
+    },
+    {
+        "id_ru": 538631,
+        "id_xyz": 521352,
+        "post_id": 26555,
+        "text": "\n                Зачем писать на сраном Java Script года есть нормальные языки?",
+        "user_id_ru": 67285,
+        "user_id_xyz": null,
+        "time_posted": 1586295666.0,
+        "time_parsed": 1586337598.3591113
+    },
+    {
+        "id_ru": 538636,
+        "id_xyz": 521356,
+        "post_id": 26555,
+        "text": "\n                Наверно, им нравится запах фекалий.",
+        "user_id_ru": 67550,
+        "user_id_xyz": null,
+        "time_posted": 1586295766.0,
+        "time_parsed": 1586337598.3591113
+    },
+    {
+        "id_ru": 538638,
+        "id_xyz": 521357,
+        "post_id": 26555,
+        "text": "\n                Зачем отвечать ******?",
+        "user_id_ru": null,
+        "user_id_xyz": 1,
+        "time_posted": 1586295816.0,
+        "time_parsed": 1586337598.3591113
+    },
+    {
+        "id_ru": 538644,
+        "id_xyz": 521364,
+        "post_id": 26555,
+        "text": "\n                Но ведь если стоять и молчать, это воспримется как солидарность!",
+        "user_id_ru": 67550,
+        "user_id_xyz": null,
+        "time_posted": 1586296117.0,
+        "time_parsed": 1586337598.3601086
+    }
+]

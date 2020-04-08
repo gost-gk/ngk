@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="ru-RU" class="no-js no-svg">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+	<link rel="icon" href="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/favicon.ico" type="image/x-icon" />
+	<meta name="keywords" content="говнокод, смешной код, быдлокод, быдлокодеры, индусы, для программистов, про программистов, индусский код, записки программиста, говно, говнокод на php, mysql, perl" />
+
+        	    <meta name="description" content="Сборник говнокода на различных языках программирования" />
+    		<meta property="og:image" content="http://govnokod.ru/images/brand.gif" />
+    	
+	<title>Говнокод</title>
+<link rel='dns-prefetch' href='//ajax.googleapis.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Говнокод &raquo; Лента" href="https://govnokod.xyz/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Говнокод &raquo; Лента комментариев" href="https://govnokod.xyz/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Говнокод &raquo; Лента комментариев к &laquo;Говнокод #26555&raquo;" href="https://govnokod.xyz/_26555/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/govnokod.xyz\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.13"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56760,9792,65039],[55358,56760,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='gk-style-css'  href='https://govnokod.xyz/wp-content/themes/govnokod/style.css?ver=1.0.72' type='text/css' media='all' />
+<link rel='stylesheet' id='um_fonticons_ii-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-fonticons-ii.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_fonticons_fa-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-fonticons-fa.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='select2-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/select2/select2.min.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_crop-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-crop.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_modal-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-modal.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_styles-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-styles.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_members-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-members.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_profile-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-profile.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_account-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-account.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_misc-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-misc.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_fileupload-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-fileupload.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_datetime-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/pickadate/default.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_datetime_date-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/pickadate/default.date.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_datetime_time-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/pickadate/default.time.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_raty-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-raty.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_scrollbar-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/simplebar.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_tipsy-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-tipsy.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_responsive-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-responsive.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_default_css-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/css/um-old-default.css?ver=2.0.56' type='text/css' media='all' />
+<link rel='stylesheet' id='um_old_css-css'  href='https://govnokod.xyz/wp-content/plugins/ultimate-member/../../uploads/ultimatemember/um_old_settings.css?ver=4.9.13' type='text/css' media='all' />
+<script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js?ver=1.12.4'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-gdpr.min.js?ver=2.0.56'></script>
+<link rel='https://api.w.org/' href='https://govnokod.xyz/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://govnokod.xyz/xmlrpc.php?rsd" />
+<link rel='prev' title='Говнокод #26554' href='https://govnokod.xyz/_26554/' />
+<link rel='next' title='Говнокод #26556' href='https://govnokod.xyz/_26556/' />
+<link rel='shortlink' href='https://govnokod.xyz/?p=49255' />
+<link rel="alternate" type="application/json+oembed" href="https://govnokod.xyz/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fgovnokod.xyz%2F_26555%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://govnokod.xyz/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fgovnokod.xyz%2F_26555%2F&#038;format=xml" />
+<script>var TEMPLATE_PATH = "https:\/\/govnokod.xyz\/wp-content\/themes\/govnokod";</script><style>#header h1 a {background-image:url('https://govnokod.xyz/wp-content/themes/govnokod/assets/images/brand.gif')}</style>		<style type="text/css">
+			.request_name {
+				display: none !important;
+			}
+		</style>
+	    <script>
+        var anr_onloadCallback = function() {
+            window.recaptchaEnabled = false;
+            for (var i = 0; i < document.forms.length; i++) {
+                var form = document.forms[i];
+                var captcha_div = form.querySelector('.anr_captcha_field_div');
+
+                if (null === captcha_div) {
+                    continue;
+                }
+
+                captcha_div.innerHTML = '';
+                (function(form) {	
+                    var anr_captcha = grecaptcha.render( captcha_div,{
+                        'sitekey' : '6Lduh7oUAAAAAFWqQdxwehVVzPPMvISc7OAl049K',
+                        'size'  : 'invisible',
+                        'theme' : 'light',
+                        'badge' : 'bottomright',
+                        'callback' : function (token) {
+                            onSubmitComment();
+                            grecaptcha.reset(anr_captcha);
+                        },
+                        'expired-callback' : function() {
+                            grecaptcha.reset( anr_captcha );
+                        }
+                    });
+                    
+                    window.recaptchaEnabled = true;
+                    form.onsubmit = function(e) {
+                        e.preventDefault();
+                        grecaptcha.execute(anr_captcha);
+                    };
+                })(form);
+            }
+            jQuery('#submit').removeClass('disabled'); // TODO: submit может ещё не быть
+        };
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=anr_onloadCallback&#038;render=explicit" async defer></script>
+    <script>window.recaptchaEnabled = true;</script>
+</head>
+
+<body class="post-template-default single single-post postid-49255 single-format-standard group-blog">
+
+<div id="page">
+	<div id="header">
+		<h1><a rel="homepage" href="https://govnokod.xyz"><!--Говнокод: по колено в коде.--></a></h1>
+
+		<div id="userpane">
+			<ul class="menu" style="background-size: contain; background-image: url('https://secure.gravatar.com/avatar/?s=20&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g');">
+								<li>
+											<li><a id="expand-trigger0" href="https://govnokod.xyz/login/">Войти в говнокод</a></li>
+									</li>
+
+				
+			</ul>
+
+
+			<div class="pane-content">
+				<ul>
+					<li><a href="">Кабинка</a></li>
+					<li><a href="https://govnokod.xyz/account/">Настройки</a></li>
+					<li>&nbsp;</li>
+					<li><a href="https://govnokod.xyz/logout/">Выйти</a></li>
+				</ul>
+			</div>
+
+		</div>
+
+					<div class="menu-menu-1-container"><ul id="navigation" class="menu"><li id="menu-item-87" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-87"><a href="http://govnokod.xyz/">Все</a></li>
+<li id="menu-item-97" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-97"><a href="https://govnokod.xyz/comments/">Сток</a></li>
+<li id="menu-item-93" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-93"><a href="https://govnokod.xyz/search/">Глупый поиск</a></li>
+<li id="menu-item-94" class="add menu-item menu-item-type-post_type menu-item-object-page menu-item-94"><a href="https://govnokod.xyz/add/">Наговнокодить!</a></li>
+<li id="menu-item-47015" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-47015"><a href="https://govnokod.xyz/guest-settings/">Настройки гостя</a></li>
+</ul></div>		
+		<p id="entrance">
+			Нашли или выдавили из себя код, который нельзя назвать нормальным,
+			на который без улыбки не взглянешь?
+			Не торопитесь его удалять или рефакторить, &mdash; запостите его на
+			говнокод.ру, посмеёмся вместе!
+		</p>
+
+		<ol id="language">
+		<li class=""><a href="https://govnokod.xyz/language/php/">"PHP"</a> <span>(6080)</span></li><li class=""><a href="https://govnokod.xyz/language/other/">Куча</a> <span>(3038)</span></li><li class=""><a href="https://govnokod.xyz/language/cpp/">C++</a> <span>(2648)</span></li><li class=""><a href="https://govnokod.xyz/language/cs/">C#</a> <span>(2012)</span></li><li class=""><a href="https://govnokod.xyz/language/js/">JavaScript</a> <span>(2000)</span></li><li class=""><a href="https://govnokod.xyz/language/java/">Java</a> <span>(1616)</span></li><li class=""><a href="https://govnokod.xyz/language/c/">C</a> <span>(1175)</span></li><li class=""><a href="https://govnokod.xyz/language/pascal/">Pascal</a> <span>(749)</span></li><li class=""><a href="https://govnokod.xyz/language/py/">Python</a> <span>(747)</span></li><li class=""><a href="https://govnokod.xyz/language/sql/">SQL</a> <span>(550)</span></li><li class=""><a href="https://govnokod.xyz/language/1c/">1C</a> <span>(496)</span></li><li class=""><a href="https://govnokod.xyz/language/actionscript/">ActionScript</a> <span>(416)</span></li><li class=""><a href="https://govnokod.xyz/language/objc/">Objective C</a> <span>(286)</span></li><li class=""><a href="https://govnokod.xyz/language/ruby/">Ruby</a> <span>(279)</span></li><li class=""><a href="https://govnokod.xyz/language/bash/">Bash</a> <span>(263)</span></li><li class=""><a href="https://govnokod.xyz/language/perl/">Perl</a> <span>(257)</span></li><li class=""><a href="https://govnokod.xyz/language/vb/">VisualBasic</a> <span>(191)</span></li><li class=""><a href="https://govnokod.xyz/language/asm/">Assembler</a> <span>(127)</span></li><li class=""><a href="https://govnokod.xyz/language/lua/">Lua</a> <span>(79)</span></li><li class=""><a href="https://govnokod.xyz/language/haskell/">Haskell</a> <span>(44)</span></li><li class=""><a href="https://govnokod.xyz/language/swift/">Swift</a> <span>(43)</span></li><li class=""><a href="https://govnokod.xyz/language/kotlin/">Kotlin</a> <span>(4)</span></li><li class=""><a href="https://govnokod.xyz/language/html/">HTML</a> <span>(1)</span></li>		</ol>
+	</div>
+
+	<div id="content">
+<div class="posts hatom">
+	
+<article id="post-49255" class="hentry post-49255 post type-post status-publish format-standard category-1 language-java">
+	<h2 class="entry-header">
+		<a rel="chapter" href="https://govnokod.xyz/language/java/">Java</a> /		<a rel="bookmark" class="entry-title" href="https://govnokod.xyz/_26555/">Говнокод #26555</a>
+
+					<a href="http://govnokod.ru/26555" target="_blank" style="">
+				<img title="Этот пост является копией поста с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+					 alt="Ссылка на оригинал"
+					 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+				>
+			</a>
+		
+	</h2>
+
+	
+<p class="vote my-voted">
+    
+    <strong class="just-rating" title="0 за и 0 против">0</strong>
+    </p>
+	<div class="entry-content">
+		    <ol><li>1</li></ol>
+    <pre><code class="java">https://i.postimg.cc/7Z5pfXKj/gavno.png</code></pre>
+    	</div>
+
+	<p class="description">
+		--Существует ли функция с такими перегрузками, что у всякого, кто ее использует, возникает желание повести автора этой функции?<br />
+--Конечно, лови	</p>
+
+	<p class="author">
+		Запостил: 					<a target="_blank" href="http://govnokod.ru/user/67285"><img src="//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=20" class="avatar" width="20" height="20" alt="MAKAKA"></a>
+			<a target="_blank" href="http://govnokod.ru/user/67285">MAKAKA</a>,
+				<time class="entry-date published" datetime="2020-04-07T00:24:57+00:00">07.04.2020</time> (Updated <time class="updated" datetime="2020-04-07T00:25:40+00:00">07.04.2020</time>)	</p>
+
+	
+<div id="comments" class="comments-area entry-comments">
+
+			<h3 class="comments-title">
+			Комментарии <span class="enrty-comments-count">(20)</span>
+			<span class="rss"><a href="https://govnokod.xyz/_26555/feed/">RSS</a></span>
+		</h3>
+
+	<ul class="comment-list"
+		data-update-url="https://govnokod.xyz/wp-admin/admin-ajax.php?action=comments&amp;post_id=49255&amp;latest&amp;_ajax_nonce=6c4a9a42be"
+		data-update-delay="5"
+		data-update-interval="15"
+	>
+		        <li id="comment-521164" class="comment even thread-even depth-1 hcomment">
+        <article id="div-comment-521164"
+                 data-parent="0"
+                 data-hash="f3128537a3b7d7e6633b6a2d7c159c1d"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-07T00:25:03+00:00">
+        1 день ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521164" data-legacy-id="538452">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538452" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                            </p>
+
+            <div class="comment-content entry-comment">
+                сео: гавно            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521164#respond' onclick='return addComment.moveForm( "div-comment-521164", "521164", "respond", "49255" )' aria-label='Комментарий к записи MAKAKA'>Ответить</a></span>                    </article>
+        </li><!-- #comment-## -->
+        <li id="comment-521165" class="comment odd alt thread-odd thread-alt depth-1 parent hcomment">
+        <article id="div-comment-521165"
+                 data-parent="0"
+                 data-hash="a5bad7c5293b44d0c6b20e9091e66943"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-07T00:28:23+00:00">
+        1 день ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521165" data-legacy-id="538453">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538453" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                            </p>
+
+            <div class="comment-content entry-comment">
+                errara:<br />
+* &quot;повести&quot; следует читать как &quot;повести на крышу, и оттудава бросить&quot;            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521165#respond' onclick='return addComment.moveForm( "div-comment-521165", "521165", "respond", "49255" )' aria-label='Комментарий к записи MAKAKA'>Ответить</a></span>                    </article>
+        <ul class="children">
+        <li id="comment-521166" class="comment even depth-2 hcomment">
+        <article id="div-comment-521166"
+                 data-parent="521165"
+                 data-hash="bc24ab5ee683ddac7bd027a561c01c88"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/46ee8a8bfdd70d2b7a0d63e5293e6586?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8394' rel='external nofollow' class='url'>Fike</a></b></strong>
+
+    <time datetime="2020-04-07T01:51:16+00:00">
+        1 день ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521166" data-legacy-id="538454">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538454" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                errata:<br />
+* «errara» следует читать как «errata»            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521166#respond' onclick='return addComment.moveForm( "div-comment-521166", "521166", "respond", "49255" )' aria-label='Комментарий к записи Fike'>Ответить</a></span>                    </article>
+        </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+        <li id="comment-521170" class="comment odd alt thread-even depth-1 parent hcomment">
+        <article id="div-comment-521170"
+                 data-parent="0"
+                 data-hash="dd2837db17a7a89fd8bdb4ecdbe596a9"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/968d7d71ed271933cf3b88b348eee661?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67575' rel='external nofollow' class='url'>BECEHHuu_nemyx</a></b></strong>
+
+    <time datetime="2020-04-07T06:28:08+00:00">
+        1 день ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521170" data-legacy-id="538458">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538458" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                            </p>
+
+            <div class="comment-content entry-comment">
+                В «PHP» такое есть. Функция implode, например. У неё два аргумента: один строка, другой — массив, порядок может быть любым. Строка используется как клей для элементов массива.            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521170#respond' onclick='return addComment.moveForm( "div-comment-521170", "521170", "respond", "49255" )' aria-label='Комментарий к записи BECEHHuu_nemyx'>Ответить</a></span>                    </article>
+        <ul class="children">
+        <li id="comment-521171" class="comment even depth-2 parent hcomment">
+        <article id="div-comment-521171"
+                 data-parent="521170"
+                 data-hash="2acca32e7c95c4b81ba07c272d4ea97a"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/968d7d71ed271933cf3b88b348eee661?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67575' rel='external nofollow' class='url'>BECEHHuu_nemyx</a></b></strong>
+
+    <time datetime="2020-04-07T06:31:10+00:00">
+        1 день ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521171" data-legacy-id="538459">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538459" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                P.S. Реальный пример:<br />
+<pre><code class="">&lt;?php
+echo implode(&#039;; &#039;, [&#039;проказница мартышка&#039;, &#039;осёл&#039;, &#039;козёл&#039;, &#039;косолапый мишка&#039;]), PHP_EOL;
+echo implode([&#039;проказница мартышка&#039;, &#039;осёл&#039;, &#039;козёл&#039;, &#039;косолапый мишка&#039;], &#039;; &#039;), PHP_EOL;</code></pre><br />
+<br />
+<span style="color:blue;"><span style="text-decoration:underline;"><a href="https://ideone.com/CjF0Pp" rel="nofollow">https://ideone.com/CjF0Pp</a></span></span>            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521171#respond' onclick='return addComment.moveForm( "div-comment-521171", "521171", "respond", "49255" )' aria-label='Комментарий к записи BECEHHuu_nemyx'>Ответить</a></span>                    </article>
+        <ul class="children">
+        <li id="comment-521178" class="comment odd alt depth-3 parent hcomment">
+        <article id="div-comment-521178"
+                 data-parent="521171"
+                 data-hash="4effddd5e97dc66e7c4c098d7974841b"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/9c5bdb0225250dd7cceb65d9f034eb84?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67223' rel='external nofollow' class='url'>phpBidlokoder2</a></b></strong>
+
+    <time datetime="2020-04-07T08:33:10+00:00">
+        1 день ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521178" data-legacy-id="538466">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538466" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                Именно поэтому я за console.log([&#039;проказница мартышка&#039;, &#039;осёл&#039;, &#039;козёл&#039;, &#039;косолапый мишка&#039;].join(&#039;; &#039;));            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521178#respond' onclick='return addComment.moveForm( "div-comment-521178", "521178", "respond", "49255" )' aria-label='Комментарий к записи phpBidlokoder2'>Ответить</a></span>                    </article>
+        <ul class="children">
+        <li id="comment-521194" class="comment even depth-4 hcomment">
+        <article id="div-comment-521194"
+                 data-parent="521178"
+                 data-hash="d03611f024cdf24fc706779d746419f5"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/46ee8a8bfdd70d2b7a0d63e5293e6586?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/8394' rel='external nofollow' class='url'>Fike</a></b></strong>
+
+    <time datetime="2020-04-07T15:15:55+00:00">
+        18 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521194" data-legacy-id="538482">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538482" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                просто ты не осилил «PHP», признай            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521194#respond' onclick='return addComment.moveForm( "div-comment-521194", "521194", "respond", "49255" )' aria-label='Комментарий к записи Fike'>Ответить</a></span>                    </article>
+        </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+        <li id="comment-521196" class="comment odd alt depth-3 parent hcomment">
+        <article id="div-comment-521196"
+                 data-parent="521171"
+                 data-hash="c15649666a58c25bc2e5de15e9529445"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-07T15:27:18+00:00">
+        18 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521196" data-legacy-id="538484">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538484" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                &gt; Осёл, Козёл, Мартышка, и криворукий Мишка<br />
+Это про комитет по стандартам?            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521196#respond' onclick='return addComment.moveForm( "div-comment-521196", "521196", "respond", "49255" )' aria-label='Комментарий к записи MAKAKA'>Ответить</a></span>                    </article>
+        <ul class="children">
+        <li id="comment-521197" class="comment even depth-4 parent hcomment">
+        <article id="div-comment-521197"
+                 data-parent="521196"
+                 data-hash="14f1abbca93d6feeafd8c1b986e34410"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/d1b54c403885629eed55d7bddccbfe20?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67292' rel='external nofollow' class='url'>ropuJIJIa</a></b></strong>
+
+    <time datetime="2020-04-07T15:31:37+00:00">
+        18 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521197" data-legacy-id="538485">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538485" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                Комитет по стандартам — это Лебедь, Рак и Щука.            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521197#respond' onclick='return addComment.moveForm( "div-comment-521197", "521197", "respond", "49255" )' aria-label='Комментарий к записи ropuJIJIa'>Ответить</a></span>                    </article>
+        <ul class="children">
+        <li id="comment-521206" class="comment odd alt depth-5 hcomment">
+        <article id="div-comment-521206"
+                 data-parent="521197"
+                 data-hash="b8e1f8a7938ed06df2cda58a631ea4ee"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-07T15:52:31+00:00">
+        17 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521206" data-legacy-id="538494">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538494" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                xkcd_про_стандарты            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521206#respond' onclick='return addComment.moveForm( "div-comment-521206", "521206", "respond", "49255" )' aria-label='Комментарий к записи MAKAKA'>Ответить</a></span>                    </article>
+        </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+        <li id="comment-521199" class="comment even depth-2 parent hcomment">
+        <article id="div-comment-521199"
+                 data-parent="521170"
+                 data-hash="c266845a1fbdbe19dd5b4a204f0b23e9"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-07T15:35:48+00:00">
+        18 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521199" data-legacy-id="538487">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538487" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                пися в том, что это груви. Стат типизация там опциональна, так что не всегда можно понять на какую перегрузку ты попал            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521199#respond' onclick='return addComment.moveForm( "div-comment-521199", "521199", "respond", "49255" )' aria-label='Комментарий к записи MAKAKA'>Ответить</a></span>                    </article>
+        <ul class="children">
+        <li id="comment-521202" class="comment odd alt depth-3 hcomment">
+        <article id="div-comment-521202"
+                 data-parent="521199"
+                 data-hash="3575e310b9d0eefa452a65f3b6d41802"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/d1b54c403885629eed55d7bddccbfe20?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67292' rel='external nofollow' class='url'>ropuJIJIa</a></b></strong>
+
+    <time datetime="2020-04-07T15:45:20+00:00">
+        18 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521202" data-legacy-id="538490">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538490" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                Какой багор )))            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521202#respond' onclick='return addComment.moveForm( "div-comment-521202", "521202", "respond", "49255" )' aria-label='Комментарий к записи ropuJIJIa'>Ответить</a></span>                    </article>
+        </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+        <li id="comment-521201" class="comment even depth-2 parent hcomment">
+        <article id="div-comment-521201"
+                 data-parent="521170"
+                 data-hash="bb47ff6a877b1a8fda475d26fd202e39"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-07T15:40:38+00:00">
+        18 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521201" data-legacy-id="538488">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538488" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                запусти неск раз<br />
+<pre><code class="">def val = new Random().nextBoolean()
+def first
+def second
+if (val) {
+		first = new File(&quot;c:/&quot;)
+		second = &quot;windows&quot;
+} else {
+		first = &quot;c:/&quot;
+		second = new File(&quot;windows&quot;)
+}
+ 
+
+
+print(new File(first, second))</code></pre>            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521201#respond' onclick='return addComment.moveForm( "div-comment-521201", "521201", "respond", "49255" )' aria-label='Комментарий к записи MAKAKA'>Ответить</a></span>                    </article>
+        <ul class="children">
+        <li id="comment-521203" class="comment odd alt depth-3 parent hcomment">
+        <article id="div-comment-521203"
+                 data-parent="521201"
+                 data-hash="2e1e3d24cfc3ad8e0d2b0dcd49c2739e"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/787e4db09e7f549efecd75e189856682?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/5528' rel='external nofollow' class='url'>bormand</a></b></strong>
+
+    <time datetime="2020-04-07T15:45:32+00:00">
+        18 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521203" data-legacy-id="538491">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538491" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                Это на каком языке?            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521203#respond' onclick='return addComment.moveForm( "div-comment-521203", "521203", "respond", "49255" )' aria-label='Комментарий к записи bormand'>Ответить</a></span>                    </article>
+        <ul class="children">
+        <li id="comment-521204" class="comment even depth-4 hcomment">
+        <article id="div-comment-521204"
+                 data-parent="521203"
+                 data-hash="feb90207f970e9263436e0879645cc79"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-07T15:45:47+00:00">
+        18 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521204" data-legacy-id="538492">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538492" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                груви            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521204#respond' onclick='return addComment.moveForm( "div-comment-521204", "521204", "respond", "49255" )' aria-label='Комментарий к записи MAKAKA'>Ответить</a></span>                    </article>
+        </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+        <li id="comment-521330" class="comment odd alt thread-odd thread-alt depth-1 parent hcomment">
+        <article id="div-comment-521330"
+                 data-parent="0"
+                 data-hash="78c9eb70957b3a578552e2dd3b85b3e0"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/9c5bdb0225250dd7cceb65d9f034eb84?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67223' rel='external nofollow' class='url'>phpBidlokoder2</a></b></strong>
+
+    <time datetime="2020-04-07T20:35:58+00:00">
+        13 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521330" data-legacy-id="538612">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538612" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                            </p>
+
+            <div class="comment-content entry-comment">
+                Ну и срань, зачем писать на всяком низкоуровневом говне, когда есть Java Script ?            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521330#respond' onclick='return addComment.moveForm( "div-comment-521330", "521330", "respond", "49255" )' aria-label='Комментарий к записи phpBidlokoder2'>Ответить</a></span>                    </article>
+        <ul class="children">
+        <li id="comment-521352" class="comment even depth-2 parent hcomment">
+        <article id="div-comment-521352"
+                 data-parent="521330"
+                 data-hash="3020e55d3cbdc658d13366f07d516882"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/aa8e7bac24ec06804587b9ee6e310c76?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67285' rel='external nofollow' class='url'>MAKAKA</a></b></strong>
+
+    <time datetime="2020-04-07T21:41:06+00:00">
+        12 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521352" data-legacy-id="538631">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538631" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                Зачем писать на сраном Java Script года есть нормальные языки?            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521352#respond' onclick='return addComment.moveForm( "div-comment-521352", "521352", "respond", "49255" )' aria-label='Комментарий к записи MAKAKA'>Ответить</a></span>                    </article>
+        <ul class="children">
+        <li id="comment-521356" class="comment odd alt depth-3 hcomment">
+        <article id="div-comment-521356"
+                 data-parent="521352"
+                 data-hash="db36b3687d218fe55160b6ac8631729e"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/375e2bbafc1139a45fe4daf213f08ed1?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67550' rel='external nofollow' class='url'>KOPOHABuPYC</a></b></strong>
+
+    <time datetime="2020-04-07T21:42:46+00:00">
+        12 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521356" data-legacy-id="538636">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538636" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                Наверно, им нравится запах фекалий.            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521356#respond' onclick='return addComment.moveForm( "div-comment-521356", "521356", "respond", "49255" )' aria-label='Комментарий к записи KOPOHABuPYC'>Ответить</a></span>                    </article>
+        </li><!-- #comment-## -->
+        <li id="comment-521357" class="comment byuser comment-author-admin even depth-3 parent hcomment">
+        <article id="div-comment-521357"
+                 data-parent="521352"
+                 data-hash="2ee1dd0a51baf409774cff357c38b86b"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img src="https://gravatar.com/avatar/731caaee14d3c4d2e6f55aa22251285f?s=400&amp;r=G&amp;d=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png" class="gravatar avatar avatar-100 um-avatar um-avatar-gravatar" width="100" height="100" alt="admin" data-default="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png" onerror="if ( ! this.getAttribute('data-load-error') ){ this.setAttribute('data-load-error', '1');this.setAttribute('src', this.getAttribute('data-default'));}" />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a href="https://govnokod.xyz/user/1/">admin</a></b></strong>
+
+    <time datetime="2020-04-07T21:43:36+00:00">
+        12 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521357" data-legacy-id="538638">#</a>
+
+    
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                Зачем отвечать ******?            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521357#respond' onclick='return addComment.moveForm( "div-comment-521357", "521357", "respond", "49255" )' aria-label='Комментарий к записи admin'>Ответить</a></span>                    </article>
+        <ul class="children">
+        <li id="comment-521364" class="comment odd alt depth-4 hcomment">
+        <article id="div-comment-521364"
+                 data-parent="521357"
+                 data-hash="55162dcec26a05d67f56b0c24cb82b1a"
+                 class="comment-body entry-comment-wrapper">
+            <p class="comment-meta entry-info">
+                <img alt='ava' src='//gravatar.com/avatar/375e2bbafc1139a45fe4daf213f08ed1?default=https://govnokod.xyz/wp-content/themes/govnokod/assets/images/noavatar_100.png&r=pg&size=100'  class='avatar avatar-100 photo avatar' height='100' width='100' />
+    <strong class="comment-author vcard entry-author"><b class="fn"><a target="_blank" href='http://govnokod.ru/user/67550' rel='external nofollow' class='url'>KOPOHABuPYC</a></b></strong>
+
+    <time datetime="2020-04-07T21:48:37+00:00">
+        12 часов ago    </time>
+
+    <a class="comment-link" href="https://govnokod.xyz/_26555/#comment-521364" data-legacy-id="538644">#</a>
+
+    
+            <a href="http://govnokod.ru/26555#comment538644" target="_blank" style="border-bottom:none">
+            <img title="Этот комментарий является копией комментария с сайта govnokod.ru. Кликните, чтобы перейти к оригиналу."
+                 alt="Ссылка на оригинал"
+                 src="https://govnokod.xyz/wp-content/themes/govnokod/assets/images/ghost.png"
+            >
+        </a>
+    
+                
+<span class="comment-vote">
+    <strong class="just-rating  " title="0 за и 0 против">0</strong>
+    </span>
+                
+                                    <a href="#" title="Прокрутить до родительского комментария" class="to-comment-parent">⇈</a>
+                            </p>
+
+            <div class="comment-content entry-comment">
+                Но ведь если стоять и молчать, это воспримется как солидарность!            </div>
+
+            <span class="reply"><a rel='nofollow' class='comment-reply-link' href='https://govnokod.xyz/_26555/?replytocom=521364#respond' onclick='return addComment.moveForm( "div-comment-521364", "521364", "respond", "49255" )' aria-label='Комментарий к записи KOPOHABuPYC'>Ответить</a></span>                    </article>
+        </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	</ul>
+
+		<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title"><a class="selected">Добавить комментарий <small><a rel="nofollow" id="cancel-comment-reply-link" href="/_26555/#respond" style="display:none;">Отменить ответ</a></small></a></h3>			<form action="https://govnokod.xyz/wp-admin/admin-ajax.php?action=add-comment&#038;_ajax_nonce=6c4a9a42be" method="post" id="commentform" class="comment-form" novalidate>
+				<p class="logged-in-as"><img alt='' src='https://secure.gravatar.com/avatar/?s=20&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=40&#038;d=https%3A%2F%2Fgovnokod.xyz%2Fwp-content%2Fthemes%2Fgovnokod%2Fassets%2Fimages%2Fguest_100_vi.png&#038;r=g 2x' class='avatar avatar-20 photo avatar-default' height='20' width='20' /> Из-за тебя ушел bormand, <b>guest</b>!</p><dl class="errors"><dd><ol></ol></dd></dl> <dl><dd><textarea cols="5" id="comment" name="comment" rows="5" maxlength="65525" aria-required="true" required="required"></textarea>
+			<div class="field-info">
+                А не использовать ли нам <a href="http://govnokod.ru/page/bbcode" onclick="toggleBBCodeBlock(this); return false;">bbcode</a>?
+                <div class="bbcodes" style="display: none;">
+                    <ul style="margin-left: 0;">
+                        <li>[b]жирный[/b] — <b>жирный</b></li>
+                        <li>[i]курсив[/i] — <i>курсив</i></li>
+                        <li>[u]подчеркнутый[/u] — <span style="text-decoration:underline;">подчеркнутый</span></li>
+                        <li>[s]перечеркнутый[/s] — <span style="text-decoration:line-through;">перечеркнутый</span></li>
+                        <li>[blink]мигающий[/blink] — <span style="text-decoration:blink;">мигающий</span></li>
+                        <li>[color=red]цвет[/color] — <span style="color:red;">цвет</span> (<a href="http://govnokod.ru/page/bbcode#color">подробнее</a>)</li>
+                        <li>[size=20]размер[/size] — <span style="font-size:20px">размер</span> (<a href="http://govnokod.ru/page/bbcode#size">подробнее</a>)</li>
+                        <li>[code=&lt;language&gt;]some code[/code] (<a href="http://govnokod.ru/page/bbcode#code">подробнее</a>)</li>
+                    </ul>
+                </div>
+            </div></dd></dl>
+<div class="anr_captcha_field"><div id="anr_captcha_field_1" class="anr_captcha_field_div"></div></div><p class="form-submit"><input name="submit" type="submit" id="submit" class="submit send disabled" value="Отправить комментарий [Ctrl+Enter]" /> <input type='hidden' name='comment_post_ID' value='49255' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</p>			</form>
+			</div><!-- #respond -->
+	
+</div>
+</article>
+</div>
+
+            </div>
+            <div id="footer">
+                <address>
+                    <span>&copy; 2018-2020 &laquo;Govnokod.xyz&raquo;</span>
+
+                                            <div class="menu-backlink-menu-container"><ul id="navigation_backlink" class="menu"><li id="menu-item-41697" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-41697"><a href="https://govnokod.xyz/feedback/">Обратная связь</a></li>
+<li id="menu-item-41698" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-41698"><a href="https://govnokod.xyz/license/">Лицензионное соглашение</a></li>
+</ul></div>                                    </address>
+            </div>
+        </div>
+
+        
+<div id="um_upload_single" style="display:none"></div>
+<div id="um_view_photo" style="display:none">
+
+	<a href="javascript:void(0);" data-action="um_remove_modal" class="um-modal-close"><i class="um-faicon-times"></i></a>
+
+	<div class="um-modal-body photo">
+		<div class="um-modal-photo"></div>
+	</div>
+
+</div><link rel='stylesheet' id='gk_highlight_js-css'  href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs.min.css?ver=9.12.0' type='text/css' media='all' />
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/themes/govnokod/assets/js/global.js?ver=1.0.72'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-includes/js/comment-reply.min.js?ver=4.9.13'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-includes/js/imagesloaded.min.js?ver=3.2.0'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-includes/js/masonry.min.js?ver=3.3.2'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-includes/js/jquery/jquery.masonry.min.js?ver=3.1.2b'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/select2/select2.full.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-includes/js/underscore.min.js?ver=1.8.3'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var _wpUtilSettings = {"ajax":{"url":"\/wp-admin\/admin-ajax.php"}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-includes/js/wp-util.min.js?ver=4.9.13'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-crop.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-modal.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-jquery-form.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-fileupload.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/pickadate/picker.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/pickadate/picker.date.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/pickadate/picker.time.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/pickadate/legacy.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/pickadate/translations/ru_RU.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-raty.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-tipsy.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/simplebar.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-functions.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-responsive.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-conditional.min.js?ver=2.0.56'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var um_scripts = {"nonce":"0603162e70"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-scripts.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-members.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-profile.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-content/plugins/ultimate-member/assets/js/um-account.min.js?ver=2.0.56'></script>
+<script type='text/javascript' src='https://govnokod.xyz/wp-includes/js/wp-embed.min.js?ver=4.9.13'></script>
+<script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js?ver=9.12.0'></script>
+		<script type="text/javascript">
+			jQuery( '#request' ).val( '' );
+		</script>
+		</body>
+</html>
+
+<!--53 queries in 0,145 seconds. -->
+
+<!--
+-->
+
+<div id="new-comments-box">
+	<a class="up-dir" title="Предыдущий">↑<hr></a>
+	<div class="info" title="Новые комментарии">8</div>
+	<a class="down-dir" title="Следующий"><hr>↓</a>
+</div>
