@@ -18,7 +18,8 @@
     </div>
     <div ng-repeat="comment in post.comments" ng-class="{'comment': true, 'new': comment.is_new}"
          ng-style="{'margin-left': (comment.indent * 15) + 'px'}"
-         ng-include="'comment-template-base'">
+         ng-include="'comment-template-base'"
+         ng-attr-id="comment{{comment.id}}">
     </div>
 </div>
 
