@@ -1,9 +1,9 @@
 [Unit]
 Description=NGK posts scanner
-PartOf=ngk.target
 
 [Service]
 Type=simple
+User=python
 WorkingDirectory=/home/python/ngk/src
 ExecStart=/usr/bin/env python3 -m ngk.fetch_posts
 StandardOutput=journal
