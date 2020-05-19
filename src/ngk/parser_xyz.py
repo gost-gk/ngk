@@ -10,7 +10,6 @@ import lxml
 import lxml.etree
 import lxml.html
 import lxml.sax
-import requests
 
 from ngk.html_util import inner_html_xyz, normalize_text
 from ngk.parse_error import ParseError

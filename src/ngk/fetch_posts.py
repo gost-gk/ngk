@@ -95,7 +95,13 @@ def parse_post(content: bytes) -> Tuple[Post, List[User], List[Comment]]:
 
     post.language = post_node.xpath('.//a[@rel="chapter"]')[0].text
 
-    post.code = post_node.xpath('div[@class="entry-content"]/pre/code')[0].text
+    post_content = post_node.xpath('div[@class="entry-content"]')[0]
+    post_code_nodes = post_content.xpath('.//code')
+    if len(post_code_nodes) > 0:
+        post.code = post_code_nodes[0].text
+    else:
+        post.code = inner_html_ru(post_content)
+    
     post.text = normalize_text(inner_html_ru(post_node.xpath('div[@class="description"]')[0]))
 
     post.posted = parse_date(author_node.xpath('abbr')[0].get('title'))
