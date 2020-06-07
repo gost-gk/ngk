@@ -7,7 +7,7 @@ import json
 import logging
 import re
 import secrets
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Set
 
 import flask
 from flask_socketio import SocketIO, close_room, join_room, leave_room
@@ -99,10 +99,13 @@ def get_replies_to(user_id: Optional[int]=None, user_name: Optional[str]=None) -
     
         if parent_user is None:
             return Replies([], [])
-
-        query = session.query(Comment) \
-            .filter(Comment.children.any()) \
-            .filter(Comment.user_id == parent_user.user_id)
+        
+        Comment_parent = aliased(Comment)
+        query = session.query(Comment.parent_id, Comment.comment_id) \
+            .join(Comment_parent, Comment_parent.comment_id == Comment.parent_id) \
+            .filter(Comment_parent.user_id == parent_user.user_id) \
+            .filter(Comment.user_id != parent_user.user_id) \
+            .order_by(Comment.posted.desc())
 
         before = flask.request.args.get('before')
         if before is not None:
@@ -113,14 +116,23 @@ def get_replies_to(user_id: Optional[int]=None, user_name: Optional[str]=None) -
             ignored_posts = [int(p) for p in ignored_posts.split(',')]
             query = query.filter(Comment.post_id.notin_(ignored_posts))
 
-        parents: List[Comment] = []
-        children: List[Comment] = []
-        parents = query.order_by(Comment.posted.desc()).limit(RESPONSE_PARENTS_LIMIT).all()
-        children = [c for comment in parents for c in comment.children]
+        parent_ids: List[int] = []
+        baseline_ids: Set[int] = set()
+        for x in query.limit(RESPONSE_PARENTS_LIMIT).distinct().all():
+            parent_ids.append(x[0])
+            baseline_ids.add(x[1])
 
-        replies = Replies([c.to_dict() for c in parents], [c.to_dict() for c in children])
+        parents = session.query(Comment).filter(Comment.comment_id.in_(parent_ids)).all()
+        parents_dict = [comment.to_dict() for comment in parents]
+        children = [comment for parent in parents for comment in parent.children]
+        children_dict = []
 
-    return replies
+        for child in children:
+            child_dict = child.to_dict()
+            child_dict['baseline'] = child.comment_id in baseline_ids
+            children_dict.append(child_dict)
+        
+        return Replies(parents_dict, children_dict)
 
 
 @app.route('/replies/id/<int:user_id>')

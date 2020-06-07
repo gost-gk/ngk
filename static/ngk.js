@@ -624,10 +624,6 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
     }
 
     function insertParent(comment) {
-        if (minDate == null || comment.posted < minDate) {
-            minDate = comment.posted;
-        }
-
         if (seenParents[comment.id]) {
             return;
         }
@@ -641,6 +637,10 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
     }
 
     function insertChild(comment) {
+        if (comment.baseline && (minDate == null || comment.posted < minDate)) {
+            minDate = comment.posted;
+        }
+
         if (isSpam(comment)) {
             return;
         }
