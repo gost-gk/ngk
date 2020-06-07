@@ -7,7 +7,7 @@ import json
 import logging
 import re
 import secrets
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 
 import flask
 from flask_socketio import SocketIO, close_room, join_room, leave_room
@@ -26,6 +26,7 @@ redirect_basic_logging(L, logging.WARNING)
 
 SEARCH_LIMIT = 50
 COMMENTS_LIMIT = 20
+RESPONSE_PARENTS_LIMIT = 15
 IO_NAMESPACE = '/ngk'
 
 app = flask.Flask(__name__)
@@ -99,35 +100,25 @@ def get_replies_to(user_id: Optional[int]=None, user_name: Optional[str]=None) -
         if parent_user is None:
             return Replies([], [])
 
-        Comment_parent = aliased(Comment)
-        query = session.query(Comment, Comment_parent) \
-            .filter(Comment.user_id != parent_user.user_id) \
-            .join(Comment_parent, Comment.parent) \
-            .filter(Comment_parent.user_id == parent_user.user_id)
+        query = session.query(Comment) \
+            .filter(Comment.children.any()) \
+            .filter(Comment.user_id == parent_user.user_id)
 
         before = flask.request.args.get('before')
         if before is not None:
             query = query.filter(Comment.posted < parse_date(before))
 
-        ignored_users = flask.request.args.get('ignore_u')
         ignored_posts = flask.request.args.get('ignore_p')
-        if ignored_users:
-            ignored_users = [int(u) for u in ignored_users.split(',')]
-            query = query.filter(Comment.user_id.notin_(ignored_users))
         if ignored_posts:
             ignored_posts = [int(p) for p in ignored_posts.split(',')]
             query = query.filter(Comment.post_id.notin_(ignored_posts))
 
-        parents: Dict[int, str] = {}
-        children = []
-        for comment, parent_comment in query.order_by(Comment.posted.desc()).limit(COMMENTS_LIMIT).all():
-            if parent_comment.comment_id not in parents:
-                parents[parent_comment.comment_id] = parent_comment.to_dict()
-            children.append(comment.to_dict())
-        replies = Replies(
-            list(parents.values()),
-            children
-        )
+        parents: List[Comment] = []
+        children: List[Comment] = []
+        parents = query.order_by(Comment.posted.desc()).limit(RESPONSE_PARENTS_LIMIT).all()
+        children = [c for comment in parents for c in comment.children]
+
+        replies = Replies([c.to_dict() for c in parents], [c.to_dict() for c in children])
 
     return replies
 

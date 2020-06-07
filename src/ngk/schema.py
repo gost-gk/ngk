@@ -8,11 +8,14 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy.ext.declarative import declarative_base
 import sqlalchemy.orm
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import relationship, sessionmaker, deferred
 
 from ngk import config
 from ngk.html_util import normalize_text
 
+
+
+DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
 engine = create_engine(config.DB_CONNECT_STRING)
 Base = declarative_base()
@@ -70,14 +73,14 @@ class Post(Base):
     comment_list_id = Column(Integer)
     user_id = Column(Integer, ForeignKey('users.user_id'))
     user = relationship('User', lazy='joined', back_populates='posts')
-    language = Column(String)
+    language = deferred(Column(String))
     code = Column(String)
     text = Column(String)
-    text_tsv = Column(TSVECTOR)
+    text_tsv = deferred(Column(TSVECTOR))
     posted = Column(DateTime)
-    vote_plus = Column(Integer)
-    vote_minus = Column(Integer)
-    rating = Column(Numeric)
+    vote_plus = deferred(Column(Integer))
+    vote_minus = deferred(Column(Integer))
+    rating = deferred(Column(Numeric))
     source = Column(Integer)
 
     comments = relationship('Comment', back_populates='post', order_by='Comment.posted.asc()')
@@ -108,17 +111,18 @@ class Comment(Base):
     comment_id_storage = relationship('CommentIdStorage', lazy='joined', foreign_keys=[comment_id], uselist=False, cascade='')
 
     post_id = Column(Integer, ForeignKey('posts.post_id'))
-    post = relationship("Post", lazy='joined', back_populates="comments")
+    post = relationship('Post', lazy='joined', back_populates='comments')
     parent_id = Column(Integer, ForeignKey('comments.comment_id'))
     parent = relationship('Comment', uselist=False, remote_side=[comment_id])
+    children = relationship('Comment', uselist=True, remote_side=[parent_id])
     user_id = Column(Integer, ForeignKey('users.user_id'))
     user = relationship('User', lazy='joined', back_populates='comments')
     text = Column(String)
-    text_tsv = Column(TSVECTOR)
+    text_tsv = deferred(Column(TSVECTOR))
     posted = Column(DateTime)
-    vote_plus = Column(Integer)
-    vote_minus = Column(Integer)
-    rating = Column(Numeric)
+    vote_plus = deferred(Column(Integer))
+    vote_minus = deferred(Column(Integer))
+    rating = deferred(Column(Numeric))
     source = Column(Integer)
 
     SOURCE_GK = 0
@@ -151,6 +155,3 @@ class CommentIdStorage(Base):
     comment_id_ru = Column(Integer, primary_key=True)
     comment_id_xyz = Column(Integer)
 
-
-# TODO: shit. Move to a standalone
-DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"

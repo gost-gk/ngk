@@ -1,5 +1,5 @@
 "use strict";
-var app = angular.module('app', ['ngRoute']);
+let app = angular.module('app', ['ngRoute']);
 
 
 const DEFAULT_FILTER = `// quick and dirty filter agains guest spam
@@ -11,6 +11,7 @@ return false;`;
 
 const SEARCH_LIMIT = 50;
 const COMMENTS_LIMIT = 20;
+const RESPONSE_PARENTS_LIMIT = 15;
 
 function SocketTransport(socket) {
     this.socket = socket;
@@ -64,7 +65,7 @@ function SocketTransport(socket) {
 }
 
 function formatDate(timestamp_seconds) {
-    var date = new Date(timestamp_seconds * 1000);
+    let date = new Date(timestamp_seconds * 1000);
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
 }
 
@@ -79,21 +80,21 @@ function formatSource(source, element) {
 
 // Source: https://github.com/jashkenas/underscore/blob/master/underscore.js
 function throttle(func, wait, options) {
-    var timeout, context, args, result;
-    var previous = 0;
+    let timeout, context, args, result;
+    let previous = 0;
     if (!options) options = {};
 
-    var later = function() {
+    let later = function() {
       previous = options.leading === false ? 0 : Date.now();
       timeout = null;
       result = func.apply(context, args);
       if (!timeout) context = args = null;
     };
 
-    var throttled = function() {
-      var now = Date.now();
+    let throttled = function() {
+      let now = Date.now();
       if (!previous && options.leading === false) previous = now;
-      var remaining = wait - (now - previous);
+      let remaining = wait - (now - previous);
       context = this;
       args = arguments;
       if (remaining <= 0 || remaining > wait) {
@@ -120,9 +121,9 @@ function throttle(func, wait, options) {
 };
 
 app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
-    var popupStack = [];
-    var currentPopup = null;
-    var touchMode = false;
+    let popupStack = [];
+    let currentPopup = null;
+    let touchMode = false;
 
     function switchToTouchMode() {
         touchMode = true;
@@ -134,19 +135,19 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
 
     function loadPopup(scope, anchor) {
         if (scope.commentId) {
-            var request = {
+            let request = {
                 method: 'GET',
                 url: '/api/comments',
                 params: {id: scope.commentId}
             };
 
-            var template =
+            let template =
                 `<div class="comment-popup comment">
                     <ng-include src="'comment-template-base'"></ng-include>
                 </div>`;
 
             $http(request).then(function(response) {
-                var comment = response.data[0];
+                let comment = response.data[0];
                 comment.text = $sce.trustAsHtml(comment.text);
                 comment.avatar_url = makeAvatarUrl(comment.user_avatar);
                 comment.posted_local = formatDate(comment.posted_timestamp);
@@ -155,19 +156,19 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
                 showPopup(scope, anchor, template);
             })
         } else {
-            var request = {
+            let request = {
                 method: 'GET',
                 url: '/api/post/' + scope.postId,
                 params: {no_comments: true}
             };
 
-            var template =
+            let template =
                 `<div class="comment-popup comment">
                 <ng-include src="'post-template-base'"></ng-include>
                 </div>`;
 
             $http(request).then(function(response) {
-                var post = response.data;
+                let post = response.data;
                 post.text = $sce.trustAsHtml(post.text);
                 post.avatar_url = makeAvatarUrl(post.user_avatar);
                 post.posted_local = formatDate(post.posted_timestamp);
@@ -179,7 +180,7 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
     }
 
     function showPopup(scope, anchor, template) {
-        var popup = angular.element($compile(template)(scope));
+        let popup = angular.element($compile(template)(scope));
 
         angular.element(document.body).append(popup);
 
@@ -198,7 +199,7 @@ app.directive('ngkCommentPopup', function ($sce, $compile, $http) {
             closePopups();
             event.stopPropagation();
         });
-        var y = anchor[0].getBoundingClientRect().top + window.scrollY;
+        let y = anchor[0].getBoundingClientRect().top + window.scrollY;
         popup[0].style.left = '5%';
         popup[0].style.top = y + 'px';
     }
@@ -427,13 +428,13 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     let transport = new SocketTransport(socket);
 
     $scope.comments = [];
-    var minDate = null;
-    var seen = {};
-    var limit = COMMENTS_LIMIT;
-    var notifier = new Notifier();
+    let minDate = null;
+    let seen = {};
+    let limit = COMMENTS_LIMIT;
+    let notifier = new Notifier();
 
-    var spamFilterString = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
-    var isSpam = new Function("comment", spamFilterString);
+    let spamFilterString = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
+    let isSpam = new Function("comment", spamFilterString);
     
     function updateViewedComments() {
         let lastViewed = getLastViewedComments();
@@ -480,7 +481,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     }
 
     function loadComments(beforeDate) {
-        var request = {
+        let request = {
             method: 'GET',
             url: '/api/comments',
             params: {}
@@ -553,14 +554,14 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     loadComments(null);
     transport.onData = socketIOHandler;
 
-    var updateTimer = $interval(loadNewComments, 5000);
-    var infScroll = throttle(function() {
+    let updateTimer = $interval(loadNewComments, 5000);
+    let infScroll = throttle(function() {
         if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
             $scope.loadMoreComments();
         }
     }, 1500);
     
-    var infScrollListener = function(ev) {
+    let infScrollListener = function(ev) {
         if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
             infScroll();
         }
@@ -580,23 +581,30 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
     $scope.comments = [];
     $scope.user = $routeParams.userName;
     $scope.isUserValid = true;
-    var minDate = null;
-    var seenParents = {};
-    var seenChildren = {};
-    var parents = [];
-    var children = {};
+    let minDate = null;
+    let seenParents = {};
+    let seenChildren = {};
+    let parents = [];
+    let children = {};
 
-    var limit = COMMENTS_LIMIT;
+    let limit = RESPONSE_PARENTS_LIMIT;
     $scope.someRepliesLoaded = false;
     $scope.allRepliesLoaded = false;
-    var notifier = new Notifier();
+    let notifier = new Notifier();
 
-    var spamFilterString = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
-    var isSpam = new Function("comment", spamFilterString);
-    
+    let spamFilterString = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
+    let isSpam = new Function("comment", spamFilterString);
+    const ignoredUsers = getIgnoredUsers();
+    function isIgnored(comment) {
+        return comment.user_id in ignoredUsers;
+    }
+
     function rebuildComments() {
         console.log('Total replies:', totalChildrenCount());
         $scope.comments = [];
+
+        parents = parents.filter((comment) => children[comment.id]);
+
         parents.sort(function (first, second) {
             let maxChildIdReducer = function (prevMaxId, child) {
                 return (child.id > prevMaxId ? child.id : prevMaxId);
@@ -620,9 +628,6 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
             minDate = comment.posted;
         }
 
-        if (isSpam(comment))
-            return;
-
         if (seenParents[comment.id]) {
             return;
         }
@@ -636,16 +641,18 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
     }
 
     function insertChild(comment) {
-        if (minDate == null || comment.posted < minDate) {
-            minDate = comment.posted;
-        }
-
-        if (isSpam(comment))
+        if (isSpam(comment)) {
             return;
+        }
 
         if (seenChildren[comment.id]) {
             return;
         }
+
+        if (isIgnored(comment)) {
+            return;
+        }
+
         seenChildren[comment.id] = true;
         handleComment(comment);
 
@@ -659,7 +666,7 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
     }
 
     function totalChildrenCount() {
-        var sum = 0;
+        let sum = 0;
         for (let parent of parents) {
             sum += (children[parent.id] || []).reduce(function (acc, val) { return acc + 1; }, 0);
         }
@@ -676,14 +683,15 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
     }
 
     function loadComments(beforeDate) {
-        var request = {
+        let request = {
             method: 'GET',
             url: '/api/replies/name/' + encodeURI($routeParams.userName),
             params: {}
         };
 
-        if (beforeDate)
+        if (beforeDate) {
             request.params.before = beforeDate;
+        }
 
         setRequestIgnoredParams(request);
 
@@ -698,7 +706,7 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
 
             rebuildComments();
             $scope.someRepliesLoaded = true;
-            $scope.allRepliesLoaded = response.data.children.length < COMMENTS_LIMIT;
+            $scope.allRepliesLoaded = response.data.children.length < RESPONSE_PARENTS_LIMIT;
             if ($scope.allRepliesLoaded) {
                 window.removeEventListener('scroll', infScrollListener);
             }
@@ -709,7 +717,7 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
     }
 
     function checkUserName() {
-        var request = {
+        let request = {
             method: 'GET',
             url: '/api/user/name/' + encodeURI($routeParams.userName),
             params: {}
@@ -733,7 +741,7 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
     }
 
     $scope.loadMoreComments = function() {
-        limit += COMMENTS_LIMIT;
+        limit += RESPONSE_PARENTS_LIMIT;
         loadMoreComments();
         console.log('Loading more.');
     }
@@ -745,14 +753,13 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
     checkUserName();
     loadComments(null);
     
-    var updateTimer = $interval(loadNewComments, 5000);
-    var infScroll = throttle(function() {
+    let infScroll = throttle(function() {
         if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
             $scope.loadMoreComments();
         }
     }, 1500);
     
-    var infScrollListener = function(ev) {
+    let infScrollListener = function(ev) {
         if ($scope.someRepliesLoaded
                 && (window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
             infScroll();
@@ -763,13 +770,12 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
     
     $scope.$on('$destroy', function() {
         window.removeEventListener('scroll', infScrollListener);
-        $interval.cancel(updateTimer);
         infScroll.cancel();
     });
 });
 
 app.controller('PostController', function($scope, $http, $sce, $routeParams, $timeout, $anchorScroll, $route) {
-    var request = {
+    let request = {
         method: 'GET',
         url: '/api/post/' + $routeParams.postId,
         params: {}
@@ -790,16 +796,16 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
     $http(request).then(function(response) {
         console.log("Got response")
 
-        var comments = [];
-        var known_comments = {};
+        let comments = [];
+        let known_comments = {};
 
-        var lastViewed = getLastViewedComments();
-        var lastViewedInPost = lastViewed[response.data.id] || 0;
+        let lastViewed = getLastViewedComments();
+        let lastViewedInPost = lastViewed[response.data.id] || 0;
         const ignoredUsers = getIgnoredUsers();
         const ignoredPosts = getIgnoredPosts();
 
-        for (var j = 0; j < response.data.comments.length; ++j) {
-            var comment = response.data.comments[j];
+        for (let j = 0; j < response.data.comments.length; ++j) {
+            let comment = response.data.comments[j];
             comment.posted_local = formatDate(comment.posted_timestamp);
             comment.source = $sce.trustAsHtml(formatSource(comment.source, "Коммент"));
             comment.avatar_url = makeAvatarUrl(comment.user_avatar);
@@ -816,10 +822,10 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
             }
         }
 
-        var maxLevel = 20;
+        let maxLevel = 20;
         function flatten(level, comments) {
-            var out = [];
-            for (var j = 0; j < comments.length; j++) {
+            let out = [];
+            for (let j = 0; j < comments.length; j++) {
                 comments[j].indent = Math.min(level, maxLevel);
                 out.push(comments[j]);
                 out = out.concat(flatten(level + 1, comments[j].children));
@@ -835,9 +841,9 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
         setLastViewedComments(lastViewed);
 
         function filterIgnoredComments(comments) {
-            var res = [];
-            for (var j = 0; j < comments.length; ++j) {
-                var comment = comments[j];
+            let res = [];
+            for (let j = 0; j < comments.length; ++j) {
+                let comment = comments[j];
                 comment.children = filterIgnoredComments(comment.children);
                 if (((comment.user_id in ignoredUsers) || (comment.post_id in ignoredPosts))
                         && (comment.children.length == 0))
@@ -891,15 +897,15 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
     $scope.searchComplete = false;
     
     let doSearchRequest = function(query, username, beforeTimestamp, callback) {
-        var request = {
+        let request = {
             method: 'GET',
             url: '/api/search',
             params: {query: query, username: username, before: beforeTimestamp}
         };
 
         $http(request).then(function(response) {
-            for (var i = 0; i < response.data.length; ++i) {
-                var comment = response.data[i];
+            for (let i = 0; i < response.data.length; ++i) {
+                let comment = response.data[i];
                 comment.posted_local = formatDate(comment.posted_timestamp);
                 comment.source = $sce.trustAsHtml(formatSource(comment.source, "Коммент"));
                 comment.text = $sce.trustAsHtml(comment.text);
@@ -986,7 +992,7 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
 });
 
 app.controller('SettingsController', function($scope, $http, $sce, $interval, $route) {
-    var spamFilter = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
+    let spamFilter = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
 
     $scope.newFilter = spamFilter;
     
