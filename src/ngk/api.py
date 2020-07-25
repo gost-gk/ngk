@@ -57,6 +57,7 @@ def comments() -> flask.Response:
         query = session.query(Comment)
 
         id = flask.request.args.get('id')
+
         if id is not None:
             query = query.filter(Comment.comment_id == id)
         else:
@@ -66,12 +67,19 @@ def comments() -> flask.Response:
 
             ignored_users = flask.request.args.get('ignore_u')
             ignored_posts = flask.request.args.get('ignore_p')
+            user_id = flask.request.args.get('user_id')
+            post_id = flask.request.args.get('post_id')
+
             if ignored_users:
                 ignored_users = [int(u) for u in ignored_users.split(',')]
                 query = query.filter(Comment.user_id.notin_(ignored_users))
             if ignored_posts:
                 ignored_posts = [int(p) for p in ignored_posts.split(',')]
                 query = query.filter(Comment.post_id.notin_(ignored_posts))
+            if user_id:
+                query = query.filter(Comment.user_id == int(user_id))
+            if post_id:
+                query = query.filter(Comment.post_id == int(post_id))
 
         comments = []
 
