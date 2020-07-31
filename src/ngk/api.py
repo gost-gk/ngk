@@ -12,6 +12,7 @@ from typing import Dict, Optional, List, Set
 import flask
 from flask_socketio import SocketIO, close_room, join_room, leave_room
 import redis
+import sqlalchemy.sql as sql
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql.expression import func
 
@@ -101,7 +102,7 @@ def get_replies_to(user_id: Optional[int]=None, user_name: Optional[str]=None) -
         if user_id is not None:
             parent_user = session.query(User).filter(User.user_id == user_id).first()
         elif user_name is not None:
-            parent_user = session.query(User).filter(User.name == user_name).first()
+            parent_user = session.query(User).filter(sql.func.lower(User.name) == user_name.lower()).first()
         else:
             return Replies([], [])
     
@@ -201,7 +202,7 @@ def search() -> flask.Response:
                 query = query.filter(Comment.text_tsv.op('@@')(func.plainto_tsquery('russian', q)))
             
         if len(user_name) > 0:
-            user_id = session.query(User.user_id).filter(User.name == user_name).scalar()
+            user_id = session.query(User.user_id).filter(sql.func.lower(User.name) == user_name.lower()).scalar()
             query = query.filter(Comment.user_id == user_id)
         
         if before is not None:
@@ -237,7 +238,7 @@ def user_view_id(user_id: int) -> flask.Response:
 @app.route('/user/name/<user_name>')
 def user_view_name(user_name: str) -> flask.Response:
     with ScopedSession() as session:
-        user = session.query(User).filter(User.name == user_name).first()
+        user = session.query(User).filter(sql.func.lower(User.name) == user_name.lower()).first()
         user_dict = {
             'id': user.user_id,
             'name': user.name,
