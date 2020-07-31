@@ -253,15 +253,13 @@ def user_view_name(user_name: str) -> flask.Response:
     return resp
 
 
-
 @app.route('/autocomplete/user/name/<user_name>')
 def autocomplete_user_name(user_name: str) -> flask.Response:
     res = []
     with ScopedSession() as session:
-        lower_name_column = sql.func.lower(User.name)
         query = session.query(User)
-        query = query.filter(lower_name_column.startswith(user_name.lower()))
-        query = query.order_by(lower_name_column.asc())
+        query = query.filter(sql.func.lower(User.name).startswith(user_name.lower()))
+        query = query.order_by(User.name.asc())
             
         for user in query.limit(USERS_AUTOCOMPLETE_LIMIT):
             res.append({
