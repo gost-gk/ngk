@@ -26,6 +26,7 @@ L = get_logger('api', logging.DEBUG)
 redirect_basic_logging(L, logging.WARNING)
 
 SEARCH_LIMIT = 50
+USERS_AUTOCOMPLETE_LIMIT = 15
 COMMENTS_LIMIT = 20
 RESPONSE_PARENTS_LIMIT = 15
 IO_NAMESPACE = '/ngk'
@@ -246,6 +247,30 @@ def user_view_name(user_name: str) -> flask.Response:
         } if user is not None else {}
 
     resp = app.make_response(json.dumps(user_dict, ensure_ascii=False))
+    resp.mimetype = 'application/json; charset=utf-8'
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+
+    return resp
+
+
+
+@app.route('/autocomplete/user/name/<user_name>')
+def autocomplete_user_name(user_name: str) -> flask.Response:
+    res = []
+    with ScopedSession() as session:
+        lower_name_column = sql.func.lower(User.name)
+        query = session.query(User)
+        query = query.filter(lower_name_column.startswith(user_name.lower()))
+        query = query.order_by(lower_name_column.asc())
+            
+        for user in query.limit(USERS_AUTOCOMPLETE_LIMIT):
+            res.append({
+                'id': user.user_id,
+                'name': user.name,
+                'avatar': user.avatar_hash
+            })
+
+    resp = app.make_response(json.dumps(res, ensure_ascii=False))
     resp.mimetype = 'application/json; charset=utf-8'
     resp.headers['Access-Control-Allow-Origin'] = '*'
 
