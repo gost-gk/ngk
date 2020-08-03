@@ -40,6 +40,12 @@ def parse_date(date: str) -> datetime:
     return datetime.strptime(date, DATE_FORMAT)
 
 
+def add_api_headers(response: flask.Response) -> flask.Response:
+    response.mimetype = 'application/json; charset=utf-8'
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
 @app.route('/state')
 def state() -> flask.Response:
     with ScopedSession() as session:
@@ -89,10 +95,7 @@ def comments() -> flask.Response:
             comments.append(comment.to_dict())
 
     resp = app.make_response(json.dumps(comments, ensure_ascii=False))
-    resp.mimetype = 'application/json; charset=utf-8'
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-
-    return resp
+    return add_api_headers(resp)
 
 
 Replies = namedtuple('Replies', ['parents', 'children'])
@@ -148,17 +151,13 @@ def get_replies_to(user_id: Optional[int]=None, user_name: Optional[str]=None) -
 @app.route('/replies/id/<int:user_id>')
 def replies_to_id(user_id: int) -> flask.Response:
     resp = app.make_response(json.dumps(get_replies_to(user_id=user_id)._asdict(), ensure_ascii=False))
-    resp.mimetype = 'application/json; charset=utf-8'
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-    return resp
+    return add_api_headers(resp)
 
 
 @app.route('/replies/name/<user_name>')
 def replies_to_name(user_name: str) -> flask.Response:
     resp = app.make_response(json.dumps(get_replies_to(user_name=user_name)._asdict(), ensure_ascii=False))
-    resp.mimetype = 'application/json; charset=utf-8'
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-    return resp
+    return add_api_headers(resp)
    
 
 @app.route('/post/<int:post_id>')
@@ -176,10 +175,7 @@ def post(post_id: int) -> flask.Response:
         resp['comments'] = comments
 
         resp = app.make_response(json.dumps(resp, ensure_ascii=False))
-        resp.mimetype = 'application/json; charset=utf-8'
-        resp.headers['Access-Control-Allow-Origin'] = '*'
-
-        return resp
+        return add_api_headers(resp)
 
 
 @app.route('/search')
@@ -213,10 +209,7 @@ def search() -> flask.Response:
             comments.append(comment.to_dict())
 
     resp = app.make_response(json.dumps(comments, ensure_ascii=False))
-    resp.mimetype = 'application/json; charset=utf-8'
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-
-    return resp
+    return add_api_headers(resp)
 
 
 @app.route('/user/id/<int:user_id>')
@@ -230,10 +223,7 @@ def user_view_id(user_id: int) -> flask.Response:
         } if user is not None else {}
 
     resp = app.make_response(json.dumps(user_dict, ensure_ascii=False))
-    resp.mimetype = 'application/json; charset=utf-8'
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-
-    return resp
+    return add_api_headers(resp)
 
 
 @app.route('/user/name/<user_name>')
@@ -247,10 +237,7 @@ def user_view_name(user_name: str) -> flask.Response:
         } if user is not None else {}
 
     resp = app.make_response(json.dumps(user_dict, ensure_ascii=False))
-    resp.mimetype = 'application/json; charset=utf-8'
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-
-    return resp
+    return add_api_headers(resp)
 
 
 @app.route('/autocomplete/user/name/<user_name>')
@@ -269,10 +256,7 @@ def autocomplete_user_name(user_name: str) -> flask.Response:
             })
 
     resp = app.make_response(json.dumps(res, ensure_ascii=False))
-    resp.mimetype = 'application/json; charset=utf-8'
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-
-    return resp
+    return add_api_headers(resp)
 
 
 ###### SocketIO ######
