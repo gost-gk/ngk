@@ -259,6 +259,23 @@ def autocomplete_user_name(user_name: str) -> flask.Response:
     return add_api_headers(resp)
 
 
+@app.route('/posts_info/<posts_list>')
+def posts_info(posts_list: str) -> flask.Response:
+    posts = list(map(int, posts_list.split(',')))
+    res: Dict[int, Dict[str, int]] = {}
+    with ScopedSession() as session:
+        count_query = session.query(func.count()).filter(Comment.post_id == Post.post_id).label('comments_count')
+        query = session.query(Post.post_id, Post.comment_list_id, count_query)
+        query = query.filter(Post.post_id.in_(posts))
+        for post_id, comment_list_id, comments_count in query:
+            res[post_id] = {
+                'comment_list_id': comment_list_id,
+                'comments_count': comments_count,
+            }
+    resp = app.make_response(json.dumps(res, ensure_ascii=False))
+    return add_api_headers(resp)
+
+
 ###### SocketIO ######
 rooms: Dict[str, int] = {}
 
