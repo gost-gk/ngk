@@ -952,6 +952,10 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
         focusOnSuggestion($scope.usernameSuggestions.length - 1);
     }
 
+    let focusOnQueryInput = function() {
+        focusOn('query-input');
+    }
+
     let isFocusOnSuggestionsList = function() {
         return document.activeElement.classList.contains('autocompletion-focusable');
     }
@@ -997,6 +1001,19 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
         }
     }
 
+    $scope.submitButtonKeydown = function(event) {
+        switch (event.key) {
+            case 'ArrowLeft':
+                event.preventDefault();
+                focusOnUsernameInput();
+                break;
+            case 'ArrowRight':
+                event.preventDefault();
+                focusOnQueryInput();
+                break;
+        }
+    }
+
     $scope.suggestionItemGainedFocus = function(idx) {
     }
 
@@ -1031,6 +1048,11 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
                 event.preventDefault();
                 $scope.applySuggestion($scope.usernameSuggestions[idx]);
                 focusOnSubmitButton();
+                break;
+            case 'Escape':
+                event.preventDefault();
+                focusOnQueryInput();
+                hideSuggestionsList();
                 break;
         }
     }
@@ -1193,10 +1215,7 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
         window.removeEventListener('resize', adjustAutocompletionListPosition);
     });
     
-    let queryElement = document.getElementById('query-input');
-    if (queryElement !== null) {
-        queryElement.focus();
-    }
+    focusOnQueryInput();
 
     $scope.ignoreUser = ignoreUser.bind(undefined, $route);
     $scope.ignorePost = ignorePost.bind(undefined, $route);
