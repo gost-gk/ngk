@@ -987,9 +987,11 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
     $scope.usernameKeydown = function(event) {
         switch (event.key) {
             case 'ArrowDown':
+                event.preventDefault();
                 focusOnFirstSuggestion();
                 break;
             case 'ArrowUp':
+                event.preventDefault();
                 focusOnLastSuggestion();
                 break;
         }
@@ -1005,6 +1007,7 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
     $scope.suggestionItemKeydown = function(idx, event) {
         switch(event.key) {
             case 'ArrowDown':
+                event.preventDefault();
                 if (idx == $scope.usernameSuggestions.length - 1) {
                     focusOnUsernameInput();
                 } else {
@@ -1012,6 +1015,7 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
                 }
                 break;
             case 'ArrowUp':
+                event.preventDefault();
                 if (idx == 0) {
                     focusOnUsernameInput();
                 } else {
@@ -1024,6 +1028,7 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
     $scope.suggestionItemKeyup = function(idx, event) {
         switch(event.key) {
             case 'Enter':
+                event.preventDefault();
                 $scope.applySuggestion($scope.usernameSuggestions[idx]);
                 focusOnSubmitButton();
                 break;
