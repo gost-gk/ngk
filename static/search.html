@@ -23,7 +23,7 @@
     <div ng-switch-when="IN_PROGRESS">Ищем...</div>
     <div ng-switch-when="NOT_FOUND">Ничего не найдено.</div>
     <div ng-switch-when="FOUND">
-        <div tabindex="-1" ng-repeat="comment in result" ng-include="'comment-template-base'" class="comment"></div>
+        <div tabindex="-1" ng-repeat="comment in result track by comment.id" ng-include="'comment-template-base'" class="comment"></div>
         <div ng-if="!searchComplete">
             <button tabindex="-1" ng-click="loadMoreResults()">Ещё результаты</button>
         </div>
