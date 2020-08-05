@@ -3,9 +3,16 @@
 
     <form>
     Порыться в говне:
-    <input ng-model="query" placeholder="{{example}}">
-    <input ng-model="username" placeholder="{{exampleUsername}}">
-    <button ng-click="search()">Искать!</button>
+    <input id="query-input" tabindex="1" ng-model="query" placeholder="{{example}}">
+    <input id="username-input" tabindex="1" class="autocompletion-focusable" autocomplete="off"
+        ng-model="username"
+        ng-keydown="usernameKeydown($event)"
+        ng-focus="usernameGainedFocus()"
+        ng-blur="usernameLostFocus()"
+        ng-change="updateSuggestions(username)"
+        placeholder="{{exampleUsername}}"
+    >
+    <button id="submit-button" tabindex="2" ng-click="search()">Искать!</button>
     </form>
     <br>
     Точный поиск: <code>"выражение"</code> (на данный момент поддерживается только поиск
@@ -25,3 +32,19 @@
         </div>
     </div>
 </div>
+
+<ul id="autocompletion-list" class="autocompletion-list" style="display: none;">
+    <span ng-if="usernameSuggestions.length > 0" ng-repeat="user in usernameSuggestions">
+        <li id="username-suggestion-{{$index}}" class="autocompletion-focusable autocompletion-list-item" tabindex="1"
+            ng-click="applySuggestion(user)"
+            ng-keydown="suggestionItemKeydown($index, $event)"
+            ng-keyup="suggestionItemKeyup($index, $event)"
+            ng-focus="suggestionItemGainedFocus($index)"
+            ng-blur="suggestionItemLostFocus($index)">
+            <div class="autocompletion-item">{{user}}</div>
+        </li>
+    </span>
+    <span ng-if="usernameSuggestions.length <= 0">
+        <li><div class="autocompletion-item">Нет результатов.</div></li>
+    </span>
+</ul>

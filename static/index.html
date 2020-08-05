@@ -111,6 +111,32 @@ body {
 .closebtn:hover {
   color: black;
 }
+
+.autocompletion-list {
+    position: absolute;
+    border: thin solid #c0c0c0;
+    background: white;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    outline: 0;
+    box-sizing: border-box;
+}
+
+.autocompletion-item {
+    cursor: pointer;
+    position: relative;
+    padding: 3px 1em 3px .4em;
+    user-select: none;
+}
+
+.autocompletion-item:hover {
+    background-color: #e0ffe0;
+}
+
+.autocompletion-list-item:focus {
+    background-color: #c0ffc0;
+}
 </style>
 </head>
 <body>

@@ -245,7 +245,7 @@ def autocomplete_user_name(user_name: str) -> flask.Response:
     res = []
     with ScopedSession() as session:
         query = session.query(User)
-        query = query.filter(sql.func.lower(User.name).startswith(user_name.lower()))
+        query = query.filter(sql.func.lower(User.name).startswith(user_name.lower(), autoescape=True))
         query = query.order_by(User.name.asc())
             
         for user in query.limit(USERS_AUTOCOMPLETE_LIMIT):

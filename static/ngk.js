@@ -872,7 +872,9 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
     $scope.unignoreEverything = unignoreEverything.bind(undefined, $route);
 });
 
-app.controller('SearchController', function($scope, $routeParams, $location, $http, $sce, $interval, $route) {
+let usernameAutocompletionCache = {};  // App-wide cache
+
+app.controller('SearchController', function($scope, $routeParams, $location, $http, $sce, $timeout, $route) {
     $scope.result = [];
 
     let examples = [
@@ -896,6 +898,202 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
     $scope.state = 'NO_QUERY';
     $scope.searchComplete = false;
     
+    // Autocompletion
+    $scope.usernameSuggestions = [];
+    let suggestionsValidFor = '';
+    let lostFocusPromise = null;
+
+    let usernameElement = angular.element(document.getElementById('username-input'))[0];
+    let autocompletionElement = angular.element(document.getElementById('autocompletion-list'))[0];
+
+    let placeElementBelow = function(upperElement, lowerElement) {
+        const upperRect = upperElement.getBoundingClientRect();
+        lowerElement.style.top = (upperRect.bottom + window.scrollY) + "px";
+        lowerElement.style.left = (upperRect.left + window.scrollX) + "px";
+        lowerElement.style.width = (upperRect.right - upperRect.left) + "px";
+    }
+
+    let adjustAutocompletionListPosition = function() {
+        placeElementBelow(usernameElement, autocompletionElement);
+    }
+    
+    let showSuggestionsList = function() {
+        autocompletionElement.style.display = null;
+    }
+
+    let hideSuggestionsList = function() {
+        autocompletionElement.style.display = 'none';
+    }
+
+    let focusOn = function(elementName) {
+        let element = document.getElementById(elementName);
+        if (element !== null) {
+            element.focus();
+        }
+    }
+
+    let focusOnUsernameInput = function() {
+        focusOn('username-input');
+    }
+
+    let focusOnSubmitButton = function() {
+        focusOn('submit-button');
+    }
+
+    let focusOnSuggestion = function(index) {
+        focusOn('username-suggestion-' + index);
+    }
+
+    let focusOnFirstSuggestion = function() {
+        focusOnSuggestion(0);
+    }
+
+    let focusOnLastSuggestion = function() {
+        focusOnSuggestion($scope.usernameSuggestions.length - 1);
+    }
+
+    let isFocusOnSuggestionsList = function() {
+        return document.activeElement.classList.contains('autocompletion-focusable');
+    }
+
+    let onSuggestionsFocusLost = function() {
+        if (lostFocusPromise !== null) {
+            $timeout.cancel(lostFocusPromise);
+        }
+
+        lostFocusPromise = $timeout(function() {
+            if (!isFocusOnSuggestionsList()) {
+                hideSuggestionsList();
+            }
+        }, 200);
+    }
+
+    $scope.usernameLostFocus = function() {
+        onSuggestionsFocusLost();
+    }
+
+    $scope.usernameGainedFocus = function() {
+        if (lostFocusPromise !== null) {
+            $timeout.cancel(lostFocusPromise);
+        }
+
+        if ($scope.username == suggestionsValidFor) {
+            showSuggestionsList();
+        } else {
+            $scope.updateSuggestions();
+        }
+    }
+
+    $scope.usernameKeydown = function(event) {
+        switch (event.key) {
+            case 'ArrowDown':
+                focusOnFirstSuggestion();
+                break;
+            case 'ArrowUp':
+                focusOnLastSuggestion();
+                break;
+        }
+    }
+
+    $scope.suggestionItemGainedFocus = function(idx) {
+    }
+
+    $scope.suggestionItemLostFocus = function(idx) {
+        onSuggestionsFocusLost();
+    }
+
+    $scope.suggestionItemKeydown = function(idx, event) {
+        switch(event.key) {
+            case 'ArrowDown':
+                if (idx == $scope.usernameSuggestions.length - 1) {
+                    focusOnUsernameInput();
+                } else {
+                    focusOnSuggestion(idx + 1);
+                }
+                break;
+            case 'ArrowUp':
+                if (idx == 0) {
+                    focusOnUsernameInput();
+                } else {
+                    focusOnSuggestion(idx - 1);
+                }
+                break;
+        }
+    }
+
+    $scope.suggestionItemKeyup = function(idx, event) {
+        switch(event.key) {
+            case 'Enter':
+                $scope.applySuggestion($scope.usernameSuggestions[idx]);
+                focusOnSubmitButton();
+                break;
+        }
+    }
+
+    $scope.applySuggestion = function(newUsername) {
+        $scope.username = newUsername;
+        hideSuggestionsList();
+    }
+
+    let getFocusedSuggestionId = function() {
+        let focusedId = document.activeElement.id;
+        if (focusedId.indexOf('username-suggestion-') == 0) {
+            return 0 | focusedId.split('-')[2];
+        } else {
+            return -1;
+        }
+    }
+
+    let handleNewSuggestions = function(username, suggestions) {        
+        let oldFocusId = getFocusedSuggestionId();
+        let returnFocus = oldFocusId >= 0;
+
+        if (returnFocus) {
+            focusOnUsernameInput();
+        }
+
+        usernameAutocompletionCache[username] = suggestions;
+        suggestionsValidFor = username;
+        $scope.usernameSuggestions = suggestions;
+        
+        showSuggestionsList();
+
+        if (returnFocus) {
+            $timeout(function() {
+                if (oldFocusId >= suggestions.length) {
+                    oldFocusId = suggestions.length - 1;
+                }
+                focusOnSuggestion(oldFocusId);
+            });
+        }
+    }
+
+    let updateSuggestions = throttle(function() {
+        const username = $scope.username;
+
+        let request = {
+            method: 'GET',
+            url: '/api/autocomplete/user/name/' + encodeURI(username),
+            params: {}
+        };
+
+        $http(request).then(function(response) {
+            handleNewSuggestions(username, response.data.map(function(user) { return user.name; }));
+        });
+    }, 500);
+
+    $scope.updateSuggestions = function() {
+        if ($scope.username !== undefined && $scope.username.length >= 2) {
+            if ($scope.username in usernameAutocompletionCache) {
+                handleNewSuggestions($scope.username, usernameAutocompletionCache[$scope.username]);
+            } else {
+                updateSuggestions();
+            }
+        } else {
+            hideSuggestionsList();
+        }
+    }
+
     let doSearchRequest = function(query, username, beforeTimestamp, callback) {
         let request = {
             method: 'GET',
@@ -980,12 +1178,21 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
     };
     
     window.addEventListener('scroll', infScrollListener);
-    
+    window.addEventListener('resize', adjustAutocompletionListPosition);
+    adjustAutocompletionListPosition();
+
     $scope.$on('$destroy', function() {
         infScroll.cancel();
+        updateSuggestions.cancel();
         window.removeEventListener('scroll', infScrollListener);
+        window.removeEventListener('resize', adjustAutocompletionListPosition);
     });
     
+    let queryElement = document.getElementById('query-input');
+    if (queryElement !== null) {
+        queryElement.focus();
+    }
+
     $scope.ignoreUser = ignoreUser.bind(undefined, $route);
     $scope.ignorePost = ignorePost.bind(undefined, $route);
     $scope.unignoreEverything = unignoreEverything.bind(undefined, $route);
