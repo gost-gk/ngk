@@ -6,6 +6,41 @@
     <title>Neon Neon Genesis Govnokod</title>
     <link rel="preconnect" href="https://www.gravatar.com/">
     <link rel="preload" href="/comments.html" as="fetch" type="text/html" crossorigin="anonymous">
+    <script>
+        function getPreloadLink() {
+            let link = '/api/comments';
+
+            const ignoredPosts = JSON.parse(localStorage.getItem('ignoredPosts') || '{}');
+            let ignorePosts = [];
+            for (let k in ignoredPosts) {
+                ignorePosts.push(k);
+            }
+
+            ignorePosts = ignorePosts.join(",");
+            if (ignorePosts) {
+                link += '?ignore_p=' + ignorePosts;
+            }
+
+            const ignoredUsers = JSON.parse(localStorage.getItem('ignoredUsers') || '{}');
+            let ignoreUsers = [];
+            for (let k in ignoredUsers) {
+                ignoreUsers.push(k);
+            }
+
+            ignoreUsers = ignoreUsers.join(",");
+            if (ignoreUsers) {
+                if (!ignorePosts) {
+                    link += '?ignore_u=' + ignoreUsers;
+                } else {
+                    link += '&ignore_u=' + ignoreUsers;
+                }
+            }
+
+            return link;
+        }
+        // Yep, this is extremely dirty, whatever.
+        document.write('<link rel="preload" href="' + getPreloadLink() + '" as="fetch" type="text/json" crossorigin="anonymous">');
+    </script>
     <link rel="preload" href="/img/logo.webp" as="image">
     <link rel="shortcut icon" href="/img/favicon.ico">
     <link rel="icon" type="image/x-icon" href="/img/favicon.ico" sizes="200x200">

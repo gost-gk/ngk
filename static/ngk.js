@@ -333,12 +333,7 @@ function makeAvatarUrl(hash) {
 }
 
 function getLocalStorageObject(name) {
-    let obj = null;
-    try {
-        obj = JSON.parse(localStorage.getItem(name));
-    } catch (e) {
-    }
-    return obj || {};
+    return JSON.parse(localStorage.getItem(name) || '{}');
 }
 
 function setLocalStorageObject(name, obj) {
@@ -484,7 +479,10 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
         let request = {
             method: 'GET',
             url: '/api/comments',
-            params: {}
+            params: {},
+            headers: {
+                'Accept': undefined,  // Fuck Chrome
+            }
         };
 
         if (beforeDate)
