@@ -15,6 +15,7 @@ import redis
 import sqlalchemy.sql as sql
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql.expression import func
+from sqlalchemy_utils.functions import escape_like
 
 from ngk.comments_processor import CommentsProcessor
 from ngk import config
@@ -180,6 +181,8 @@ def post(post_id: int) -> flask.Response:
 
 @app.route('/search')
 def search() -> flask.Response:
+    ESCAPE_CHAR = '^'
+
     comments = []
     with ScopedSession() as session:
         q: str = flask.request.args.get('query', '').strip()
@@ -194,7 +197,8 @@ def search() -> flask.Response:
         
         if len(q) > 0:
             if len(q) > 2 and q.startswith('"') and q.endswith('"'):
-                query = query.filter(Comment.text.ilike(f'%{q[1:-1]}%'))
+                q_escaped = escape_like(q[1:-1], ESCAPE_CHAR)
+                query = query.filter(Comment.text.ilike(f'%{q_escaped}%', escape=ESCAPE_CHAR))
             else:
                 query = query.filter(Comment.text_tsv.op('@@')(func.plainto_tsquery('russian', q)))
             
@@ -205,7 +209,8 @@ def search() -> flask.Response:
         if before is not None:
             query = query.filter(Comment.posted < datetime.fromtimestamp(before))
         
-        for comment in query.order_by(Comment.posted.desc()).limit(SEARCH_LIMIT).all():
+        query = query.order_by(Comment.posted.desc()).limit(SEARCH_LIMIT)
+        for comment in query.all():
             comments.append(comment.to_dict())
 
     resp = app.make_response(json.dumps(comments, ensure_ascii=False))
