@@ -4,7 +4,7 @@
     <p ng-if="!isUserValid">Такого пользователя нет.</p>
 </div>
 <div>
-    <div ng-repeat="comment in comments track by comment.id"
+    <div ng-repeat="comment in comments track by $index"
          ng-class="{'comment':true, 'new': comment.is_new}"
          ng-style="{'margin-left': (comment.indent * 15) + 'px'}"
          ng-include="'comment-template-base'">
