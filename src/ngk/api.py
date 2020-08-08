@@ -177,20 +177,23 @@ def replies_to_name(user_name: str) -> flask.Response:
 
 @app.route('/post/<int:post_id>')
 def post(post_id: int) -> flask.Response:
+    no_comments: bool = flask.request.args.get('no_comments', False)
     with ScopedSession() as session:
         post = session.query(Post).get(post_id)
         resp = post.to_dict()
 
         comments = []
 
-        no_comments = flask.request.args.get('no_comments')
         if not no_comments:
             for comment in post.comments:
                 comments.append(comment.to_dict())
         resp['comments'] = comments
 
         resp = app.make_response(json.dumps(resp, ensure_ascii=False))
-        return add_api_headers(resp)
+        resp = add_api_headers(resp)
+        if no_comments:
+            resp = add_api_cache_headers(resp)
+    return resp
 
 
 @app.route('/search')
