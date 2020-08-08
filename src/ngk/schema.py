@@ -1,18 +1,18 @@
-from contextlib import contextmanager
+import datetime
 import re
+import time
+from contextlib import contextmanager
 from typing import Any, Dict, Iterator
 
-from sqlalchemy import create_engine, event
-from sqlalchemy import (
-    Boolean, Column, DateTime, ForeignKey, Integer, Numeric, String)
+import sqlalchemy.orm
+from sqlalchemy import (Boolean, Column, DateTime, ForeignKey, Integer,
+                        Numeric, String, create_engine, event)
 from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy.ext.declarative import declarative_base
-import sqlalchemy.orm
-from sqlalchemy.orm import relationship, sessionmaker, deferred
+from sqlalchemy.orm import deferred, relationship, sessionmaker
 
 from ngk import config
 from ngk.html_util import normalize_text
-
 
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
@@ -129,8 +129,13 @@ class Comment(Base):
     SOURCE_WEBARCHIVE = 1
     SOURCE_XYZ = 2
 
+    _EDIT_EXPIRE_SEC = 420  # 5 min from GK + 2 min for NGK to update
+
     def __init__(self, comment_id: int):
         self.comment_id = comment_id
+
+    def is_edit_expired(self) -> bool:
+        return time.time() - (self.posted or datetime.datetime.now()).timestamp() > Comment._EDIT_EXPIRE_SEC
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -154,4 +159,3 @@ class CommentIdStorage(Base):
 
     comment_id_ru = Column(Integer, primary_key=True)
     comment_id_xyz = Column(Integer)
-

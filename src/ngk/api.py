@@ -41,10 +41,19 @@ def parse_date(date: str) -> datetime:
     return datetime.strptime(date, DATE_FORMAT)
 
 
+def add_api_no_cache_headers(response: flask.Response) -> flask.Response:
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    return response
+
+def add_api_cache_headers(response: flask.Response, expire_sec: int = 86400) -> flask.Response:
+    response.headers['Cache-Control'] = f'max-age={expire_sec}, public'
+    response.headers['Pragma'] = 'public'
+    return response
+
 def add_api_headers(response: flask.Response) -> flask.Response:
     response.mimetype = 'application/json; charset=utf-8'
     response.headers['Access-Control-Allow-Origin'] = '*'
-    return response
+    return add_api_no_cache_headers(response)
 
 
 @app.route('/state')
@@ -62,13 +71,13 @@ def state() -> flask.Response:
 
 @app.route('/comments')
 def comments() -> flask.Response:
+    comment_id = flask.request.args.get('id')
+
     with ScopedSession() as session:
         query = session.query(Comment)
 
-        id = flask.request.args.get('id')
-
-        if id is not None:
-            query = query.filter(Comment.comment_id == id)
+        if comment_id is not None:
+            query = query.filter(Comment.comment_id == comment_id)
         else:
             before = flask.request.args.get('before')
             if before is not None:
@@ -90,13 +99,18 @@ def comments() -> flask.Response:
             if post_id:
                 query = query.filter(Comment.post_id == int(post_id))
 
-        comments = []
+        comments: List[Comment] = []
 
         for comment in query.order_by(Comment.posted.desc()).limit(COMMENTS_LIMIT).all():
-            comments.append(comment.to_dict())
+            comments.append(comment)
 
-    resp = app.make_response(json.dumps(comments, ensure_ascii=False))
-    return add_api_headers(resp)
+        resp = app.make_response(json.dumps([c.to_dict() for c in comments], ensure_ascii=False))
+        resp = add_api_headers(resp)
+        if comment_id is not None and len(comments) == 1:
+            if comments[0].is_edit_expired():
+                resp = add_api_cache_headers(resp)
+
+    return resp
 
 
 Replies = namedtuple('Replies', ['parents', 'children'])

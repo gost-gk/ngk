@@ -1,62 +1,52 @@
 server {
     listen 80;
 	server_name gcode.space;
-
-    access_log /var/log/nginx/ngk/access.log;
-    error_log /var/log/nginx/ngk/error.log error;
     
     gzip on;
     gzip_types text/plain application/xml application/json;
     gzip_proxied no-cache no-store private expired auth;
     
+    access_log /var/log/nginx/ngk/access.log;
+    error_log /var/log/nginx/ngk/error.log error;
+    
     root /home/python/ngk/static;
-    add_header "Content-Security-Policy" "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; img-src * data:" always;
+    add_header "Content-Security-Policy" "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * data:" always;
     add_header "X-XSS-Protection" "1; mode=block" always;
     add_header "X-Frame-Options" "sameorigin" always;
     add_header "X-Content-Type-Options" "nosniff" always;
     add_header "Feature-Policy" "microphone 'none'; geolocation 'none'; camera 'none'" always;
     add_header "Referrer-Policy" "same-origin" always;
     
+    etag on;
+    if_modified_since exact;
+    add_header Pragma "public";
+    add_header Cache-Control "max-age=31536000, public";
+    
 	location / {
         index index.html;
 	}
-
+    
     location /db_dumps/ {
         root /home/python/ngk;
         autoindex on;
-        
-        etag on;
-        if_modified_since exact;
-        add_header Pragma "public";
-        add_header Cache-Control "max-age=31536000, public";
     }
     
     location = /favicon.ico {
-        root /home/python/ngk/static/img;
-        
-        etag on;
-        if_modified_since exact;
-        add_header Pragma "public";
-        add_header Cache-Control "max-age=31536000, public";
+        root /home/python/ngk-dev/static/img;
     }
     
     location /.well-known {
-        root /home/python/ngk/static;
+        root /home/python/ngk-dev/static;
     }
     
 	location = /robots.txt {
-        root /home/python/ngk/static;
-    }
-    
-    location /img/ {
-        etag on;
-        if_modified_since exact;
-        add_header Pragma "public";
-        add_header Cache-Control "max-age=31536000, public";
+        root /home/python/ngk-dev/static;
     }
     
     location = /socket.io/ {
         gunzip on;
+        add_header Pragma "";
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
         
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -72,6 +62,8 @@ server {
     
     location /api {
         gunzip on;
+        add_header Pragma "";
+        add_header Cache-Control "";
         
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
