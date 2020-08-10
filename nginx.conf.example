@@ -32,15 +32,15 @@ server {
     }
     
     location = /favicon.ico {
-        root /home/python/ngk-dev/static/img;
+        root /home/python/ngk/static/img;
     }
     
     location /.well-known {
-        root /home/python/ngk-dev/static;
+        root /home/python/ngk/static;
     }
     
 	location = /robots.txt {
-        root /home/python/ngk-dev/static;
+        root /home/python/ngk/static;
     }
     
     location = /socket.io/ {
