@@ -3,10 +3,12 @@
     <p>Бесконечный сток имени Борманда: <a href="http://govnokod.ru">ГК</a>, <a href="http://govnokod.xyz">хуз</a>.</p>
     <p>Исходники: <a href="https://github.com/gost-gk/ngk">https://github.com/gost-gk/ngk</a></p>
     <p><a href="" ng-click="unignoreEverything($event)">[Разбанить всё]</a>
-        <a href="#!/blacklist">[Чёрный список]</a>
+       <a href="#!/blacklist">[Чёрный список]</a>
        <a href="#!/search">[Порыться в говне]</a>
-       <a href="#!/settings">[Настройки фильтра]</a>
-       <a href="/db_dumps/">[Дампы базы]</a></p>
+       <a href="#!/settings">[Настройки]</a>
+       <a href="/db_dumps/">[Дампы]</a>
+       <a href="//index.gcode.space/">[Индекс]</a>
+    </p>
 </div>
 <div>
     <div ng-repeat="comment in comments track by comment.id" ng-include="'comment-template-base'" ng-class="{'comment':true, 'new': comment.is_new}">

@@ -49,6 +49,13 @@ CREATE TABLE IF NOT EXISTS comment_ids_storage(
     comment_id_xyz INTEGER
 );
 
+CREATE TABLE IF NOT EXISTS user_settings(
+    id            VARCHAR PRIMARY KEY,
+    ignored_users INTEGER[],
+    ignored_posts INTEGER[],
+    custom_filter VARCHAR
+);
+
 CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE OF text ON comments FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(text_tsv, 'pg_catalog.russian', text);
 CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE OF text ON posts FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(text_tsv, 'pg_catalog.russian', text);
 
@@ -65,3 +72,4 @@ CREATE INDEX IF NOT EXISTS posts_post_ids ON posts(post_id);
 CREATE INDEX IF NOT EXISTS users_user_ids ON users(user_id);
 CREATE INDEX IF NOT EXISTS comment_ids_storage_ids_ru_xyz ON comment_ids_storage(comment_id_ru, comment_id_xyz);
 CREATE INDEX IF NOT EXISTS comment_ids_storage_ids_xyz_ru ON comment_ids_storage(comment_id_xyz, comment_id_ru);
+CREATE INDEX IF NOT EXISTS user_settings_ids ON user_settings(id);

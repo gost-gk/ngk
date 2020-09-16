@@ -10,6 +10,7 @@ from sqlalchemy import (Boolean, Column, DateTime, ForeignKey, Integer,
 from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import deferred, relationship, sessionmaker
+from sqlalchemy.types import ARRAY
 
 from ngk import config
 from ngk.html_util import normalize_text
@@ -159,3 +160,13 @@ class CommentIdStorage(Base):
 
     comment_id_ru = Column(Integer, primary_key=True)
     comment_id_xyz = Column(Integer)
+
+
+class UserSettings(Base):
+    __tablename__ = 'user_settings'
+
+    id = Column(String, primary_key=True, nullable=False, index=True)
+    ignored_users = Column(ARRAY(Integer, zero_indexes=True))
+    ignored_posts = Column(ARRAY(Integer, zero_indexes=True))
+    custom_filter = Column(String)
+    

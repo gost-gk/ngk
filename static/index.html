@@ -175,27 +175,6 @@ body {
 </style>
 </head>
 <body>
-    <div class="alert" style="display: none;" id="xp-alert">
-        <span class="closebtn" id="xp-alert-btn">&times;</span> 
-        <center><strong>Внимание!</strong></center><br>
-        23 августа 2020 года с домена <strong><code>gcode-xp.space</code></strong> будет установлен 301-й редирект на основной домен <strong><code>gcode.space</code></strong>.<br>
-        23 сентября 2020 года домен <strong><code>gcode-xp.space</code></strong> прекратит своё существование.<br>
-        Основной домен — <strong><code>gcode.space</code></strong> — продолжит работу в штатном режиме <small>(если к тому времени инженерный отдел ещё будет жив)</small>.<br>
-    </div>
-    
-    <script>
-        function closeXpAlert() {
-            document.getElementById('xp-alert').style.display = 'none';
-            localStorage.setItem('xp-alert-closed', (new Date()).toISOString());
-        }
-        document.getElementById('xp-alert-btn').onclick = closeXpAlert;
-        if (document.location.hostname.match(/gcode-xp.space/i)) {
-            if (localStorage.getItem('xp-alert-closed') === null) {
-                document.getElementById('xp-alert').style.display = '';
-            }
-        }
-    </script>
-    
     <script type="text/ng-template" id="comment-template-base">
         <img ng-src="{{comment.avatar_url}}" class="avatar" onerror="this.onerror = null; this.src = '/img/default.png';">
         <div class="content">
