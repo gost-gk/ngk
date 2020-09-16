@@ -218,7 +218,7 @@ def main() -> None:
     thread_ru = threading.Thread(target=worker_ru, name='RU', args=(threads_exited_events[-1],))
 
     threads_exited_events.append(threading.Event())
-    thread_xyz = threading.Thread(target=worker_xyz, name='RU', args=(threads_exited_events[-1],))
+    thread_xyz = threading.Thread(target=worker_xyz, name='XYZ', args=(threads_exited_events[-1],))
 
     signal.signal(signal.SIGINT, graceful_exit)
     signal.signal(signal.SIGTERM, graceful_exit)
