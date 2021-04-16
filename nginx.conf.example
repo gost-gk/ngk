@@ -16,7 +16,7 @@ server {
     add_header "X-Content-Type-Options" "nosniff" always;
     add_header "Feature-Policy" "microphone 'none'; geolocation 'none'; camera 'none'" always;
     add_header "Referrer-Policy" "same-origin" always;
-    add_header "Permissions-Policy" "interest-cohort=()" alway;
+    add_header "Permissions-Policy" "interest-cohort=()" always;
     
     etag on;
     if_modified_since exact;
