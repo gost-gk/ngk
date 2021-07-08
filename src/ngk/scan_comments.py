@@ -16,6 +16,8 @@ from ngk.comments_processor import CommentsProcessor
 from ngk.log import get_logger, redirect_basic_logging
 from ngk.html_util import inner_html_ru, normalize_text
 from ngk.parse_error import ParseError
+from ngk.parser import ParsedComment, ParsedPost, ParsedUser
+from ngk.parser_ru import parse_sink, parse_post
 from ngk.schema import Comment, CommentIdStorage, ScopedSession, SyncState
 
 
@@ -34,24 +36,11 @@ exit_event = threading.Event()
 threads_exited_events: List[threading.Event] = []
 
 
-def fetch_latest_comments() -> List[Tuple[int, int, str]]:
+def fetch_latest_comments() -> List[ParsedComment]:
     L.debug("Fetching comments from ru...")
     r = requests.get(COMMENTS_URL, headers=config.DEFAULT_HEADERS, timeout=30)
     r.raise_for_status()
-    root = lxml.etree.HTML(r.content)
-
-    comments: List[Tuple[int, int, str]] = []
-    for comment_entry in root.xpath('//li[@class="hcomment"]'):
-        comment_link = comment_entry.xpath('.//a[@class="comment-link"]')[0]
-        m = re.search("/([0-9]+)#comment([0-9]+)", comment_link.get("href"))
-        if m is None:
-            raise ParseError('Invalid comment-link (no regex match)')
-        post_id = int(m.group(1))
-        comment_id = int(m.group(2))
-        comment_text = normalize_text(inner_html_ru(comment_entry.xpath('.//div[@class="entry-comment"]')[0]))
-        comments.append((post_id, comment_id, comment_text))
-
-    return comments
+    return parse_sink(r.content)
 
 
 def fetch_latest_comments_xyz() -> List[parser_xyz.CommentXyz]:
@@ -62,11 +51,12 @@ def fetch_latest_comments_xyz() -> List[parser_xyz.CommentXyz]:
     return parser_xyz.parse_comments(root)
 
 
-def update_sync_states(comments: Sequence[Tuple[int, int, str]], processor: CommentsProcessor) -> bool:
+def update_sync_states(comments: Sequence[ParsedComment], processor: CommentsProcessor) -> bool:
     has_updates = False
     updated_comments: List[Comment] = []
     with ScopedSession() as session:
-        for post_id, comment_id, comment_text in comments:
+        for comment_sink in comments:
+            post_id, comment_id, comment_text = comment_sink.post_id, comment_sink.id_ru, comment_sink.text
             comment_db = session.query(Comment).filter(Comment.comment_id == comment_id).first()
             if comment_db is not None and comment_db.text != comment_text:
                 comment_db.text = comment_text
