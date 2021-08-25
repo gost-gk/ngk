@@ -26,7 +26,7 @@ redirect_basic_logging(L)
 
 COMMENTS_URL = 'http://govnokod.ru/comments'
 COMMENTS_URL_XYZ = 'https://govnokod.xyz/comments/'
-FAST_DELAY = 15
+FAST_DELAY = 8
 SLOW_DELAY = 60
 FAST_TO_SLOW_STEPS = 20
 
