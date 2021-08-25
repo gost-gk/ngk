@@ -13,13 +13,13 @@
     <br>
     <div id="banSourcesSelection">
         Источники серверных банов:
-        <label ng-repeat="banSource in banSources">
+        <label ng-repeat="(banSourceId, banSourceState) in banSources">
             <div>
                 <input
                     type="checkbox"
                     name="selectedBanSources[]"
-                    ng-model="banSource.selected"
-                > {{banSource.id}}
+                    ng-model="banSourceState.selected"
+                > {{banSourceId}}
             </div>
         </label>
     </div>

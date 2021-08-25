@@ -1227,9 +1227,35 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
 });
 
 app.controller('SettingsController', function($scope, $http, $sce, $interval, $route) {
-    let getBanSources = () => {
-        // TODO: load them via API
-        return JSON.parse(localStorage.getItem('banSources')) || []
+    let updateBanSources = (newBanSources) => {
+        console.log('New ban sources arrived!', newBanSources);
+        for (let [sourceId, sourceState] of Object.entries(newBanSources)) {
+            if (!(sourceId in $scope.banSources)) {
+                $scope.banSources[sourceId] = sourceState;
+                $scope.banSources[sourceId].selected = false;
+            } else {
+                $scope.banSources[sourceId].pubkey = sourceState.pubkey;
+            }
+        }
+    }
+
+    let requestNewBanSources = () => {
+        let request = {
+            method: 'GET',
+            url: '/api/ban_sources',
+            params: {},
+            headers: {
+                'Accept': undefined, //'application/json',
+            }
+        };
+
+        $http(request).then(function(response) {
+            updateBanSources(response.data);
+        });
+    }
+
+    let getInitialBanSources = () => {
+        return JSON.parse(localStorage.getItem('banSources')) || {"server": {"selected": false, "pubkey": "abc"}}
     }
 
     let spamFilter = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
@@ -1247,10 +1273,11 @@ app.controller('SettingsController', function($scope, $http, $sce, $interval, $r
         }
     };
 
-    $scope.banSources = getBanSources()
+    $scope.banSources = getInitialBanSources();
+    requestNewBanSources();
 
     $scope.$watch('banSources', function (newBanSources) {
-        localStorage.setItem("banSources", JSON.stringify(newBanSources.map((src) => ({id: src.id, selected: src.selected}))));
+        localStorage.setItem("banSources", JSON.stringify(newBanSources));
       }, true);
 });
 
