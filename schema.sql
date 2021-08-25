@@ -56,6 +56,14 @@ CREATE TABLE IF NOT EXISTS user_settings(
     custom_filter VARCHAR
 );
 
+CREATE TABLE IF NOT EXISTS banned_users(
+    user_id INTEGER NOT NULL,
+    ban_source VARCHAR NOT NULL,
+
+    PRIMARY KEY(user_id, ban_source),
+    FOREIGN KEY(user_id) REFERENCES users(user_id)
+);
+
 CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE OF text ON comments FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(text_tsv, 'pg_catalog.russian', text);
 CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE OF text ON posts FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(text_tsv, 'pg_catalog.russian', text);
 

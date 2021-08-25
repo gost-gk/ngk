@@ -1,4 +1,5 @@
 import datetime
+import enum
 import re
 import time
 from contextlib import contextmanager
@@ -6,8 +7,9 @@ from typing import Any, Dict, Iterator
 
 import sqlalchemy.orm
 from sqlalchemy import (Boolean, Column, DateTime, ForeignKey, Integer,
-                        Numeric, String, create_engine, event)
-from sqlalchemy.dialects.postgresql import TSVECTOR
+                        Numeric, String, create_engine, PrimaryKeyConstraint,
+                        Index)
+from sqlalchemy.dialects.postgresql import TSVECTOR, ENUM
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import deferred, relationship, sessionmaker
 from sqlalchemy.types import ARRAY
@@ -169,4 +171,13 @@ class UserSettings(Base):
     ignored_users = Column(ARRAY(Integer, zero_indexes=True))
     ignored_posts = Column(ARRAY(Integer, zero_indexes=True))
     custom_filter = Column(String)
+
+
+class BannedUser(Base):
+    __tablename__ = 'banned_users'
     
+    user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
+    ban_source = Column(String, nullable=False)
+    __table_args__ = (
+        PrimaryKeyConstraint('user_id', 'ban_source'),
+    )

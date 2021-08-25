@@ -30,8 +30,6 @@ FAST_DELAY = 8
 SLOW_DELAY = 60
 FAST_TO_SLOW_STEPS = 20
 
-GK_GUEST8_ID = 25580
-
 exit_event = threading.Event()
 threads_exited_events: List[threading.Event] = []
 
