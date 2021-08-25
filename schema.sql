@@ -56,11 +56,17 @@ CREATE TABLE IF NOT EXISTS user_settings(
     custom_filter VARCHAR
 );
 
+CREATE TABLE IF NOT EXISTS moderators(
+    id VARCHAR NOT NULL PRIMARY KEY,
+    pubkey VARCHAR NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS banned_users(
     user_id INTEGER NOT NULL,
-    ban_source VARCHAR NOT NULL,
+    moderator_id VARCHAR NOT NULL,
 
-    PRIMARY KEY(user_id, ban_source),
+    PRIMARY KEY(user_id, moderator_id),
+    FOREIGN KEY(moderator_id) REFERENCES moderators(id),
     FOREIGN KEY(user_id) REFERENCES users(user_id)
 );
 
@@ -81,3 +87,4 @@ CREATE INDEX IF NOT EXISTS users_user_ids ON users(user_id);
 CREATE INDEX IF NOT EXISTS comment_ids_storage_ids_ru_xyz ON comment_ids_storage(comment_id_ru, comment_id_xyz);
 CREATE INDEX IF NOT EXISTS comment_ids_storage_ids_xyz_ru ON comment_ids_storage(comment_id_xyz, comment_id_ru);
 CREATE INDEX IF NOT EXISTS user_settings_ids ON user_settings(id);
+CREATE INDEX IF NOT EXISTS idx$moderators_pubkey ON moderators(pubkey);
