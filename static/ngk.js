@@ -410,6 +410,13 @@ function setRequestIgnoredParams(request) {
         request.params.ignore_p = ignore;
 }
 
+function getSelectedBanSources() {
+    return (Object.entries(JSON.parse(localStorage.getItem('banSources')))
+        .filter((obj) => obj[1].selected)
+        .map((obj) => obj[0])
+    );
+}
+
 function getLastViewedComments() {
     return getLocalStorageObject('lastViewed');
 }
@@ -431,11 +438,8 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     let spamFilterString = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
     let isSpam = new Function("comment", spamFilterString);
     
-    let banSources = JSON.parse(localStorage.getItem('banSources'))
-        .filter((src) => src.selected)
-        .map((src) => src.id);
-    
-    console.log("Ban sources: ", banSources);
+    let selectedBanSources = getSelectedBanSources();
+    console.log("Selected ban sources: ", selectedBanSources);
 
     function updateViewedComments() {
         let lastViewed = getLastViewedComments();
@@ -495,6 +499,10 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
             request.params.before = beforeDate;
 
         setRequestIgnoredParams(request);
+        
+        if (selectedBanSources.length > 0) {
+            request.params['ban_sources'] = selectedBanSources.join(',');
+        }
 
         $http(request).then(function(response) {
             let maxId = 0;
@@ -598,6 +606,10 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
 
     let spamFilterString = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
     let isSpam = new Function("comment", spamFilterString);
+
+    let selectedBanSources = getSelectedBanSources();
+    console.log('Selected ban sources: ', selectedBanSources);
+
     const ignoredUsers = getIgnoredUsers();
     function isIgnored(comment) {
         return comment.user_id in ignoredUsers;
@@ -698,6 +710,10 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
         }
 
         setRequestIgnoredParams(request);
+        
+        if (selectedBanSources.length > 0) {
+            request.params['ban_sources'] = selectedBanSources.join(',');
+        }
 
         $http(request).then(function(response) {
             for (let comment of response.data.parents) {
@@ -1245,7 +1261,7 @@ app.controller('SettingsController', function($scope, $http, $sce, $interval, $r
             url: '/api/ban_sources',
             params: {},
             headers: {
-                'Accept': undefined, //'application/json',
+                'Accept': 'application/json',
             }
         };
 

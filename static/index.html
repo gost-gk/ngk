@@ -8,7 +8,8 @@
     <link rel="preload" href="/comments.html" as="fetch" type="text/html" crossorigin="anonymous">
     <script>
         function getPreloadLink() {
-            let link = '/api/comments';
+            const BASE_LINK = '/api/comments'
+            let link = BASE_LINK;
 
             const ignoredPosts = JSON.parse(localStorage.getItem('ignoredPosts') || '{}');
             let ignorePosts = [];
@@ -29,11 +30,30 @@
 
             ignoreUsers = ignoreUsers.join(",");
             if (ignoreUsers) {
-                if (!ignorePosts) {
-                    link += '?ignore_u=' + ignoreUsers;
+                if (link == BASE_LINK) {
+                    link += '?'
                 } else {
-                    link += '&ignore_u=' + ignoreUsers;
+                    link += '&'
                 }
+                link += 'ignore_u=' + ignoreUsers;
+            }
+            
+            function getSelectedBanSources() {
+                return (Object.entries(JSON.parse(localStorage.getItem('banSources')))
+                    .filter((obj) => obj[1].selected)
+                    .map((obj) => obj[0])
+                );
+            }
+
+            const banSources = getSelectedBanSources();
+            
+            if (banSources.length > 0) {
+                if (link == BASE_LINK) {
+                    link += '?'
+                } else {
+                    link += '&'
+                }
+                link += 'ban_sources=' + banSources.join(',');
             }
 
             return link;
