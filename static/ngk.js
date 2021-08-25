@@ -411,7 +411,7 @@ function setRequestIgnoredParams(request) {
 }
 
 function getSelectedBanSources() {
-    return (Object.entries(JSON.parse(localStorage.getItem('banSources')))
+    return (Object.entries(JSON.parse(localStorage.getItem('banSources') || '{}'))
         .filter((obj) => obj[1].selected)
         .map((obj) => obj[0])
     );
@@ -1271,7 +1271,7 @@ app.controller('SettingsController', function($scope, $http, $sce, $interval, $r
     }
 
     let getInitialBanSources = () => {
-        return JSON.parse(localStorage.getItem('banSources')) || {"server": {"selected": false, "pubkey": "abc"}}
+        return JSON.parse(localStorage.getItem('banSources') || '{}')
     }
 
     let spamFilter = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
