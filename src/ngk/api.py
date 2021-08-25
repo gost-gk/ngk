@@ -13,6 +13,7 @@ import flask
 from flask_socketio import SocketIO, close_room, join_room, leave_room
 import redis
 import sqlalchemy.sql as sql
+from sqlalchemy import exists
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql.expression import func
 from sqlalchemy_utils.functions import escape_like
@@ -20,7 +21,7 @@ from sqlalchemy_utils.functions import escape_like
 from ngk.comments_processor import CommentsProcessor
 from ngk import config
 from ngk.log import get_logger, redirect_basic_logging
-from ngk.schema import Comment, DATE_FORMAT, Post, ScopedSession, SyncState, User
+from ngk.schema import Comment, DATE_FORMAT, Post, ScopedSession, SyncState, User, BannedUser, Moderator
 
 
 L = get_logger('api', logging.DEBUG)
@@ -85,6 +86,8 @@ def comments() -> flask.Response:
 
             ignored_users = flask.request.args.get('ignore_u')
             ignored_posts = flask.request.args.get('ignore_p')
+            ban_sources = flask.request.args.get('ban_sources', '').split(',')
+            
             user_id = flask.request.args.get('user_id')
             post_id = flask.request.args.get('post_id')
 
@@ -98,7 +101,14 @@ def comments() -> flask.Response:
                 query = query.filter(Comment.user_id == int(user_id))
             if post_id:
                 query = query.filter(Comment.post_id == int(post_id))
-
+            
+            if len(ban_sources) > 0:
+                bans_query = session.query(BannedUser)
+                bans_query = bans_query.filter(BannedUser.user_id == Comment.user_id)
+                bans_query = bans_query.filter(BannedUser.moderator_id.in_(ban_sources))
+                
+                query = query.filter(~bans_query.exists())
+            
         comments: List[Comment] = []
 
         for comment in query.order_by(Comment.posted.desc()).limit(COMMENTS_LIMIT).all():
