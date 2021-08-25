@@ -68,7 +68,6 @@ CREATE TABLE IF NOT EXISTS banned_users(
 
     PRIMARY KEY(user_id, moderator_id),
     FOREIGN KEY(moderator_id) REFERENCES moderators(id),
-    FOREIGN KEY(user_id) REFERENCES users(user_id)
 );
 
 CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE OF text ON comments FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(text_tsv, 'pg_catalog.russian', text);
