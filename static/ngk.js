@@ -431,6 +431,12 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     let spamFilterString = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
     let isSpam = new Function("comment", spamFilterString);
     
+    let banSources = JSON.parse(localStorage.getItem('banSources'))
+        .filter((src) => src.selected)
+        .map((src) => src.id);
+    
+    console.log("Ban sources: ", banSources);
+
     function updateViewedComments() {
         let lastViewed = getLastViewedComments();
         for (let comment of $scope.comments) {
@@ -1221,6 +1227,11 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
 });
 
 app.controller('SettingsController', function($scope, $http, $sce, $interval, $route) {
+    let getBanSources = () => {
+        // TODO: load them via API
+        return JSON.parse(localStorage.getItem('banSources')) || []
+    }
+
     let spamFilter = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
 
     $scope.newFilter = spamFilter;
@@ -1235,6 +1246,12 @@ app.controller('SettingsController', function($scope, $http, $sce, $interval, $r
             $scope.saveFilter();
         }
     };
+
+    $scope.banSources = getBanSources()
+
+    $scope.$watch('banSources', function (newBanSources) {
+        localStorage.setItem("banSources", JSON.stringify(newBanSources.map((src) => ({id: src.id, selected: src.selected}))));
+      }, true);
 });
 
 app.controller('BlacklistController', function($scope, $http, $sce, $interval, $route) {
