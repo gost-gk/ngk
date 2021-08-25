@@ -185,6 +185,7 @@ class BannedUser(Base):
     
     user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
     moderator_id = Column(String, ForeignKey('moderators.id'), nullable=False)
+    ban_date = Column(DateTime(timezone=True), nullable=False, index=True)
     moderator = relationship('Moderator', uselist=False, remote_side=[moderator_id])
     
     __table_args__ = (
