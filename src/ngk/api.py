@@ -314,6 +314,20 @@ def posts_info(posts_list: str) -> flask.Response:
     return add_api_headers(resp)
 
 
+@app.route('/ban_sources')
+def ban_sources() -> flask.Response:
+    with ScopedSession() as session:
+        query = session.query(Moderator)
+        res = {
+            mod.id: {
+                'pubkey': mod.pubkey,
+            }
+            for mod in query
+        }
+        resp = app.make_response(json.dumps(res, ensure_ascii=False))
+        return add_api_headers(resp)
+
+
 def ban_user(session: Session, user_id: int, moderator_id: str) -> flask.Response:
     ban_date=datetime.now(tz=timezone.utc)
     
