@@ -363,36 +363,36 @@ def check_sign(sign: str, action_descr: str, user_id: int, nonce: str, moderator
 
 
 def do_ban_action(user_id: int, action_desc: str, action: Callable[[Session, int, str], flask.Response]) -> flask.Response:
-    moderator_id = flask.request.args.get('moderator_id')
-    sign = flask.request.args.get('sign')
-    nonce = flask.request.args.get('nonce')
+    moderator_id = flask.request.form.get('moderator_id')
+    sign = flask.request.form.get('sign')
+    nonce = flask.request.form.get('nonce')
     
     if moderator_id is None or sign is None or nonce is None:
-        resp = app.make_response(json.dumps({'status': 'error', 'error': 'unauthorized'}, ensure_ascii=False))
+        resp = app.make_response(json.dumps({'status': 'error', 'error': 'unauthorized', 'comment': 'no params'}))
         resp.status_code = HTTPStatus.UNAUTHORIZED
         return add_api_headers(resp)
 
     with ScopedSession() as session:
         moderator = session.query(Moderator).filter(Moderator.id == moderator_id).first()
         if moderator is None:
-            resp = app.make_response(json.dumps({'status': 'error', 'error': 'unauthorized'}, ensure_ascii=False))
+            resp = app.make_response(json.dumps({'status': 'error', 'error': 'unauthorized', 'comment': 'no moderator'}))
             resp.status_code = HTTPStatus.UNAUTHORIZED
             return add_api_headers(resp)
         
         if not check_sign(sign, action_desc, user_id, nonce, moderator):
-            resp = app.make_response(json.dumps({'status': 'error', 'error': 'unauthorized'}, ensure_ascii=False))
+            resp = app.make_response(json.dumps({'status': 'error', 'error': 'unauthorized', 'comment': 'wrong sign'}))
             resp.status_code = HTTPStatus.UNAUTHORIZED
             return add_api_headers(resp)
         
         return action(session, user_id, moderator_id)
 
 
-@app.route('/mod/ban/<int:user_id>')
+@app.route('/mod/ban/<int:user_id>', methods = ['POST'])
 def ban_by_id(user_id: int) -> flask.Response:
     return do_ban_action(user_id, 'ban', ban_user)
 
 
-@app.route('/mod/unban/<int:user_id>')
+@app.route('/mod/unban/<int:user_id>', methods = ['POST'])
 def unban_by_id(user_id: int) -> flask.Response:
     return do_ban_action(user_id, 'unban', unban_user)
 
