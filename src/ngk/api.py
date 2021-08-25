@@ -5,6 +5,7 @@ from collections import defaultdict, namedtuple
 from datetime import datetime, timedelta, timezone
 import json
 import logging
+from http import HTTPStatus
 import re
 import secrets
 from typing import Dict, Optional, List, Set
@@ -12,11 +13,16 @@ from typing import Dict, Optional, List, Set
 import flask
 from flask_socketio import SocketIO, close_room, join_room, leave_room
 import redis
+import nacl
+import nacl.encoding
+import nacl.signing
 import sqlalchemy.sql as sql
-from sqlalchemy import exists
-from sqlalchemy.orm import aliased
+from sqlalchemy import delete
+from sqlalchemy.orm import aliased, Session
 from sqlalchemy.sql.expression import func
 from sqlalchemy_utils.functions import escape_like
+from sqlalchemy.dialects.postgresql import insert
+from typing import Callable
 
 from ngk.comments_processor import CommentsProcessor
 from ngk import config
@@ -306,6 +312,89 @@ def posts_info(posts_list: str) -> flask.Response:
             }
     resp = app.make_response(json.dumps(res, ensure_ascii=False))
     return add_api_headers(resp)
+
+
+def ban_user(session: Session, user_id: int, moderator_id: str) -> flask.Response:
+    ban_date=datetime.now(tz=timezone.utc)
+    
+    upsert_query = insert(BannedUser).values(
+        user_id=user_id,
+        moderator_id=moderator_id,
+        ban_date=ban_date
+    ).on_conflict_do_update(
+        index_elements=[BannedUser.user_id, BannedUser.moderator_id],
+        set_=dict(ban_date=ban_date)
+    )
+
+    session.execute(upsert_query)
+    
+    resp = app.make_response(json.dumps({'status': 'success'}, ensure_ascii=False))
+    return add_api_headers(resp)
+
+
+def unban_user(session: Session, user_id: int, moderator_id: str) -> flask.Response:
+    delete_query = delete(BannedUser).where(BannedUser.user_id == user_id and
+                                            BannedUser.moderator_id == moderator_id)
+    
+    session.execute(delete_query)
+    
+    resp = app.make_response(json.dumps({'status': 'success'}, ensure_ascii=False))
+    return add_api_headers(resp)
+
+
+def encode_message(action_descr: str, user_id: int, nonce: str, moderator_id: str) -> bytes:
+    msg = '{}/{}/{}/{}'.format(action_descr, user_id, nonce, moderator_id)
+    return msg.encode('utf-8')
+
+
+def check_sign(sign: str, action_descr: str, user_id: int, nonce: str, moderator: Moderator) -> bool:
+    verify_key = nacl.signing.VerifyKey(moderator.pubkey, encoder=nacl.encoding.HexEncoder)
+
+    try:
+        signature_bytes = nacl.encoding.HexEncoder.decode(sign)
+    except:
+        return False
+    message = encode_message(action_descr, user_id, nonce, moderator.id)
+    try:
+        verify_key.verify(message, signature_bytes)
+        return True
+    except:
+        return False
+
+
+def do_ban_action(user_id: int, action_desc: str, action: Callable[[Session, int, str], flask.Response]) -> flask.Response:
+    moderator_id = flask.request.args.get('moderator_id')
+    sign = flask.request.args.get('sign')
+    nonce = flask.request.args.get('nonce')
+    
+    if moderator_id is None or sign is None or nonce is None:
+        resp = app.make_response(json.dumps({'status': 'error', 'error': 'unauthorized'}, ensure_ascii=False))
+        resp.status_code = HTTPStatus.UNAUTHORIZED
+        return add_api_headers(resp)
+
+    with ScopedSession() as session:
+        moderator = session.query(Moderator).filter(Moderator.id == moderator_id).first()
+        if moderator is None:
+            resp = app.make_response(json.dumps({'status': 'error', 'error': 'unauthorized'}, ensure_ascii=False))
+            resp.status_code = HTTPStatus.UNAUTHORIZED
+            return add_api_headers(resp)
+        
+        if not check_sign(sign, action_desc, user_id, nonce, moderator):
+            resp = app.make_response(json.dumps({'status': 'error', 'error': 'unauthorized'}, ensure_ascii=False))
+            resp.status_code = HTTPStatus.UNAUTHORIZED
+            return add_api_headers(resp)
+        
+        return action(session, user_id, moderator_id)
+
+
+@app.route('/mod/ban/<int:user_id>')
+def ban_by_id(user_id: int) -> flask.Response:
+    return do_ban_action(user_id, 'ban', ban_user)
+
+
+@app.route('/mod/unban/<int:user_id>')
+def unban_by_id(user_id: int) -> flask.Response:
+    return do_ban_action(user_id, 'unban', unban_user)
 
 
 ###### SocketIO ######
