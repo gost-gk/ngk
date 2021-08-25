@@ -86,7 +86,7 @@ def comments() -> flask.Response:
 
             ignored_users = flask.request.args.get('ignore_u')
             ignored_posts = flask.request.args.get('ignore_p')
-            ban_sources = flask.request.args.get('ban_sources', '').split(',')
+            ban_sources = [s for s in flask.request.args.get('ban_sources', '').split(',') if len(s) > 0]
             
             user_id = flask.request.args.get('user_id')
             post_id = flask.request.args.get('post_id')
