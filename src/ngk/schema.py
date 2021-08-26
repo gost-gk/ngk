@@ -181,6 +181,12 @@ class Moderator(Base):
     bans = relationship('BannedUser', uselist=True, back_populates='moderator')
 
 
+class ModeratorSecret(Base):
+    __tablename__ = 'moderator_secrets'
+    moderator_id = Column(String, ForeignKey('moderators.id'), primary_key=True, nullable=False)
+    secret = Column(String, nullable=False)
+
+
 class BannedUser(Base):
     __tablename__ = 'banned_users'
     

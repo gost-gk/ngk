@@ -61,13 +61,20 @@ CREATE TABLE IF NOT EXISTS moderators(
     pubkey VARCHAR NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS moderator_secrets(
+    moderator_id VARCHAR NOT NULL PRIMARY KEY,
+    secret VARCHAR NOT NULL,
+
+    FOREIGN KEY(moderator_id) REFERENCES moderators(id)
+);
+
 CREATE TABLE IF NOT EXISTS banned_users(
     user_id INTEGER NOT NULL,
     moderator_id VARCHAR NOT NULL,
     ban_date TIMESTAMPTZ NOT NULL,
 
     PRIMARY KEY(user_id, moderator_id),
-    FOREIGN KEY(moderator_id) REFERENCES moderators(id),
+    FOREIGN KEY(moderator_id) REFERENCES moderators(id)
 );
 
 CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE OF text ON comments FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(text_tsv, 'pg_catalog.russian', text);
