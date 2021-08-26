@@ -3,6 +3,7 @@ eventlet.monkey_patch(thread=False)
 
 from collections import defaultdict, namedtuple
 from datetime import datetime, timedelta, timezone
+import dataclasses
 import hmac
 from http import HTTPStatus
 import json
@@ -531,13 +532,19 @@ def trigger_git_mod(moderator_id: str) -> flask.Response:
 
 
 ###### SocketIO ######
-rooms: Dict[str, int] = {}
+@dataclasses.dataclass
+class WebsocketClient:
+    __slots__ = ('max_id', 'ban_sources')
+    max_id: int
+    ban_sources: Set[str]
+
+
+websocker_clients: Dict[str, WebsocketClient] = defaultdict(lambda: WebsocketClient(max_id=0, ban_sources=set()))
 
 
 @io.on('connect', namespace=IO_NAMESPACE)
 def io_connect() -> None:
     L.debug(f'IO: {flask.request.sid} connected')
-    rooms[flask.request.sid] = 0
     join_room(flask.request.sid)
 
 
@@ -545,7 +552,10 @@ def io_connect() -> None:
 def io_disconnect() -> None:
     L.debug(f'IO: {flask.request.sid} left')
     close_room(flask.request.sid)
-    del rooms[flask.request.sid]
+    try:
+        del websocker_clients[flask.request.sid]
+    except KeyError:
+        pass
 
 
 @io.on('set_max_id', namespace=IO_NAMESPACE)
@@ -555,7 +565,18 @@ def io_set_max_id(max_id: str) -> None:
         max_id_int = int(max_id)
     except ValueError:
         max_id_int = 0
-    rooms[flask.request.sid] = max_id_int
+    websocker_clients[flask.request.sid].max_id = max_id_int
+
+
+@io.on('set_ban_sources', namespace=IO_NAMESPACE)
+def io_set_ban_sources(ban_sources: str) -> None:
+    L.debug(f'IO: set_ban_sources {flask.request.sid} -> {ban_sources}')
+    try:
+        ban_sources_set = set(map(str, json.loads(ban_sources)))
+    except:
+        L.exception(f'IO: exception while parsing ban_sources')
+        return
+    websocker_clients[flask.request.sid].ban_sources = ban_sources_set
 
 
 def comments_listener(comments_processor: CommentsProcessor) -> None:
