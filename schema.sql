@@ -61,11 +61,12 @@ CREATE TABLE IF NOT EXISTS moderators(
     pubkey VARCHAR NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS moderator_secrets(
-    moderator_id VARCHAR NOT NULL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS auto_moderators(
+    id VARCHAR NOT NULL PRIMARY KEY,
     secret VARCHAR NOT NULL,
+    update_url VARCHAR NOT NULL,
 
-    FOREIGN KEY(moderator_id) REFERENCES moderators(id)
+    FOREIGN KEY(id) REFERENCES moderators(id)
 );
 
 CREATE TABLE IF NOT EXISTS banned_users(

@@ -179,12 +179,16 @@ class Moderator(Base):
     pubkey = Column(String, nullable=False, index=True)
     
     bans = relationship('BannedUser', uselist=True, back_populates='moderator')
+    auto_moderator = relationship('AutoModerator', uselist=False, back_populates='moderator')
 
 
-class ModeratorSecret(Base):
-    __tablename__ = 'moderator_secrets'
-    moderator_id = Column(String, ForeignKey('moderators.id'), primary_key=True, nullable=False)
+class AutoModerator(Base):
+    __tablename__ = 'auto_moderators'
+    id = Column(String, ForeignKey('moderators.id'), primary_key=True, nullable=False)
     secret = Column(String, nullable=False)
+    update_url = Column(String, nullable=False)
+
+    moderator = relationship('Moderator', uselist=False, back_populates='auto_moderator')
 
 
 class BannedUser(Base):

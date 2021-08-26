@@ -1,34 +1,44 @@
-import eventlet
-eventlet.monkey_patch()
+import eventlet  # TODO: don't use native threading?..
+eventlet.monkey_patch(thread=False)
 
 from collections import defaultdict, namedtuple
 from datetime import datetime, timedelta, timezone
+import hmac
+from http import HTTPStatus
 import json
 import logging
-from http import HTTPStatus
 import re
 import secrets
-from typing import Dict, Optional, List, Set, Sequence
+from typing import Callable, Dict, List, Optional, Sequence, Set
 
 import flask
 from flask_socketio import SocketIO, close_room, join_room, leave_room
-import redis
 import nacl
 import nacl.encoding
 import nacl.signing
-import sqlalchemy.sql as sql
+import redis
 from sqlalchemy import delete
-from sqlalchemy.orm import aliased, Session, joinedload
-from sqlalchemy.sql.expression import func
-from sqlalchemy_utils.functions import escape_like
 import sqlalchemy.dialects.postgresql as postgresql
 from sqlalchemy.dialects.postgresql import insert
-from typing import Callable
+from sqlalchemy.orm import Session, aliased, joinedload
+import sqlalchemy.sql as sql
+from sqlalchemy.sql.expression import func
+from sqlalchemy_utils.functions import escape_like
 
-from ngk.comments_processor import CommentsProcessor
 from ngk import config
+from ngk.comments_processor import CommentsProcessor
+from ngk.denylist_updater import DenylistUpdater
 from ngk.log import get_logger, redirect_basic_logging
-from ngk.schema import Comment, DATE_FORMAT, Post, ScopedSession, SyncState, User, BannedUser, Moderator
+from ngk.schema import (
+    BannedUser,
+    Comment,
+    DATE_FORMAT,
+    Moderator,
+    Post,
+    ScopedSession,
+    SyncState,
+    User,
+)
 
 
 L = get_logger('api', logging.DEBUG)
@@ -43,6 +53,11 @@ IO_NAMESPACE = '/ngk'
 app = flask.Flask(__name__)
 app.secret_key = config.SECRET_KEY
 io = SocketIO(app, async_mode='eventlet')
+
+
+# TODO: graceful shutdown
+denylist_updater = DenylistUpdater()
+denylist_updater.start()
 
 
 def parse_date(date: str) -> datetime:
@@ -361,7 +376,7 @@ def bans_list_by_moderators(moderator_ids: str) -> flask.Response:
     with ScopedSession() as session:
         query = (
             session.query(Moderator)
-            .where(Moderator.id.in_(moderator_ids_list))
+            .filter(Moderator.id.in_(moderator_ids_list))
             .options(joinedload(Moderator.bans).joinedload(BannedUser.user))
         )
         return _create_bans_list(query)
@@ -382,8 +397,6 @@ def ban_users(session: Session, user_ids: List[int], moderator_id: str) -> flask
         }
         for user_id in user_ids
     ])
-    
-    print(upsert_query.compile(dialect=postgresql.dialect()))
     
     resp = app.make_response(json.dumps({'status': 'success'}, ensure_ascii=False))
     return add_api_headers(resp)
@@ -462,18 +475,59 @@ def ban_by_id(user_ids: str) -> flask.Response:
 def unban_by_id(user_ids: str) -> flask.Response:
     return do_ban_action(user_ids, 'unban', unban_users)
 
-
+    
 @app.route('/mod/git/trigger/<moderator_id>', methods = ['POST'])
 def trigger_git_mod(moderator_id: str) -> flask.Response:
-    token = flask.request.form.get('token')
-    if token is None:
-        resp = app.make_response(json.dumps({'status': 'error', 'error': 'unauthorized', 'comment': 'no token'}))
+    sign = flask.request.headers.get('X-Hub-Signature-256')
+    body = flask.request.data
+    
+    if sign is None:
+        resp = app.make_response(json.dumps({'status': 'error', 'error': 'unauthorized', 'comment': 'no sign'}))
         resp.status_code = HTTPStatus.UNAUTHORIZED
         return add_api_headers(resp)
     
-    # TODO
-    resp = app.make_response(json.dumps({'status': 'ok'}))
-    return add_api_headers(resp)
+    if '=' in sign:  # remove 'sha256='
+        sign = ''.join(sign.split('=')[1:])
+    
+    try:
+        sign_bytes = nacl.encoding.HexEncoder.decode(sign)
+    except:
+        resp = app.make_response(json.dumps({'status': 'error', 'error': 'invalid input', 'comment': 'invalid sign'}))
+        resp.status_code = HTTPStatus.BAD_REQUEST
+        return add_api_headers(resp)
+    
+    
+    with ScopedSession() as session:
+        moderator = session.query(Moderator).filter(Moderator.id == moderator_id).first()
+        
+        if moderator is None:
+            resp = app.make_response(json.dumps({'status': 'error', 'error': 'no such moderator_id'}))
+            resp.status_code = HTTPStatus.UNAUTHORIZED
+            return add_api_headers(resp)
+
+        auto_moderator = moderator.auto_moderator
+        
+        if auto_moderator is None:
+            resp = app.make_response(json.dumps({'status': 'error', 'error': 'no auto_moderator set'}))
+            resp.status_code = HTTPStatus.FORBIDDEN
+            return add_api_headers(resp)
+        
+        
+        body_hmac = hmac.digest(auto_moderator.secret.encode('utf-8'), body, 'sha256')
+        sign_correct = hmac.compare_digest(body_hmac, sign_bytes)
+
+        if not sign_correct:
+            resp = app.make_response(json.dumps({'status': 'error', 'error': 'wrong sign'}))
+            resp.status_code = HTTPStatus.UNAUTHORIZED
+            return add_api_headers(resp)
+        
+        # TODO: make an update
+        L.info('Correct github webhook arrived')
+        
+        denylist_updater.enqueue_update(auto_moderator.update_url, auto_moderator.id)
+        
+        resp = app.make_response(json.dumps({'status': 'ok'}))
+        return add_api_headers(resp)
 
 
 ###### SocketIO ######
