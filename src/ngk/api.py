@@ -585,7 +585,7 @@ def _filter_comments_ban_source(session: Session, comments: List[dict], ban_sour
         comments_by_user_id[comment['user_id']].append(comment)
     
     bans_query = session.query(BannedUser)
-    bans_query = bans_query.filter(BannedUser.user_id == Comment.user_id)
+    bans_query = bans_query.filter(BannedUser.user_id == User.user_id)
     bans_query = bans_query.filter(BannedUser.moderator_id.in_(ban_sources))
     
     query = session.query(User.user_id).filter(~bans_query.exists())
