@@ -18,7 +18,7 @@ import nacl.encoding
 import nacl.signing
 import sqlalchemy.sql as sql
 from sqlalchemy import delete
-from sqlalchemy.orm import aliased, Session
+from sqlalchemy.orm import aliased, Session, joinedload
 from sqlalchemy.sql.expression import func
 from sqlalchemy_utils.functions import escape_like
 import sqlalchemy.dialects.postgresql as postgresql
@@ -323,6 +323,47 @@ def ban_sources() -> flask.Response:
             mod.id: {
                 'pubkey': mod.pubkey,
             }
+            for mod in query
+        }
+        resp = app.make_response(json.dumps(res, ensure_ascii=False))
+        return add_api_headers(resp)
+
+
+@app.route('/bans')
+def bans_list() -> flask.Response:
+    with ScopedSession() as session:
+        query = session.query(Moderator).options(joinedload(Moderator.bans))
+        print(query)
+        
+        res = {
+            mod.id: [
+                {
+                    'user_id': ban.user_id,
+                    'ban_ts_utc': int(ban.ban_date.timestamp())
+                }
+                for ban in mod.bans
+            ]
+            for mod in query
+        }
+        resp = app.make_response(json.dumps(res, ensure_ascii=False))
+        return add_api_headers(resp)
+
+
+@app.route('/bans/<moderator_ids>')
+def bans_list_by_moderators(moderator_ids: str) -> flask.Response:
+    moderator_ids = moderator_ids.split(',')
+    with ScopedSession() as session:
+        query = session.query(Moderator).where(Moderator.id.in_(moderator_ids)).options(joinedload(Moderator.bans))
+        print(query)
+        
+        res = {
+            mod.id: [
+                {
+                    'user_id': ban.user_id,
+                    'ban_ts_utc': int(ban.ban_date.timestamp())
+                }
+                for ban in mod.bans
+            ]
             for mod in query
         }
         resp = app.make_response(json.dumps(res, ensure_ascii=False))
