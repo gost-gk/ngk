@@ -189,6 +189,7 @@ class BannedUser(Base):
     ban_date = Column(DateTime(timezone=True), nullable=False, index=True)
     
     moderator = relationship('Moderator', uselist=False, back_populates='bans')
+    user = relationship('User', uselist=False, foreign_keys=[user_id], primaryjoin=(user_id == User.user_id))
     
     __table_args__ = (
         PrimaryKeyConstraint('user_id', 'moderator_id'),
