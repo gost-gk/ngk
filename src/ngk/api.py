@@ -357,9 +357,13 @@ def bans_list() -> flask.Response:
 
 @app.route('/bans/<moderator_ids>')
 def bans_list_by_moderators(moderator_ids: str) -> flask.Response:
-    moderator_ids = moderator_ids.split(',')
+    moderator_ids_list = moderator_ids.split(',')
     with ScopedSession() as session:
-        query = session.query(Moderator).where(Moderator.id.in_(moderator_ids)).options(joinedload(Moderator.bans).joinedload(BannedUser.user))
+        query = (
+            session.query(Moderator)
+            .where(Moderator.id.in_(moderator_ids_list))
+            .options(joinedload(Moderator.bans).joinedload(BannedUser.user))
+        )
         return _create_bans_list(query)
 
 
