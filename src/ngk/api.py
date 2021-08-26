@@ -579,8 +579,28 @@ def io_set_ban_sources(ban_sources: str) -> None:
     websocker_clients[flask.request.sid].ban_sources = ban_sources_set
 
 
+def _filter_comments_ban_source(session: Session, comments: List[dict], ban_sources: Set[str]) -> List[dict]:
+    comments_by_user_id = defaultdict(list)
+    for comment in comments:
+        comments_by_user_id[comment['user_id']].append(comment)
+    
+    bans_query = session.query(BannedUser)
+    bans_query = bans_query.filter(BannedUser.user_id == Comment.user_id)
+    bans_query = bans_query.filter(BannedUser.moderator_id.in_(ban_sources))
+    
+    query = session.query(User.user_id).filter(~bans_query.exists())
+    
+    visible_user_ids = query.all()
+    
+    res = []
+    for visible_user_id in visible_user_ids:
+        res.extend(comments_by_user_id[visible_user_id])
+    return res
+
+
 def comments_listener(comments_processor: CommentsProcessor) -> None:
     L.debug('IO: CommentsListenerTask started')
+    # TODO: model tasks
     for message in comments_processor.listen():
         try:
             update_event = json.loads(message, encoding='utf-8')
@@ -588,14 +608,17 @@ def comments_listener(comments_processor: CommentsProcessor) -> None:
             updated_comments = update_event['updated']
             L.debug(f'IO: CommentsListenerTask: Got {len(new_comments)} new comments and {len(updated_comments)} updated comments')
             to_send = new_comments + updated_comments
-            for room in rooms.copy():
-                max_id = rooms[room]
-                L.debug(f'IO: CommentsListenerTask: Room {room}, max_id={max_id}, to_send -> {len(to_send)}')
-                if len(to_send) > 0:
-                    io.emit('new_comments',
-                            to_send,
-                            namespace=IO_NAMESPACE,
-                            room=room)
+            
+            with ScopedSession() as session:
+                for (sid, client) in websocker_clients.copy().items():
+                    max_id = client.max_id
+                    visible_to_send = _filter_comments_ban_source(session, to_send, client.ban_sources)
+                    L.debug(f'IO: CommentsListenerTask: Room {sid}, max_id={max_id}, to_send -> {len(to_send)}, after filter -> {len(visible_to_send)}')
+                    if len(to_send) > 0:
+                        try:
+                            io.emit('new_comments', to_send, namespace=IO_NAMESPACE, room=sid)
+                        except:
+                            L.exception('Exception while sending an update.')
         except:
             L.exception('IO: CommentsListenerTask: exception')
     L.warning('IO: CommentsListenerTask: exiting')
