@@ -463,6 +463,19 @@ def unban_by_id(user_ids: str) -> flask.Response:
     return do_ban_action(user_ids, 'unban', unban_users)
 
 
+@app.route('/mod/git/trigger/<moderator_id>', methods = ['POST'])
+def trigger_git_mod(moderator_id: str) -> flask.Response:
+    token = flask.request.form.get('token')
+    if token is None:
+        resp = app.make_response(json.dumps({'status': 'error', 'error': 'unauthorized', 'comment': 'no token'}))
+        resp.status_code = HTTPStatus.UNAUTHORIZED
+        return add_api_headers(resp)
+    
+    # TODO
+    resp = app.make_response(json.dumps({'status': 'ok'}))
+    return add_api_headers(resp)
+
+
 ###### SocketIO ######
 rooms: Dict[str, int] = {}
 
