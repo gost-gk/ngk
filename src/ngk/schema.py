@@ -178,7 +178,7 @@ class Moderator(Base):
     id = Column(String, primary_key=True, nullable=False)
     pubkey = Column(String, nullable=False, index=True)
     
-    bans = relationship('BannedUser', uselist=True, remote_side=[id])
+    bans = relationship('BannedUser', uselist=True, back_populates='moderator')
 
 
 class BannedUser(Base):
@@ -188,7 +188,7 @@ class BannedUser(Base):
     moderator_id = Column(String, ForeignKey('moderators.id'), nullable=False)
     ban_date = Column(DateTime(timezone=True), nullable=False, index=True)
     
-    moderator = relationship('Moderator', uselist=False, remote_side=[moderator_id])
+    moderator = relationship('Moderator', uselist=False, back_populates='bans')
     
     __table_args__ = (
         PrimaryKeyConstraint('user_id', 'moderator_id'),
