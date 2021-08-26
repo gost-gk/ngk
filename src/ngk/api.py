@@ -8,7 +8,7 @@ import logging
 from http import HTTPStatus
 import re
 import secrets
-from typing import Dict, Optional, List, Set
+from typing import Dict, Optional, List, Set, Sequence
 
 import flask
 from flask_socketio import SocketIO, close_room, join_room, leave_room
@@ -329,45 +329,38 @@ def ban_sources() -> flask.Response:
         return add_api_headers(resp)
 
 
-@app.route('/bans')
-def bans_list() -> flask.Response:
-    with ScopedSession() as session:
-        query = session.query(Moderator).options(joinedload(Moderator.bans))
-        print(query)
-        
-        res = {
+def _create_bans_list(mods: Sequence[Moderator]) -> flask.Response:
+    res = {
             mod.id: [
                 {
-                    'user_id': ban.user_id,
+                    'user': {
+                        'id': ban.user_id,
+                        'name': ban.user.name if ban.user is not None else None,
+                        'avatar_hash': ban.user.avatar_hash if ban.user is not None else None,
+                    },
                     'ban_ts_utc': int(ban.ban_date.timestamp())
                 }
                 for ban in mod.bans
             ]
-            for mod in query
+            for mod in mods
         }
-        resp = app.make_response(json.dumps(res, ensure_ascii=False))
-        return add_api_headers(resp)
+    resp = app.make_response(json.dumps(res, ensure_ascii=False))
+    return add_api_headers(resp)
+
+
+@app.route('/bans')
+def bans_list() -> flask.Response:
+    with ScopedSession() as session:
+        query = session.query(Moderator).options(joinedload(Moderator.bans).joinedload(BannedUser.user))
+        return _create_bans_list(query)
 
 
 @app.route('/bans/<moderator_ids>')
 def bans_list_by_moderators(moderator_ids: str) -> flask.Response:
     moderator_ids = moderator_ids.split(',')
     with ScopedSession() as session:
-        query = session.query(Moderator).where(Moderator.id.in_(moderator_ids)).options(joinedload(Moderator.bans))
-        print(query)
-        
-        res = {
-            mod.id: [
-                {
-                    'user_id': ban.user_id,
-                    'ban_ts_utc': int(ban.ban_date.timestamp())
-                }
-                for ban in mod.bans
-            ]
-            for mod in query
-        }
-        resp = app.make_response(json.dumps(res, ensure_ascii=False))
-        return add_api_headers(resp)
+        query = session.query(Moderator).where(Moderator.id.in_(moderator_ids)).options(joinedload(Moderator.bans).joinedload(BannedUser.user))
+        return _create_bans_list(query)
 
 
 def ban_users(session: Session, user_ids: List[int], moderator_id: str) -> flask.Response:
