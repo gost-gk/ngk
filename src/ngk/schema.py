@@ -177,6 +177,7 @@ class Moderator(Base):
     __tablename__ = 'moderators'
     id = Column(String, primary_key=True, nullable=False)
     pubkey = Column(String, nullable=False, index=True)
+    secret = Column(String, nullable=True, default=None)
     
     bans = relationship('BannedUser', uselist=True, back_populates='moderator')
 
