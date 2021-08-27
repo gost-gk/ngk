@@ -445,7 +445,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     let notifier = new Notifier();
 
     let spamFilterString = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
-    let isSpam = new Function("comment", spamFilterString);
+    let isSpam = new Function(['comment', 'comments'], spamFilterString);
     
     let selectedBanSources = getSelectedBanSources();
     console.log("Selected ban sources: ", selectedBanSources);
@@ -465,7 +465,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
         if (minDate == null || comment.posted < minDate)
             minDate = comment.posted;
 
-        if (isSpam(comment))
+        if (isSpam(comment, $scope.comments))
             return;
         
         comment.text = $sce.trustAsHtml(comment.text);
@@ -614,7 +614,7 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
     let notifier = new Notifier();
 
     let spamFilterString = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
-    let isSpam = new Function("comment", spamFilterString);
+    let isSpam = new Function(['comment', 'comments'], spamFilterString);
 
     let selectedBanSources = getSelectedBanSources();
     console.log('Selected ban sources: ', selectedBanSources);
@@ -666,7 +666,7 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
             minDate = comment.posted;
         }
 
-        if (isSpam(comment)) {
+        if (isSpam(comment, $scope.comments)) {
             return;
         }
 
