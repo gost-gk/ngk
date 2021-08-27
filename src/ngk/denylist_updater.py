@@ -76,20 +76,21 @@ class DenylistUpdater:
             )
             session.execute(delete_query)
             
-            ban_date=datetime.datetime.now(tz=datetime.timezone.utc)
-    
-            upsert_query = insert(BannedUser).on_conflict_do_update(
-                index_elements=[BannedUser.user_id, BannedUser.moderator_id],
-                set_=dict(ban_date=ban_date)
-            )
+            if len(user_ids) > 0:
+                ban_date=datetime.datetime.now(tz=datetime.timezone.utc)
 
-            session.execute(upsert_query, [{
-                    BannedUser.user_id.name: user_id,
-                    BannedUser.moderator_id.name: task.mod_id,
-                    BannedUser.ban_date.name: ban_date
-                }
-                for user_id in user_ids
-            ])
+                upsert_query = insert(BannedUser).on_conflict_do_update(
+                    index_elements=[BannedUser.user_id, BannedUser.moderator_id],
+                    set_=dict(ban_date=ban_date)
+                )
+
+                session.execute(upsert_query, [{
+                        BannedUser.user_id.name: user_id,
+                        BannedUser.moderator_id.name: task.mod_id,
+                        BannedUser.ban_date.name: ban_date
+                    }
+                    for user_id in user_ids
+                ])
         L.info('Automod {} updated: banned {} users.'.format(task.mod_id, len(user_ids)))
     
     def _worker(self) -> None:
