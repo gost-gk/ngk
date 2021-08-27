@@ -19,7 +19,6 @@ function SocketTransport(socket) {
 
     this.maxId = 0;
     this.maxIdDirty = false;
-    this.banSourcesDirty = [];
     this.setMaxId = function(newMaxId) {
         if (newMaxId != this.maxId || this.maxIdDirty) {
             this.maxId = newMaxId;
@@ -31,16 +30,12 @@ function SocketTransport(socket) {
         }
     };
 
-    this.sendBanSources = function(banSources) {
-        console.log('Sending ban_sources...');
-        if (this.isSocketIoConnected) {
-            this.socket.emit('set_ban_sources', banSources, (function() {
-                console.log('Ban sources sent.');
-                this.banSourcesDirty = [];
-            }).bind(this));
-        } else {
-            this.banSourcesDirty = banSources;
-        }
+    this.onConnectSendBanSources = function() {
+        const banSources = getSelectedBanSources();
+        console.log('Sending ban_sources: ', banSources);
+        this.socket.emit('set_ban_sources', banSources, (function() {
+            console.log('Ban sources sent.');
+        }).bind(this));
     }
 
     this.disconnect = function() {
@@ -58,9 +53,7 @@ function SocketTransport(socket) {
         if (this.onConnect) {
             this.onConnect();
         }
-        if (this.banSourcesDirty.length > 0) {
-            this.sendBanSources(this.banSourcesDirty);
-        }
+        this.onConnectSendBanSources();
     }).bind(this));
 
     socket.on('disconnect', (function() {
@@ -455,7 +448,6 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     let isSpam = new Function("comment", spamFilterString);
     
     let selectedBanSources = getSelectedBanSources();
-    transport.sendBanSources(selectedBanSources);
     console.log("Selected ban sources: ", selectedBanSources);
 
     function updateViewedComments() {
