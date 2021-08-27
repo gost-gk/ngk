@@ -579,7 +579,7 @@ def io_set_ban_sources(ban_sources: List[str]) -> None:
     websocker_clients[flask.request.sid].ban_sources = ban_sources_set
 
 
-def _filter_comments_ban_source(session: Session, comments: List[dict], ban_sources: List[str]) -> List[dict]:
+def _filter_comments_ban_source(session: Session, comments: List[dict], ban_sources: Sequence[str]) -> List[dict]:
     comments_by_user_id = defaultdict(list)
     for comment in comments:
         comments_by_user_id[comment['user_id']].append(comment)
@@ -612,9 +612,8 @@ def comments_listener(comments_processor: CommentsProcessor) -> None:
             
             with ScopedSession() as session:
                 for (sid, client) in websocker_clients.copy().items():
-                    max_id = client.max_id
                     visible_to_send = _filter_comments_ban_source(session, to_send, client.ban_sources)
-                    L.debug(f'IO: CommentsListenerTask: Room {sid}, max_id={max_id}, to_send -> {len(to_send)}, after filter -> {len(visible_to_send)}')
+                    L.debug(f'IO: CommentsListenerTask: Room {sid}, to_send {len(to_send)}, after filter {len(visible_to_send)}')
                     if len(visible_to_send) > 0:
                         try:
                             io.emit('new_comments', visible_to_send, namespace=IO_NAMESPACE, room=sid)
