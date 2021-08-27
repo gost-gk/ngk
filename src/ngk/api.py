@@ -588,9 +588,7 @@ def _filter_comments_ban_source(session: Session, comments: List[dict], ban_sour
         .filter(BannedUser.moderator_id.in_(ban_sources))
         .filter(BannedUser.user_id.in_(list(comments_by_user_id.keys())))
     )
-    
-    L.info(f'bans_query = {bans_query.statement.compile(dialect=postgresql.dialect())}')
-    
+
     banned_user_ids = set((b.user_id for b in bans_query))
     
     res = []
