@@ -109,7 +109,7 @@ def comments() -> flask.Response:
 
             ignored_users = flask.request.args.get('ignore_u')
             ignored_posts = flask.request.args.get('ignore_p')
-            ban_sources = [s for s in flask.request.args.get('ban_sources', '').split(',') if len(s) > 0]
+            ban_sources = flask.request.args.get('ban_sources')
             
             user_id = flask.request.args.get('user_id')
             post_id = flask.request.args.get('post_id')
@@ -125,13 +125,23 @@ def comments() -> flask.Response:
             if post_id:
                 query = query.filter(Comment.post_id == int(post_id))
             
-            if len(ban_sources) > 0:
-                bans_query = session.query(BannedUser)
-                bans_query = bans_query.filter(BannedUser.user_id == Comment.user_id)
-                bans_query = bans_query.filter(BannedUser.moderator_id.in_(ban_sources))
+            if ban_sources is not None:
+                try:
+                    ban_sources_list = json.loads(ban_sources)
+                except:
+                    # Fallback to old-style serialization
+                    ban_sources_list = ban_sources.split(',')
+                    
+                    printable_part = ban_sources[:400]
+                    overflow = len(printable_part) != len(ban_sources)
+                    L.warning(f'Malformed ban_sources: {printable_part}{"..." if overflow else ""}')
                 
-                query = query.filter(~bans_query.exists())
-            
+                if len(ban_sources_list) > 0:
+                    bans_query = session.query(BannedUser)
+                    bans_query = bans_query.filter(BannedUser.user_id == Comment.user_id)
+                    bans_query = bans_query.filter(BannedUser.moderator_id.in_(ban_sources_list))
+                    query = query.filter(~bans_query.exists())
+        
         comments: List[Comment] = []
 
         for comment in query.order_by(Comment.posted.desc()).limit(COMMENTS_LIMIT).all():
@@ -436,9 +446,9 @@ def check_sign(sign: str, action_descr: str, user_ids: List[int], nonce: str, mo
 
 
 def do_ban_action(user_ids_str: str, action_desc: str, action: Callable[[Session, List[int], str], flask.Response]) -> flask.Response:
-    moderator_id = flask.request.form.get('moderator_id')
-    sign = flask.request.form.get('sign')
-    nonce = flask.request.form.get('nonce')
+    moderator_id = flask.request.args.get('moderator_id')
+    sign = flask.request.args.get('sign')
+    nonce = flask.request.args.get('nonce')
     
     try:
         user_ids = list(map(int, user_ids_str.split(',')))
