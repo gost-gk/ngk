@@ -51,14 +51,23 @@
                 ignoreUsers.push(k);
             }
 
-            ignoreUsers = ignoreUsers.join(",");
-            if (ignoreUsers) {
-                if (link == BASE_LINK) {
-                    link += '?'
-                } else {
-                    link += '&'
+            const defaultSettings = JSON.stringify({
+                'id': '',
+                'syncServerList': false,
+                'syncServerStrict': false,
+            });
+            const moderatorSettings = JSON.parse(localStorage.getItem('moderatorSettings') || defaultSettings);
+
+            if (banSources.indexOf(moderatorSettings.id) < 0 || !moderatorSettings.syncServerList) {
+                ignoreUsers = ignoreUsers.join(",");
+                if (ignoreUsers) {
+                    if (link == BASE_LINK) {
+                        link += '?'
+                    } else {
+                        link += '&'
+                    }
+                    link += 'ignore_u=' + ignoreUsers;
                 }
-                link += 'ignore_u=' + ignoreUsers;
             }
 
             return link;

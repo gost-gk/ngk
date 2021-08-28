@@ -431,22 +431,28 @@ function unignoreEverything(route, httpService, moderatorSettings, moderatorKeyp
     route.reload();
 }
 
-function setRequestIgnoredParams(request) {
+function setRequestIgnoredUsers(request) {
     const ignoredUsers = getIgnoredUsers();
     let ignore = [];
-    for (let k in ignoredUsers)
+    for (const k of Object.keys(ignoredUsers)) {
         ignore.push(k);
+    }
     ignore = ignore.join(",");
-    if (ignore)
+    if (ignore) {
         request.params.ignore_u = ignore;
+    }
+}
 
+function setRequestIgnoredPosts(request) {
     const ignoredPosts = getIgnoredPosts();
-    ignore = [];
-    for (let k in ignoredPosts)
+    let ignore = [];
+    for (const k of Object.keys(ignoredPosts)) {
         ignore.push(k);
+    }
     ignore = ignore.join(",");
-    if (ignore)
+    if (ignore) {
         request.params.ignore_p = ignore;
+    }
 }
 
 function getSelectedBanSources() {
@@ -617,7 +623,11 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
         if (beforeDate)
             request.params.before = beforeDate;
 
-        setRequestIgnoredParams(request);
+        // Add ignore_u only if we did not enable server-side synchronization
+        if (selectedBanSources.indexOf(moderatorSettings.id) < 0 || !moderatorSettings.syncServerList) {
+            setRequestIgnoredUsers(request);
+        }
+        setRequestIgnoredPosts(request);
         
         if (selectedBanSources.length > 0) {
             request.params['ban_sources'] = JSON.stringify(selectedBanSources);
@@ -830,8 +840,12 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
         if (beforeDate) {
             request.params.before = beforeDate;
         }
-
-        setRequestIgnoredParams(request);
+        
+        // Add ignore_u only if we did not enable server-side snchronization
+        if (!selectedBanSources.indexOf(moderatorSettings.id) >= 0 || !moderatorSettings.syncServerList) {
+            setRequestIgnoredUsers(request);
+        }
+        setRequestIgnoredPosts(request);
         
         if (selectedBanSources.length > 0) {
             request.params['ban_sources'] = JSON.stringify(selectedBanSources);
