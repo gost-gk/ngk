@@ -357,17 +357,23 @@ def ban_sources() -> flask.Response:
 
 def _create_bans_list(mods: Sequence[Moderator]) -> flask.Response:
     res = {
-            mod.id: [
-                {
-                    'user': {
-                        'id': ban.user_id,
-                        'name': ban.user.name if ban.user is not None else None,
-                        'avatar_hash': ban.user.avatar_hash if ban.user is not None else None,
-                    },
-                    'ban_ts_utc': int(ban.ban_date.timestamp())
-                }
-                for ban in mod.bans
-            ]
+            mod.id: {
+                'info': {
+                    'id': mod.id,
+                    'pubkey': mod.pubkey,
+                },
+                'bans': [
+                    {
+                        'user': {
+                            'id': ban.user_id,
+                            'name': ban.user.name if ban.user is not None else None,
+                            'avatar_hash': ban.user.avatar_hash if ban.user is not None else None,
+                        },
+                        'ban_ts_utc': int(ban.ban_date.timestamp())
+                    }
+                    for ban in mod.bans
+                ]
+            }
             for mod in mods
         }
     resp = app.make_response(json.dumps(res, ensure_ascii=False))
