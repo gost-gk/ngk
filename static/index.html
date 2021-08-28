@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="app">
+<html ng-app="app" lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -233,7 +233,7 @@ body {
 </head>
 <body>
     <script type="text/ng-template" id="comment-template-base">
-        <img ng-src="{{comment.avatar_url}}" class="avatar" onerror="this.onerror = null; this.src = '/img/default.png';">
+        <img ng-src="{{comment.avatar_url}}" alt="Аватар {{comment.user_name}}" class="avatar" onerror="this.onerror = null; this.src = '/img/default.png';">
         <div class="content">
             <div class="info">
                 <a href="/#!/search?user={{comment.user_name}}" target="_blank">{{comment.user_name}}</a>
@@ -255,7 +255,7 @@ body {
     </script>
 
     <script type="text/ng-template" id="post-template-base">
-        <img ng-src="{{post.avatar_url}}" class="avatar" onerror="this.onerror = null; this.src = '/img/default.png';">
+        <img ng-src="{{post.avatar_url}}" alt="Аватар {{post.user_name}}" class="avatar" onerror="this.onerror = null; this.src = '/img/default.png';">
         <div class="content">
             <div class="info">
                 <a href="/#!/search?user={{post.user_name}}" target="_blank">{{post.user_name}}</a>
