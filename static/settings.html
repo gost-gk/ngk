@@ -13,14 +13,57 @@
     <br>
     <div id="banSourcesSelection">
         Источники серверных банов:
-        <label ng-repeat="(banSourceId, banSourceState) in banSources">
-            <div>
-                <input
-                    type="checkbox"
-                    name="selectedBanSources[]"
-                    ng-model="banSourceState.selected"
-                > {{banSourceId}}
-            </div>
+        <div style="margin-bottom: 2px;" ng-repeat="(banSourceId, banSourceState) in banSources">
+            <label for="banSourceCheckbox-{{$index}}">
+                <div>
+                    <input
+                        id="banSourceCheckbox-{{$index}}"
+                        type="checkbox"
+                        name="selectedBanSources[]"
+                        ng-model="banSourceState.selected"
+                    > {{banSourceId}}
+                </div>
+            </label>
+            <span style="margin-left: 40px; font-family:monospace;">{{banSourceState.pubkey}}</span>
+        </div>
+    </div>
+    <br>
+    <span style="margin-left: 20px; margin-bottom: 2px">Модераторские настройки</span>
+    <div id="moderatorSettings">
+        <label class="modLabel" for="modIdArea">ID</label>
+        <input class="modInput" type="text" size="70" id="modIdArea" style="font-family:monospace;" ng-model="moderatorSettings.id"></input>
+        <br>
+        <label class="modLabel" for="modPrivkeyArea">Приватный ключ</label>
+        <input class="modInput" type="text" size="70" id="modPrivkeyArea" style="font-family:monospace;" ng-change="recalcPubkey()" ng-model="moderatorKeypair.privkey"></input>
+        <br>
+        <label class="modLabel" for="modPubkeyArea">Публичный ключ</label>
+        <input class="modInput" type="text" size="70" readonly="on" id="modPubkeyArea" style="font-family:monospace;" ng-model="moderatorKeypair.pubkey"></input>
+        <br>
+        <input ng-click="saveModeratorKeypair()" type="submit" value="Сохранить ключи">
+        <input ng-click="generateModeratorKeypair()" type="submit" value="Сгенерировать ключи">
+        <input ng-click="restoreModeratorKeypair()" type="submit" value="Вернуть локальные ключи">
+        <br>
+        <br>
+        <label>
+            <input type="checkbox" ng-model="moderatorSettings.syncServerList">
+            <span class="noselect">Синхронизировать серверный список с локальным</span>
         </label>
+        <label>
+            <input type="checkbox" ng-disabled="!moderatorSettings.syncServerList" ng-model="moderatorSettings.syncServerStrict">
+            <abbr title="Принудительно удалять элементы серверного списка, отсутствующие в локальном">
+                <span class="noselect">Строгая синхронизация</span>
+            </abbr>
+        </label>
+        <br>
+        <input ng-click="addLocalBansToServer()" type="submit" value="Добавить локальные баны на сервер">
+        <br>
+        <input ng-click="forceStrictServerSync()" type="submit" value="Строго синхронизировать серверный список">
+        <br>
+        <input ng-click="cleanServerBans()" type="submit" value="Очистить серверный список">
+        <br>
+
+        <div ng-if="banActionResult !== null">
+            Результат: {{banActionResult}}
+        </div>
     </div>
 </div>

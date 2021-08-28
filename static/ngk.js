@@ -12,6 +12,7 @@ return false;`;
 const SEARCH_LIMIT = 50;
 const COMMENTS_LIMIT = 20;
 const RESPONSE_PARENTS_LIMIT = 15;
+const NONCE_BYTES = 32;
 
 function SocketTransport(socket) {
     this.socket = socket;
@@ -86,6 +87,14 @@ function formatSource(source, element) {
         default: return "";
     }
 }
+
+const isHexstring = hexString => hexString.match(/^[0-9a-fA-F]+$/)
+
+const fromHexString = hexString =>
+  new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+
+const toHexString = bytes =>
+  bytes.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
 
 // Source: https://github.com/jashkenas/underscore/blob/master/underscore.js
 function throttle(func, wait, options) {
@@ -373,12 +382,26 @@ function getIgnoredUsers() {
     return getLocalStorageObject('ignoredUsers');
 }
 
+function getIgnoredUsersIds() {
+    return Object.keys(getLocalStorageObject('ignoredUsers')).map(k => k | 0);
+}
+
 function getIgnoredPosts() {
     return getLocalStorageObject('ignoredPosts');
 }
 
-function ignoreUser(route, user_id, user_name) {
+function ignoreUser(route, httpService, moderatorSettings, moderatorKeypair, user_id, user_name) {
     ignoreObject(route, user_id, user_name, 'ignoredUsers');
+
+    if (moderatorSettings.syncServerList) {
+        if (moderatorSettings.syncServerStrict) {
+            // Strict: make sure the server is synced with us
+            sendBanActionRequest(httpService, 'sync', getIgnoredUsersIds(), moderatorSettings, moderatorKeypair);
+        } else {
+            // Just ban this one
+            sendBanActionRequest(httpService, 'ban', [user_id], moderatorSettings, moderatorKeypair);
+        }
+    }
 }
 
 function unignoreUser(route, user_id) {
@@ -393,12 +416,19 @@ function unignorePost(route, post_id) {
     unignoreObject(route, post_id, 'ignoredPosts');
 }
 
-function unignoreEverything($route) {
+function unignoreEverything(route, httpService, moderatorSettings, moderatorKeypair) {
+    if (moderatorSettings.syncServerList) {
+        if (moderatorSettings.syncServerStrict) {
+            sendBanActionRequest(httpService, 'sync', [], moderatorSettings, moderatorKeypair);
+        } else {
+            sendBanActionRequest(httpService, 'unban', getIgnoredUsersIds(), moderatorSettings, moderatorKeypair);
+        }
+    }
     console.log('Ignored users: ' + localStorage.getItem('ignoredUsers'));
     console.log('Ignored posts: ' + localStorage.getItem('ignoredPosts'));
     localStorage.removeItem('ignoredUsers');
     localStorage.removeItem('ignoredPosts');
-    $route.reload();
+    route.reload();
 }
 
 function setRequestIgnoredParams(request) {
@@ -426,6 +456,83 @@ function getSelectedBanSources() {
     );
 }
 
+function generateNonce() {
+    return toHexString(nacl.randomBytes(NONCE_BYTES));
+}
+
+function SyncTask(action, userIds, nonce, modId) {
+    this.action = action;
+    this.userIds = userIds;
+    this.userIdsSerialized = JSON.stringify(userIds);
+    this.nonce = nonce;
+    this.modId = modId;
+
+    this.getUrl = function() {
+        return '/api/mod/' + this.action;
+    }
+
+    this.getParams = function(signatureHexStr) {
+        return {
+            'moderator_id': this.modId,
+            'sign': signatureHexStr,
+            'nonce': this.nonce,
+        }
+    }
+
+    this.getBody = function() {
+        return this.userIdsSerialized;
+    }
+}
+
+function getSignature(task, privkey) {
+    const msg = task.action + '/' + task.userIdsSerialized + '/' + task.nonce + '/' + task.modId;
+    const msgBytes = new Uint8Array(msg.split('').map(c => c.charCodeAt(0)))
+    const privkeyBytes = fromHexString(privkey);
+    const signature = toHexString(nacl.sign.detached(msgBytes, privkeyBytes));
+    return signature;
+}
+
+function getModeratorSettings() {
+    const defaultSettings = JSON.stringify({
+        'id': '',
+        'syncServerList': false,
+        'syncServerStrict': false,
+    });
+    return JSON.parse(localStorage.getItem('moderatorSettings') || defaultSettings);
+}
+
+function getModeratorKeypair() {
+    const defaultKeypair = JSON.stringify({
+        'privkey': '',
+    });
+    return JSON.parse(localStorage.getItem('moderatorKeypair') || defaultKeypair);
+}
+
+function setModeratorSettings(moderatorSettings) {
+    localStorage.setItem('moderatorSettings', JSON.stringify(moderatorSettings));
+}
+
+function setModeratorKeypair(moderatorKeypair) {
+    localStorage.setItem('moderatorKeypair', JSON.stringify(moderatorKeypair));
+}
+
+function sendBanActionRequest(httpService, action, userIds, moderatorSettings, moderatorKeypair) {
+    const task = new SyncTask(action, userIds, generateNonce(), moderatorSettings.id);
+    const signature = getSignature(task, moderatorKeypair.privkey);
+
+    let request = {
+        method: 'POST',
+        url: task.getUrl(),
+        params: task.getParams(signature),
+        data: task.getBody(),
+        headers: {
+            'Accept': undefined,
+        }
+    };
+
+    return httpService(request);
+}
+
 function getLastViewedComments() {
     return getLocalStorageObject('lastViewed');
 }
@@ -449,6 +556,9 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
     
     let selectedBanSources = getSelectedBanSources();
     console.log("Selected ban sources: ", selectedBanSources);
+
+    let moderatorSettings = getModeratorSettings();
+    let moderatorKeypair = getModeratorKeypair();
 
     function updateViewedComments() {
         let lastViewed = getLastViewedComments();
@@ -510,7 +620,7 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
         setRequestIgnoredParams(request);
         
         if (selectedBanSources.length > 0) {
-            request.params['ban_sources'] = selectedBanSources.join(',');
+            request.params['ban_sources'] = JSON.stringify(selectedBanSources);
         }
 
         $http(request).then(function(response) {
@@ -548,9 +658,9 @@ app.controller('CommentsController', function($scope, $http, $sce, $interval, $r
         console.log('Loading more.');
     }
 
-    $scope.ignoreUser = ignoreUser.bind(undefined, $route);
+    $scope.ignoreUser = ignoreUser.bind(undefined, $route, $http, moderatorSettings, moderatorKeypair);
     $scope.ignorePost = ignorePost.bind(undefined, $route);
-    $scope.unignoreEverything = unignoreEverything.bind(undefined, $route);
+    $scope.unignoreEverything = unignoreEverything.bind(undefined, $route, $http, moderatorSettings, moderatorKeypair);
 
     function socketIOHandler(data) {
         const ignoredUsers = getIgnoredUsers();
@@ -623,6 +733,9 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
     function isIgnored(comment) {
         return comment.user_id in ignoredUsers;
     }
+
+    let moderatorSettings = getModeratorSettings();
+    let moderatorKeypair = getModeratorKeypair();
 
     function rebuildComments() {
         console.log('Total replies:', totalChildrenCount());
@@ -721,7 +834,7 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
         setRequestIgnoredParams(request);
         
         if (selectedBanSources.length > 0) {
-            request.params['ban_sources'] = selectedBanSources.join(',');
+            request.params['ban_sources'] = JSON.stringify(selectedBanSources);
         }
 
         $http(request).then(function(response) {
@@ -775,9 +888,9 @@ app.controller('RepliesController', function($scope, $http, $sce, $interval, $ro
         console.log('Loading more.');
     }
 
-    $scope.ignoreUser = ignoreUser.bind(undefined, $route);
+    $scope.ignoreUser = ignoreUser.bind(undefined, $route, $http, moderatorSettings, moderatorKeypair);
     $scope.ignorePost = ignorePost.bind(undefined, $route);
-    $scope.unignoreEverything = unignoreEverything.bind(undefined, $route);
+    $scope.unignoreEverything = unignoreEverything.bind(undefined, $route, $http, moderatorSettings, moderatorKeypair);
 
     checkUserName();
     loadComments(null);
@@ -809,6 +922,9 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
         url: '/api/post/' + $routeParams.postId,
         params: {}
     };
+
+    let moderatorSettings = getModeratorSettings();
+    let moderatorKeypair = getModeratorKeypair();
 
     try {
         var isTreeModeEnabled = JSON.parse(localStorage.getItem("treeMode")) || false;
@@ -896,9 +1012,9 @@ app.controller('PostController', function($scope, $http, $sce, $routeParams, $ti
         $timeout(function() { $anchorScroll(); }, 0);
     });
 
-    $scope.ignoreUser = ignoreUser.bind(undefined, $route);
+    $scope.ignoreUser = ignoreUser.bind(undefined, $route, $http, moderatorSettings, moderatorKeypair);
     $scope.ignorePost = ignorePost.bind(undefined, $route);
-    $scope.unignoreEverything = unignoreEverything.bind(undefined, $route);
+    $scope.unignoreEverything = unignoreEverything.bind(undefined, $route, $http, moderatorSettings, moderatorKeypair);
 });
 
 let usernameAutocompletionCache = {};  // App-wide cache
@@ -927,6 +1043,9 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
     $scope.state = 'NO_QUERY';
     $scope.searchComplete = false;
     
+    let moderatorSettings = getModeratorSettings();
+    let moderatorKeypair = getModeratorKeypair();
+
     // Autocompletion
     $scope.usernameSuggestions = [];
     let suggestionsValidFor = '';
@@ -1246,12 +1365,12 @@ app.controller('SearchController', function($scope, $routeParams, $location, $ht
     
     focusOnQueryInput();
 
-    $scope.ignoreUser = ignoreUser.bind(undefined, $route);
+    $scope.ignoreUser = ignoreUser.bind(undefined, $route, $http, moderatorSettings, moderatorKeypair);
     $scope.ignorePost = ignorePost.bind(undefined, $route);
-    $scope.unignoreEverything = unignoreEverything.bind(undefined, $route);
+    $scope.unignoreEverything = unignoreEverything.bind(undefined, $route, $http, moderatorSettings, moderatorKeypair);
 });
 
-app.controller('SettingsController', function($scope, $http, $sce, $interval, $route) {
+app.controller('SettingsController', function($scope, $http, $compile) {
     let updateBanSources = (newBanSources) => {
         console.log('New ban sources arrived!', newBanSources);
         for (let [sourceId, sourceState] of Object.entries(newBanSources)) {
@@ -1270,7 +1389,7 @@ app.controller('SettingsController', function($scope, $http, $sce, $interval, $r
             url: '/api/ban_sources',
             params: {},
             headers: {
-                'Accept': 'application/json',
+                'Accept': undefined,
             }
         };
 
@@ -1284,7 +1403,6 @@ app.controller('SettingsController', function($scope, $http, $sce, $interval, $r
     }
 
     let spamFilter = localStorage.getItem("spamFilter") || DEFAULT_FILTER;
-
     $scope.newFilter = spamFilter;
     
     $scope.saveFilter = function() {
@@ -1300,13 +1418,109 @@ app.controller('SettingsController', function($scope, $http, $sce, $interval, $r
 
     $scope.banSources = getInitialBanSources();
     requestNewBanSources();
-
+    
     $scope.$watch('banSources', function (newBanSources) {
         localStorage.setItem("banSources", JSON.stringify(newBanSources));
-      }, true);
+    }, true);
+    
+    // ----------------------- Moderator settings -----------------------
+    $scope.moderatorKeypair = getModeratorKeypair();
+    $scope.moderatorSettings = getModeratorSettings();
+    
+    $scope.banActionResult = null;
+
+    const askForPrivkeyDestruction = function(newPrivkey) {
+        const oldKeypair = getModeratorKeypair();
+        if (oldKeypair.privkey.length > 0 && oldKeypair.privkey != newPrivkey) {
+            if (!confirm("Приватный ключ восстановить невозможно. Точно перезаписать?")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    $scope.generateModeratorKeypair = function() {
+        const keypair = nacl.sign.keyPair();
+        $scope.moderatorKeypair.pubkey = toHexString(keypair.publicKey);
+        $scope.moderatorKeypair.privkey = toHexString(keypair.secretKey);
+    }
+
+    $scope.saveModeratorSettings = function() {
+        setModeratorSettings($scope.moderatorSettings);
+    };
+
+    $scope.saveModeratorKeypair = function() {
+        if (!askForPrivkeyDestruction($scope.moderatorKeypair.privkey)) {
+            return;
+        }
+        setModeratorKeypair($scope.moderatorKeypair);
+    }
+
+    $scope.restoreModeratorKeypair = function() {
+        $scope.moderatorKeypair = getModeratorKeypair();
+    }
+
+    const setBanActionResultText = function(text) {
+        $scope.banActionResult = text;
+    }
+
+    const resetBanActionResultText = function() {
+        $scope.banActionResult = null;
+    }
+
+    const handleBanActionRequest = function(request) {
+        const f = function(response) {
+            console.log('Ban response: ', response);
+            setBanActionResultText(response.data);
+        };
+
+        request.then(f, f);
+    }
+
+    const doLocalListAction = function(action, userIds) {
+        resetBanActionResultText();
+        handleBanActionRequest(
+            sendBanActionRequest($http, action, userIds, $scope.moderatorSettings, $scope.moderatorKeypair)
+        );
+    }
+
+    $scope.addLocalBansToServer = function() {
+        doLocalListAction('ban', getIgnoredUsersIds());
+    }
+
+    $scope.forceStrictServerSync = function() {
+        doLocalListAction('sync', getIgnoredUsersIds());
+    }
+
+    $scope.cleanServerBans = function() {
+        doLocalListAction('sync', []);
+    }
+
+    $scope.recalcPubkey = function() {
+        if ($scope.moderatorKeypair.privkey === null || $scope.moderatorKeypair.privkey.length == 0) {
+            $scope.moderatorKeypair.pubkey = '';
+            return;
+        }
+
+        try {
+            const bytes = fromHexString($scope.moderatorKeypair.privkey);
+            const keypair = nacl.sign.keyPair.fromSecretKey(bytes);
+            $scope.moderatorKeypair.pubkey = toHexString(keypair.publicKey);
+        } catch {
+            $scope.moderatorKeypair.pubkey = '<неправильный приватный ключ>';
+        }
+    }
+
+    $scope.recalcPubkey();
+    $scope.$watch('moderatorSettings', function (newSettings) {
+        setModeratorSettings(newSettings);
+    }, true);
 });
 
 app.controller('BlacklistController', function($scope, $http, $sce, $interval, $route) {
+    const moderatorSettings = getModeratorSettings();
+    const moderatorKeypair = getModeratorKeypair();
+
     $scope.rebuildTable = function() {
         const ignoredUsers = getIgnoredUsers();
         const ignoredPosts = getIgnoredPosts();
@@ -1363,4 +1577,24 @@ app.controller('BlacklistController', function($scope, $http, $sce, $interval, $
     };
 
     $scope.rebuildTable();
+
+    const syncBanList = function() {
+        if (moderatorSettings.syncServerList) {
+            if (moderatorSettings.syncServerStrict) {
+                sendBanActionRequest($http, 'sync', getIgnoredUsersIds(), moderatorSettings, moderatorKeypair);
+            } else {
+                let unbanned = [];
+                for (let user of $scope.usersBlacklist) {
+                    if (user.pardoned) {
+                        unbanned.push(user.id | 0);
+                    }
+                }
+                sendBanActionRequest($http, 'unban', unbanned, moderatorSettings, moderatorKeypair);
+            }
+        }
+    }
+
+    $scope.$on('$destroy', function() {
+        syncBanList();
+    });
 });

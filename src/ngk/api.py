@@ -1,5 +1,5 @@
-import eventlet  # TODO: don't use native threading?..
-eventlet.monkey_patch(thread=False)
+from gevent import monkey
+monkey.patch_all()
 
 from collections import defaultdict, namedtuple
 from datetime import datetime, timedelta, timezone
@@ -53,7 +53,7 @@ IO_NAMESPACE = '/ngk'
 
 app = flask.Flask(__name__)
 app.secret_key = config.SECRET_KEY
-io = SocketIO(app, async_mode='eventlet')
+io = SocketIO(app, async_mode='gevent_uwsgi')
 
 
 # TODO: graceful shutdown
@@ -394,50 +394,83 @@ def bans_list_by_moderators(moderator_ids: str) -> flask.Response:
 
 
 def ban_users(session: Session, user_ids: List[int], moderator_id: str) -> flask.Response:
-    ban_date=datetime.now(tz=timezone.utc)
-    
-    upsert_query = insert(BannedUser).on_conflict_do_update(
-        index_elements=[BannedUser.user_id, BannedUser.moderator_id],
-        set_=dict(ban_date=ban_date)
-    )
+    if len(user_ids) > 0:
+        ban_date=datetime.now(tz=timezone.utc)
+        
+        upsert_query = insert(BannedUser).on_conflict_do_update(
+            index_elements=[BannedUser.user_id, BannedUser.moderator_id],
+            set_=dict(ban_date=ban_date)
+        )
 
-    session.execute(upsert_query, [{
-            BannedUser.user_id.name: user_id,
-            BannedUser.moderator_id.name: moderator_id,
-            BannedUser.ban_date.name: ban_date
-        }
-        for user_id in user_ids
-    ])
+        session.execute(upsert_query, [{
+                BannedUser.user_id.name: user_id,
+                BannedUser.moderator_id.name: moderator_id,
+                BannedUser.ban_date.name: ban_date
+            }
+            for user_id in user_ids
+        ])
     
     resp = app.make_response(json.dumps({'status': 'success'}, ensure_ascii=False))
     return add_api_headers(resp)
 
 
 def unban_users(session: Session, user_ids: List[int], moderator_id: str) -> flask.Response:
-    delete_query = (
-        delete(BannedUser)
-        .where(BannedUser.user_id.in_(user_ids))
-        .where(BannedUser.moderator_id == moderator_id))
-    
-    session.execute(delete_query)
+    if len(user_ids) > 0:
+        delete_query = (
+            delete(BannedUser)
+            .where(BannedUser.user_id.in_(user_ids))
+            .where(BannedUser.moderator_id == moderator_id))
+        
+        session.execute(delete_query)
     
     resp = app.make_response(json.dumps({'status': 'success'}, ensure_ascii=False))
     return add_api_headers(resp)
 
 
-def encode_message(action_descr: str, user_ids: List[int], nonce: str, moderator_id: str) -> bytes:
-    msg = '{}/{}/{}/{}'.format(action_descr, ','.join(map(str, user_ids)), nonce, moderator_id)
+def sync_banned_users(session: Session, user_ids: List[int], moderator_id: str) -> flask.Response:
+    # TODO: extract to a function
+    
+    # Drop all old banned users, then insert new ones (or do nothing
+    # if the current banned users list is empty)
+    delete_query = (
+            delete(BannedUser)
+            .where(BannedUser.moderator_id == moderator_id)
+        )
+    session.execute(delete_query)
+    
+    if len(user_ids) > 0:
+        ban_date=datetime.now(tz=timezone.utc)
+
+        upsert_query = insert(BannedUser).on_conflict_do_update(
+            index_elements=[BannedUser.user_id, BannedUser.moderator_id],
+            set_=dict(ban_date=ban_date)
+        )
+
+        session.execute(upsert_query, [{
+                BannedUser.user_id.name: user_id,
+                BannedUser.moderator_id.name: moderator_id,
+                BannedUser.ban_date.name: ban_date
+            }
+            for user_id in user_ids
+        ])
+    
+    resp = app.make_response(json.dumps({'status': 'success'}, ensure_ascii=False))
+    return add_api_headers(resp)
+
+
+def encode_message(action_descr: str, payload: str, nonce: str, moderator_id: str) -> bytes:
+    msg = '{}/{}/{}/{}'.format(action_descr, payload, nonce, moderator_id)
     return msg.encode('utf-8')
 
 
-def check_sign(sign: str, action_descr: str, user_ids: List[int], nonce: str, moderator: Moderator) -> bool:
+def check_sign(sign: str, action_descr: str, payload: str, nonce: str, moderator: Moderator) -> bool:
     verify_key = nacl.signing.VerifyKey(moderator.pubkey, encoder=nacl.encoding.HexEncoder)
 
     try:
         signature_bytes = nacl.encoding.HexEncoder.decode(sign)
     except:
         return False
-    message = encode_message(action_descr, user_ids, nonce, moderator.id)
+    message = encode_message(action_descr, payload, nonce, moderator.id)
     try:
         verify_key.verify(message, signature_bytes)
         return True
@@ -445,13 +478,15 @@ def check_sign(sign: str, action_descr: str, user_ids: List[int], nonce: str, mo
         return False
 
 
-def do_ban_action(user_ids_str: str, action_desc: str, action: Callable[[Session, List[int], str], flask.Response]) -> flask.Response:
+def do_ban_action(action_desc: str, action: Callable[[Session, List[int], str], flask.Response]) -> flask.Response:
     moderator_id = flask.request.args.get('moderator_id')
     sign = flask.request.args.get('sign')
     nonce = flask.request.args.get('nonce')
     
+    user_ids_str = flask.request.data.decode('utf-8')
+    
     try:
-        user_ids = list(map(int, user_ids_str.split(',')))
+        user_ids = json.loads(user_ids_str)
     except:
         resp = app.make_response(json.dumps({'status': 'error', 'error': 'invalid input', 'comment': 'invalid user_ids'}))
         resp.status_code = HTTPStatus.UNAUTHORIZED
@@ -469,7 +504,7 @@ def do_ban_action(user_ids_str: str, action_desc: str, action: Callable[[Session
             resp.status_code = HTTPStatus.UNAUTHORIZED
             return add_api_headers(resp)
         
-        if not check_sign(sign, action_desc, user_ids, nonce, moderator):
+        if not check_sign(sign, action_desc, user_ids_str, nonce, moderator):
             resp = app.make_response(json.dumps({'status': 'error', 'error': 'unauthorized', 'comment': 'wrong sign'}))
             resp.status_code = HTTPStatus.UNAUTHORIZED
             return add_api_headers(resp)
@@ -477,16 +512,21 @@ def do_ban_action(user_ids_str: str, action_desc: str, action: Callable[[Session
         return action(session, user_ids, moderator_id)
 
 
-@app.route('/mod/ban/<user_ids>', methods = ['POST'])
-def ban_by_id(user_ids: str) -> flask.Response:
-    return do_ban_action(user_ids, 'ban', ban_users)
+@app.route('/mod/ban', methods = ['POST'])
+def ban_endpoint() -> flask.Response:
+    return do_ban_action('ban', ban_users)
 
 
-@app.route('/mod/unban/<user_ids>', methods = ['POST'])
-def unban_by_id(user_ids: str) -> flask.Response:
-    return do_ban_action(user_ids, 'unban', unban_users)
+@app.route('/mod/unban', methods = ['POST'])
+def unban_endpoint() -> flask.Response:
+    return do_ban_action('unban', unban_users)
 
-    
+
+@app.route('/mod/sync', methods = ['POST'])
+def bans_sync_endpoint() -> flask.Response:
+    return do_ban_action('sync', sync_banned_users)
+
+
 @app.route('/mod/git/trigger/<moderator_id>', methods = ['POST'])
 def trigger_git_mod(moderator_id: str) -> flask.Response:
     sign = flask.request.headers.get('X-Hub-Signature-256')

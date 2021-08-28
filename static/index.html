@@ -67,6 +67,7 @@
     <script src="angular.min.js"></script>
     <script src="angular-route.min.js"></script>
     <script src="socket.io.min.js"></script>
+    <script src="nacl.min.js"></script>
     <script src="ngk.js"></script>
     <style>
 .header {
@@ -192,6 +193,28 @@ body {
 .autocompletion-list-item:focus {
     background-color: #c0ffc0;
 }
+
+.modLabel {
+    display: inline-block;
+    clear: left;
+    width: 9em;
+    text-align: left;
+}
+.modInput {
+  display: inline-block;
+  width: min(40em, calc(100% - 12em));
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
 </style>
 </head>
 <body>
