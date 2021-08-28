@@ -10,33 +10,6 @@
         function getPreloadLink() {
             const BASE_LINK = '/api/comments'
             let link = BASE_LINK;
-
-            const ignoredPosts = JSON.parse(localStorage.getItem('ignoredPosts') || '{}');
-            let ignorePosts = [];
-            for (let k in ignoredPosts) {
-                ignorePosts.push(k);
-            }
-
-            ignorePosts = ignorePosts.join(",");
-            if (ignorePosts) {
-                link += '?ignore_p=' + ignorePosts;
-            }
-
-            const ignoredUsers = JSON.parse(localStorage.getItem('ignoredUsers') || '{}');
-            let ignoreUsers = [];
-            for (let k in ignoredUsers) {
-                ignoreUsers.push(k);
-            }
-
-            ignoreUsers = ignoreUsers.join(",");
-            if (ignoreUsers) {
-                if (link == BASE_LINK) {
-                    link += '?'
-                } else {
-                    link += '&'
-                }
-                link += 'ignore_u=' + ignoreUsers;
-            }
             
             function getSelectedBanSources() {
                 return (Object.entries(JSON.parse(localStorage.getItem('banSources') || '{}'))
@@ -53,7 +26,39 @@
                 } else {
                     link += '&'
                 }
-                link += 'ban_sources=' + JSON.stringify(banSources);
+                link += 'ban_sources=' + encodeURI(JSON.stringify(banSources));
+            }
+
+            const ignoredPosts = JSON.parse(localStorage.getItem('ignoredPosts') || '{}');
+            let ignorePosts = [];
+            for (let k in ignoredPosts) {
+                ignorePosts.push(k);
+            }
+
+            ignorePosts = ignorePosts.join(",");
+            if (ignorePosts) {
+                if (link == BASE_LINK) {
+                    link += '?'
+                } else {
+                    link += '&'
+                }
+                link += 'ignore_p=' + ignorePosts;
+            }
+
+            const ignoredUsers = JSON.parse(localStorage.getItem('ignoredUsers') || '{}');
+            let ignoreUsers = [];
+            for (let k in ignoredUsers) {
+                ignoreUsers.push(k);
+            }
+
+            ignoreUsers = ignoreUsers.join(",");
+            if (ignoreUsers) {
+                if (link == BASE_LINK) {
+                    link += '?'
+                } else {
+                    link += '&'
+                }
+                link += 'ignore_u=' + ignoreUsers;
             }
 
             return link;
