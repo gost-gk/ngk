@@ -383,7 +383,13 @@ def bans_list() -> flask.Response:
 
 @app.route('/bans/<moderator_ids>')
 def bans_list_by_moderators(moderator_ids: str) -> flask.Response:
-    moderator_ids_list = moderator_ids.split(',')
+    try:
+        moderator_ids_list = json.loads(moderator_ids)
+    except:
+        resp = app.make_response(json.dumps({'status': 'error', 'error': 'invalid moderator_ids'}))
+        resp.status_code = HTTPStatus.BAD_REQUEST
+        return add_api_headers(resp)
+
     with ScopedSession() as session:
         query = (
             session.query(Moderator)
