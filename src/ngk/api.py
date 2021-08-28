@@ -409,9 +409,8 @@ def ban_users(session: Session, user_ids: List[int], moderator_id: str) -> flask
     if len(user_ids) > 0:
         ban_date=datetime.now(tz=timezone.utc)
         
-        upsert_query = insert(BannedUser).on_conflict_do_update(
-            index_elements=[BannedUser.user_id, BannedUser.moderator_id],
-            set_=dict(ban_date=ban_date)
+        upsert_query = insert(BannedUser).on_conflict_do_nothing(
+            index_elements=[BannedUser.user_id, BannedUser.moderator_id]
         )
 
         session.execute(upsert_query, [{
@@ -453,9 +452,8 @@ def sync_banned_users(session: Session, user_ids: List[int], moderator_id: str) 
     if len(user_ids) > 0:
         ban_date=datetime.now(tz=timezone.utc)
 
-        upsert_query = insert(BannedUser).on_conflict_do_update(
-            index_elements=[BannedUser.user_id, BannedUser.moderator_id],
-            set_=dict(ban_date=ban_date)
+        upsert_query = insert(BannedUser).on_conflict_do_nothing(
+            index_elements=[BannedUser.user_id, BannedUser.moderator_id]
         )
 
         session.execute(upsert_query, [{
