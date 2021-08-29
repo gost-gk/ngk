@@ -21,3 +21,5 @@ db_dump.log
 static/humans.txt
 static/animals.txt
 static/.well-known
+
+frontend/
