@@ -1,7 +1,7 @@
 from gevent import monkey
 monkey.patch_all()
 
-from collections import defaultdict, namedtuple
+from collections import Counter, defaultdict, namedtuple
 from datetime import datetime, timedelta, timezone
 import dataclasses
 import hmac
@@ -252,6 +252,14 @@ def search() -> flask.Response:
             before = None
 
         user_name = flask.request.args.get('username', '')
+        user_id = None
+        
+        # A kostyl for duplicated user names
+        if ',' in user_name:
+            try:
+                user_id = int(user_name.split(',')[-1])
+            except:
+                pass
         
         query = session.query(Comment)
         
@@ -263,8 +271,11 @@ def search() -> flask.Response:
                 query = query.filter(Comment.text_tsv.op('@@')(func.plainto_tsquery('russian', q)))
             
         if len(user_name) > 0:
-            user_id = session.query(User.user_id).filter(sql.func.lower(User.name) == user_name.lower()).scalar()
-            query = query.filter(Comment.user_id == user_id)
+            if user_id is None:
+                user_ids = [x[0] for x in session.query(User.user_id).filter(sql.func.lower(User.name) == user_name.lower()).all()]
+                query = query.filter(Comment.user_id.in_(user_ids))
+            else:
+                query = query.filter(Comment.user_id == user_id)
         
         if before is not None:
             query = query.filter(Comment.posted < datetime.fromtimestamp(before))
@@ -308,18 +319,32 @@ def user_view_name(user_name: str) -> flask.Response:
 @app.route('/autocomplete/user/name/<user_name>')
 def autocomplete_user_name(user_name: str) -> flask.Response:
     res = []
+    
+    if ',' in user_name:
+        prefix = user_name[:user_name.index(',')]
+    else:
+        prefix = user_name
+    
     with ScopedSession() as session:
         query = session.query(User)
-        query = query.filter(sql.func.lower(User.name).startswith(user_name.lower(), autoescape=True))
+        query = query.filter(sql.func.lower(User.name).startswith(prefix.lower(), autoescape=True))
         query = query.order_by(User.name.asc())
-            
-        for user in query.limit(USERS_AUTOCOMPLETE_LIMIT):
+        
+        users = query.limit(USERS_AUTOCOMPLETE_LIMIT).all()
+        
+        names_count = Counter(u.name for u in users)
+        
+        for user in users:
+            if names_count[user.name] > 1:
+                user_name = f'{user.name},{user.user_id}'
+            else:
+                user_name = user.name
             res.append({
                 'id': user.user_id,
-                'name': user.name,
+                'name': user_name,
                 'avatar': user.avatar_hash
             })
-
+    
     resp = app.make_response(json.dumps(res, ensure_ascii=False))
     return add_api_headers(resp)
 
