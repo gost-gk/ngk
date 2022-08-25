@@ -1,0 +1,13 @@
+flask
+flask_socketio
+lxml
+pyhocon
+PyNaCl
+python-decouple
+redis
+requests
+sqlalchemy
+uwsgi
+gevent
+sqlalchemy_utils
+psycopg2
