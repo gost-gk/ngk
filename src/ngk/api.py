@@ -687,7 +687,7 @@ def comments_listener(comments_processor: CommentsProcessor) -> None:
     # TODO: model tasks
     for message in comments_processor.listen():
         try:
-            update_event = json.loads(message, encoding='utf-8')
+            update_event = json.loads(message)
             new_comments = update_event['new']
             updated_comments = update_event['updated']
             L.debug(f'IO: CommentsListenerTask: Got {len(new_comments)} new comments and {len(updated_comments)} updated comments')
