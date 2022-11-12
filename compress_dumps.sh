@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eux
+
 LOG_FILE="$(realpath compress.log)"
 today_folder="$(date +%Y-%m-%d)/"
 folders_count=0
