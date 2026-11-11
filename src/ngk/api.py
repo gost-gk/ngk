@@ -189,7 +189,7 @@ def get_replies_to(user_id: Optional[int]=None, user_name: Optional[str]=None) -
 
         parent_ids: List[int] = []
         baseline_ids: Set[int] = set()
-        for x in query.limit(RESPONSE_PARENTS_LIMIT).distinct().all():
+        for x in query.limit(RESPONSE_PARENTS_LIMIT).all():
             parent_ids.append(x[0])
             baseline_ids.add(x[1])
 
