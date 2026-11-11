@@ -13,7 +13,7 @@ import secrets
 from typing import Callable, Dict, List, Optional, Sequence, Set
 
 import flask
-from flask_socketio import SocketIO, close_room, join_room, leave_room
+from flask_socketio import SocketIO, join_room
 import nacl
 import nacl.encoding
 import nacl.signing
@@ -53,7 +53,7 @@ IO_NAMESPACE = '/ngk'
 
 app = flask.Flask(__name__)
 app.secret_key = config.SECRET_KEY
-io = SocketIO(app, async_mode='gevent_uwsgi')
+io = SocketIO(app, async_mode='gevent')
 
 
 # TODO: graceful shutdown
@@ -636,7 +636,6 @@ def io_connect() -> None:
 @io.on('disconnect', namespace=IO_NAMESPACE)
 def io_disconnect() -> None:
     L.debug(f'IO: {flask.request.sid} left')
-    close_room(flask.request.sid)
     try:
         del websocker_clients[flask.request.sid]
     except KeyError:

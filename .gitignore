@@ -23,3 +23,6 @@ static/animals.txt
 static/.well-known
 
 frontend/
+
+# IDE
+.idea/

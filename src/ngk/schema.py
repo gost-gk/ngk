@@ -10,7 +10,7 @@ from sqlalchemy import (Boolean, Column, DateTime, ForeignKey, Integer,
                         Numeric, String, create_engine, PrimaryKeyConstraint,
                         Index)
 from sqlalchemy.dialects.postgresql import TSVECTOR, ENUM
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import deferred, relationship, sessionmaker
 from sqlalchemy.types import ARRAY
 
