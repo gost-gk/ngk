@@ -172,7 +172,7 @@ def get_replies_to(user_id: Optional[int]=None, user_name: Optional[str]=None) -
             return Replies([], [])
         
         Comment_parent = aliased(Comment)
-        query = session.query(Comment.parent_id, Comment.comment_id) \
+        query = session.query(Comment.parent_id, Comment.comment_id, Comment.posted) \
             .join(Comment_parent, Comment_parent.comment_id == Comment.parent_id) \
             .filter(Comment_parent.user_id == parent_user.user_id) \
             .filter(Comment.user_id != parent_user.user_id) \
