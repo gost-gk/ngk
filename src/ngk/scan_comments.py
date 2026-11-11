@@ -30,6 +30,10 @@ FAST_DELAY = 8
 SLOW_DELAY = 60
 FAST_TO_SLOW_STEPS = 20
 
+# anti-beget-challenge
+session_xyz = requests.Session()
+session_xyz.cookies.set('beget', 'begetok', domain='govnokod.xyz')
+
 exit_event = threading.Event()
 threads_exited_events: List[threading.Event] = []
 
@@ -43,7 +47,7 @@ def fetch_latest_comments() -> List[ParsedComment]:
 
 def fetch_latest_comments_xyz() -> List[parser_xyz.CommentXyz]:
     L.debug("Fetching comments from xyz...")
-    r = requests.get(COMMENTS_URL_XYZ, headers=config.DEFAULT_HEADERS, timeout=30)
+    r = session_xyz.get(COMMENTS_URL_XYZ, headers=config.DEFAULT_HEADERS, timeout=30)
     r.raise_for_status()
     root = lxml.etree.HTML(r.content)
     return parser_xyz.parse_comments(root)
