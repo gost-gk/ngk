@@ -101,7 +101,7 @@ def comments() -> flask.Response:
         query = session.query(Comment)
 
         if comment_id is not None:
-            query = query.filter(Comment.comment_id == comment_id)
+            query = query.filter(Comment.comment_id == int(comment_id))
         else:
             before = flask.request.args.get('before')
             if before is not None:
